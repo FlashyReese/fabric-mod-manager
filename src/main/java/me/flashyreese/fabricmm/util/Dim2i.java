@@ -1,4 +1,4 @@
-package me.flashyreese.fabricmm.utils;
+package me.flashyreese.fabricmm.util;
 
 public class Dim2i {
     private int x, y;

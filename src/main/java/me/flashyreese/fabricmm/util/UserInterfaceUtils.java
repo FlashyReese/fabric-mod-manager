@@ -1,4 +1,4 @@
-package me.flashyreese.fabricmm.utils;
+package me.flashyreese.fabricmm.util;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class UserInterfaceUtils {

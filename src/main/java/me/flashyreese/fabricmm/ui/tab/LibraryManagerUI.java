@@ -1,9 +1,11 @@
-package me.flashyreese.fabricmm.ui.components.swing;
+package me.flashyreese.fabricmm.ui.tab;
 
 import me.flashyreese.fabricmm.schema.InstalledMod;
-import me.flashyreese.fabricmm.utils.Dim2i;
-import me.flashyreese.fabricmm.utils.ModUtils;
-import me.flashyreese.fabricmm.utils.UserInterfaceUtils;
+import me.flashyreese.fabricmm.ui.components.InstalledModFileDropList;
+import me.flashyreese.fabricmm.ui.components.InstalledModPopClickListener;
+import me.flashyreese.fabricmm.util.Dim2i;
+import me.flashyreese.fabricmm.util.ModUtils;
+import me.flashyreese.fabricmm.util.UserInterfaceUtils;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -12,7 +14,7 @@ import java.io.IOException;
 
 public class LibraryManagerUI extends JPanel {
 
-    private ModFileDropList modFileDropList;
+    private InstalledModFileDropList installedModFileDropList;
     private JButton toggleInstalledModState;
     private JButton checkForModUpdate;
     private JButton openModsFolder;
@@ -32,7 +34,7 @@ public class LibraryManagerUI extends JPanel {
 
     public LibraryManagerUI(JTabbedPane jTabbedPane) throws Exception {
         setLayout(null);
-        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 8, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
+        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 4, (int)jTabbedPane.getPreferredSize().getHeight() - 24));//Fixme: Jank AF
         initComponents();
         setupComponents();
         loadComponents();
@@ -40,7 +42,7 @@ public class LibraryManagerUI extends JPanel {
     }
 
     private void initComponents(){
-        modFileDropList = new ModFileDropList();
+        installedModFileDropList = new InstalledModFileDropList();
         toggleInstalledModState = new JButton();
         checkForModUpdate = new JButton();
         openModsFolder = new JButton();
@@ -61,14 +63,15 @@ public class LibraryManagerUI extends JPanel {
 
     private void setupComponents() throws Exception {
         Dim2i modFileDropListDim = new Dim2i(10, 10, this.getWidth() / 2, this.getHeight() - 60);
-        modFileDropList.setLocation(modFileDropListDim.getOriginX(), modFileDropListDim.getOriginY());
-        modFileDropList.setSize(modFileDropListDim.getWidth(), modFileDropListDim.getHeight());
+        installedModFileDropList.setLocation(modFileDropListDim.getOriginX(), modFileDropListDim.getOriginY());
+        installedModFileDropList.setSize(modFileDropListDim.getWidth(), modFileDropListDim.getHeight());
         for(InstalledMod installedMod: ModUtils.getInstalledModsFromDir(ModUtils.getModsDirectory())){
-            modFileDropList.addItem(installedMod);
+            installedModFileDropList.addItem(installedMod);
         }
-        modFileDropList.getList().addListSelectionListener(arg0 -> {
+        installedModFileDropList.getList().addListSelectionListener(arg0 -> {
             onModFileDropListSelect();
         });
+        installedModFileDropList.getList().addMouseListener(new InstalledModPopClickListener(installedModFileDropList));
 
         Dim2i openModsFolderDim = new Dim2i(10, this.getHeight() - 40, this.getWidth() / 2 / 2, 30);
         openModsFolder.setBounds(openModsFolderDim.getOriginX(), openModsFolderDim.getOriginY(), openModsFolderDim.getWidth(), openModsFolderDim.getHeight());
@@ -85,10 +88,10 @@ public class LibraryManagerUI extends JPanel {
         refreshMods.setBounds(refreshModsDim.getOriginX(), refreshModsDim.getOriginY(), refreshModsDim.getWidth(), refreshModsDim.getHeight());
         refreshMods.setText("Refresh Mods");
         refreshMods.addActionListener(e -> {
-            modFileDropList.removeAllItems();
+            installedModFileDropList.removeAllItems();
             try {
                 for(InstalledMod installedMod: ModUtils.getInstalledModsFromDir(ModUtils.getModsDirectory())){
-                    modFileDropList.addItem(installedMod);
+                    installedModFileDropList.addItem(installedMod);
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -98,16 +101,19 @@ public class LibraryManagerUI extends JPanel {
         Dim2i toggleInstalledModStateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 40, this.getWidth() / 2 - 30, 30);
         toggleInstalledModState.setBounds(toggleInstalledModStateDim.getOriginX(), toggleInstalledModStateDim.getOriginY(), toggleInstalledModStateDim.getWidth(), toggleInstalledModStateDim.getHeight());
         toggleInstalledModState.addActionListener(e -> {
-            if(modFileDropList.getSelectedValue() != null){
-                ModUtils.changeInstalledModState(modFileDropList.getSelectedValue());
-                this.toggleInstalledModState.setText(modFileDropList.getSelectedValue().isEnabled() ? "Disable" : "Enable");
-                this.modFileDropList.refresh();
+            if(installedModFileDropList.getSelectedValue() != null){
+                ModUtils.changeInstalledModState(installedModFileDropList.getSelectedValue());
+                this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? "Disable" : "Enable");
+                this.installedModFileDropList.refresh();
             }
         });
 
         Dim2i checkForModUpdateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 70, this.getWidth() / 2 - 30, 30);
         checkForModUpdate.setBounds(checkForModUpdateDim.getOriginX(), checkForModUpdateDim.getOriginY(), checkForModUpdateDim.getWidth(), checkForModUpdateDim.getHeight());
         checkForModUpdate.setText("Check for update");
+        checkForModUpdate.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "This does nothing at the moment");
+        });
 
         Dim2i modInfoPanelDim = new Dim2i(this.getWidth() / 2 + 20, 10, this.getWidth() / 2 - 30, this.getHeight() - 90);
         modInfoPanel.setBounds(modInfoPanelDim.getOriginX(), modInfoPanelDim.getOriginY(), modInfoPanelDim.getWidth(), modInfoPanelDim.getHeight());
@@ -156,21 +162,21 @@ public class LibraryManagerUI extends JPanel {
         modInfoPanel.add(modEnvironment);
 
         this.add(modInfoPanel);
-        this.add(modFileDropList);
+        this.add(installedModFileDropList);
         this.add(toggleInstalledModState);
         this.add(checkForModUpdate);
         this.add(openModsFolder);
         this.add(refreshMods);
 
-        modFileDropList.refresh();
+        installedModFileDropList.refresh();
     }
 
     private void onModFileDropListSelect(){
-        if(modFileDropList.getSelectedValue() != null){
-            this.toggleInstalledModState.setText(modFileDropList.getSelectedValue().isEnabled() ? "Disable" : "Enable");
+        if(installedModFileDropList.getSelectedValue() != null){
+            this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? "Disable" : "Enable");
             this.toggleInstalledModState.setEnabled(true);
             this.checkForModUpdate.setEnabled(true);
-            InstalledMod selectedMod = modFileDropList.getSelectedValue();
+            InstalledMod selectedMod = installedModFileDropList.getSelectedValue();
             this.modName.setText(selectedMod.getName());
             this.modVersion.setText(selectedMod.getVersion());
             this.modId.setText(selectedMod.getId());

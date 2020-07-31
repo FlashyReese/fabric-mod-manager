@@ -1,6 +1,7 @@
 package me.flashyreese.fabricmm.ui;
 
-import me.flashyreese.fabricmm.ui.components.swing.LibraryManagerUI;
+import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
+import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +29,9 @@ public class FabricModManagerUI extends JFrame {
 
     private void setupComponents() throws Exception {
         contentPane.setLocation(0, 0);
-        contentPane.setPreferredSize(new Dimension(1000, 700));
+        contentPane.setPreferredSize(new Dimension(1280, 720));
         contentPane.addTab("Library", new LibraryManagerUI(contentPane));
+        contentPane.addTab("Browse Mods", new ModRepositoryBrowserUI(contentPane));
 
     }
 

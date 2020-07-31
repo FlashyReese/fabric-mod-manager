@@ -8,10 +8,10 @@ public class InstalledMod {
     private String version;
     private String description;
     private String iconPath;//Cached Locally
-    private String[] authors = new String[]{};
+    private String[] authors;
     private HashMap<String, String> contact;
-    private String environment = "";
-    private String minecraftVersion = "";
+    private String environment;
+    private String minecraftVersion = "";//Need Fabric modders to include this in fabric.mod.json
     private String installedPath;
 
     public String getId() {

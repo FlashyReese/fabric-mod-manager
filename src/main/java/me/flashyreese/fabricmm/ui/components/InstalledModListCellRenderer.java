@@ -1,7 +1,7 @@
-package me.flashyreese.fabricmm.ui.components.swing;
+package me.flashyreese.fabricmm.ui.components;
 
 import me.flashyreese.fabricmm.schema.InstalledMod;
-import me.flashyreese.fabricmm.utils.UserInterfaceUtils;
+import me.flashyreese.fabricmm.util.UserInterfaceUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -9,7 +9,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class ModListCellRenderer extends DefaultListCellRenderer {
+public class InstalledModListCellRenderer extends DefaultListCellRenderer {
 
     private static final long serialVersionUID = 1L;
     private final FileSystemView fileSystemView;
@@ -20,7 +20,7 @@ public class ModListCellRenderer extends DefaultListCellRenderer {
     private final Color textDisableColor = Color.GRAY;
     private final Color backgroundNonSelectionColor = Color.WHITE;
 
-    ModListCellRenderer() {
+    InstalledModListCellRenderer() {
         label = new JLabel();
         label.setOpaque(true);
         fileSystemView = FileSystemView.getFileSystemView();

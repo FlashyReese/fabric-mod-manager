@@ -1,4 +1,4 @@
-package me.flashyreese.fabricmm.utils;
+package me.flashyreese.fabricmm.util;
 
 import com.google.gson.Gson;
 import me.flashyreese.fabricmm.core.CacheManager;

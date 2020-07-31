@@ -1,7 +1,7 @@
-package me.flashyreese.fabricmm.ui.components.swing;
+package me.flashyreese.fabricmm.ui.components;
 
 import me.flashyreese.fabricmm.schema.InstalledMod;
-import me.flashyreese.fabricmm.utils.ModUtils;
+import me.flashyreese.fabricmm.util.ModUtils;
 
 import java.awt.Color;
 import java.awt.datatransfer.DataFlavor;
@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-public class ModFileDropList extends JPanel implements DropTargetListener {
+public class InstalledModFileDropList extends JPanel implements DropTargetListener {
 
     /**
      *
@@ -35,9 +35,9 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
     /**
      * Create the panel.
      */
-    public ModFileDropList() {
+    public InstalledModFileDropList() {
         setLayout(null);
-        ModListCellRenderer renderer = new ModListCellRenderer();
+        InstalledModListCellRenderer renderer = new InstalledModListCellRenderer();
         listModel = new DefaultListModel<InstalledMod>();
         list = new JList<InstalledMod>();
         new DropTarget(list, this);
