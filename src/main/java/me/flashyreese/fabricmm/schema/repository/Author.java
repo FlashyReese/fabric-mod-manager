@@ -1,4 +1,4 @@
-package me.flashyreese.fabricmm.schema;
+package me.flashyreese.fabricmm.schema.repository;
 
 import java.util.HashMap;
 import java.util.List;
