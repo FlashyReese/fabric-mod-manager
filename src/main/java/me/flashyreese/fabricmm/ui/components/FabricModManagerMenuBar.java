@@ -32,23 +32,25 @@ public class FabricModManagerMenuBar extends JMenuBar {
         helpMenu.setText("Help");
         checkForUpdates.setText("Check for Updates...");
         checkForUpdates.addActionListener(e -> {
-            try{
-                URL url = new URL("https://api.github.com/repos/FlashyReese/fabric-mod-manager/releases");
-                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                String json = in.lines().collect(Collectors.joining());
-                in.close();
-                JSONArray jsonArray = new JSONArray(json);
-                if(!jsonArray.isEmpty()){
-                    Semver latest = new Semver(jsonArray.getJSONObject(0).getString("tag_name"), Semver.SemverType.STRICT);
-                    if(Application.getVersion().isLowerThan(latest)){
-                        Desktop.getDesktop().browse(new URI("https://github.com/FlashyReese/fabric-mod-manager/releases"));
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Up to date!");
+            new Thread(() -> {
+                try{
+                    URL url = new URL("https://api.github.com/repos/FlashyReese/fabric-mod-manager/releases");
+                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                    String json = in.lines().collect(Collectors.joining());
+                    in.close();
+                    JSONArray jsonArray = new JSONArray(json);
+                    if(!jsonArray.isEmpty()){
+                        Semver latest = new Semver(jsonArray.getJSONObject(0).getString("tag_name"), Semver.SemverType.STRICT);
+                        if(Application.getVersion().isLowerThan(latest)){
+                            Desktop.getDesktop().browse(new URI("https://github.com/FlashyReese/fabric-mod-manager/releases"));
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Up to date!");
+                        }
                     }
+                }catch (Exception ex){
+                    ex.printStackTrace();
                 }
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
+            }).start();
         });
     }
 
