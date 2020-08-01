@@ -1,8 +1,11 @@
 package me.flashyreese.fabricmm.util;
 
 import com.google.gson.Gson;
-import me.flashyreese.fabricmm.core.CacheManager;
+import com.google.gson.reflect.TypeToken;
+import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.schema.InstalledMod;
+import me.flashyreese.fabricmm.schema.repository.Author;
+import me.flashyreese.fabricmm.schema.repository.Mod;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -29,7 +32,7 @@ public class ModUtils {
             String icon = fabricSchemaJsonObject.getString("icon");
             final JarEntry iconJarEntry = jarFile.getJarEntry(icon);
             if (iconJarEntry != null){
-                File iconFile = new File(CacheManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getId()));
+                File iconFile = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getId()));
                 if(!iconFile.exists()){
                     InputStream inputStream = jarFile.getInputStream(iconJarEntry);
                     FileOutputStream fileOutputStream = new FileOutputStream(iconFile);
@@ -48,6 +51,7 @@ public class ModUtils {
     }
 
     public static List<InstalledMod> getInstalledModsFromDir(File dir) throws Exception {
+        if(!dir.exists())dir.mkdirs();
         List<InstalledMod> installedMods = new ArrayList<InstalledMod>();
         if(!dir.isDirectory()){
             throw new Exception("This is not a directory???");
@@ -104,5 +108,18 @@ public class ModUtils {
             newFile = new File(file.getParentFile(), filename);
         }
         return newFile;
+    }
+
+
+    public static List<Author> getAuthors() throws FileNotFoundException {
+        return new Gson().fromJson(new FileReader("repo.json"), new TypeToken<List<Author>>(){}.getType());
+    }
+
+    public static List<Mod> getModList() throws FileNotFoundException {
+        List<Mod> modList = new ArrayList<Mod>();
+        for(Author author: getAuthors()){
+            modList.addAll(author.getMods());
+        }
+        return modList;
     }
 }
