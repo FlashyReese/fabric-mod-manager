@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'me.flashyreese'
-version '0.0.1-SNAPSHOT+build-20200731'
+version '0.0.2-SNAPSHOT+build-20200801'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 

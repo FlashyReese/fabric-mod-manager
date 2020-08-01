@@ -1,5 +1,9 @@
 package me.flashyreese.fabricmm.ui.components;
 
+import me.flashyreese.fabricmm.schema.InstalledMod;
+import me.flashyreese.fabricmm.ui.popmenu.InstalledModPopUpMenu;
+
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -12,13 +16,21 @@ public class InstalledModPopClickListener extends MouseAdapter {
     }
 
     public void mousePressed(MouseEvent e) {
-        if (e.isPopupTrigger() && installedModFileDropList.getSelectedValue() != null)
+        if (e.isPopupTrigger()){
+            JList<InstalledMod> list = installedModFileDropList.getList();
+            int row = list.locationToIndex(e.getPoint());
+            list.setSelectedIndex(row);
             doPop(e);
+        }
     }
 
     public void mouseReleased(MouseEvent e) {
-        if (e.isPopupTrigger() && installedModFileDropList.getSelectedValue() != null)
+        if (e.isPopupTrigger()){
+            JList<InstalledMod> list = installedModFileDropList.getList();
+            int row = list.locationToIndex(e.getPoint());
+            list.setSelectedIndex(row);
             doPop(e);
+        }
     }
 
     private void doPop(MouseEvent e) {

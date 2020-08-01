@@ -34,7 +34,8 @@ public class LibraryManagerUI extends JPanel {
 
     public LibraryManagerUI(JTabbedPane jTabbedPane) throws Exception {
         setLayout(null);
-        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 4, (int)jTabbedPane.getPreferredSize().getHeight() - 24));//Fixme: Jank AF
+        setLocation(0, 0);
+        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
         setupComponents();
         loadComponents();

@@ -1,6 +1,7 @@
-package me.flashyreese.fabricmm.ui.components;
+package me.flashyreese.fabricmm.ui.popmenu;
 
 import me.flashyreese.fabricmm.schema.InstalledMod;
+import me.flashyreese.fabricmm.ui.components.InstalledModFileDropList;
 import me.flashyreese.fabricmm.util.ModUtils;
 
 import javax.swing.*;
@@ -30,11 +31,14 @@ public class InstalledModPopUpMenu extends JPopupMenu {
         });
         delete.setText("Delete");
         delete.addActionListener(arg0 -> {
-            InstalledMod installedMod = installedModFileDropList.getSelectedValue();
-            File location = new File(installedMod.getInstalledPath());
-            if(location.delete()){
-                installedModFileDropList.removeSelectedItem();
-                installedModFileDropList.refresh();
+            int result = JOptionPane.showConfirmDialog(null,String.format("Are you sure you want to delete '%s'?", installedModFileDropList.getSelectedValue().getName()), "Delete Mod", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if(result == JOptionPane.YES_OPTION){
+                InstalledMod installedMod = installedModFileDropList.getSelectedValue();
+                File location = new File(installedMod.getInstalledPath());
+                if(location.delete()){
+                    installedModFileDropList.removeSelectedItem();
+                    installedModFileDropList.refresh();
+                }
             }
         });
     }

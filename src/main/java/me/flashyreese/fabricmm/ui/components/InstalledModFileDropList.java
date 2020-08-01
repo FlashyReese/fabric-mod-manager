@@ -2,8 +2,9 @@ package me.flashyreese.fabricmm.ui.components;
 
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.util.ModUtils;
+import me.flashyreese.fabricmm.util.UserInterfaceUtils;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -22,6 +23,7 @@ import java.util.stream.Stream;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileSystemView;
 
 public class InstalledModFileDropList extends JPanel implements DropTargetListener {
 
@@ -37,13 +39,35 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
      */
     public InstalledModFileDropList() {
         setLayout(null);
-        InstalledModListCellRenderer renderer = new InstalledModListCellRenderer();
         listModel = new DefaultListModel<InstalledMod>();
         list = new JList<InstalledMod>();
         new DropTarget(list, this);
         list.setModel(listModel);
         list.setDragEnabled(true);
-        list.setCellRenderer(renderer);
+        list.setCellRenderer(new DefaultListCellRenderer(){
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if(value instanceof InstalledMod) {
+                    InstalledMod mod = (InstalledMod)value;
+                    File file = new File(mod.getInstalledPath());
+                    try {
+                        if(mod.isEnabled()){
+                            renderer.setIcon(UserInterfaceUtils.getIconFromFile(new File(mod.getIconPath())));
+                        }else{
+                            renderer.setIcon(UserInterfaceUtils.getGrayScaledIconFromFile(new File(mod.getIconPath())));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        renderer.setIcon(FileSystemView.getFileSystemView().getSystemIcon(file));
+                    }
+                    renderer.setText(String.format("%s %s", mod.getName(), mod.getVersion()));
+                    renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", mod.getDescription()));
+                }
+
+                return renderer;
+            }
+        });
         jScrollPane1 = new JScrollPane(list);
         this.setBorder(new LineBorder(Color.BLACK));
         add(jScrollPane1);

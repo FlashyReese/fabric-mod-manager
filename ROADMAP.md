@@ -3,14 +3,13 @@ Should probably use a project board. Don't actually have a roadmap here.
 
 #### UI
 - [x] Menu Bar (??%)
-    - [x] Check for Updates (50%)
-        - Need to thread completely forgot
+    - [x] Check for Updates (100%)
 - [x] Mod Library Manager (50%)
     - [x] Drag and Drop Fabric Mods (100%)
     - [x] Enable/Disable Fabric Mods (100%)
-    - [x] Eliminate Fabric Mods (50%)
-        - [x] Can Eliminate (50%)
-        - [ ] Confirmation Menu(0%)
+    - [x] Eliminate Fabric Mods (100%)
+        - [x] Can Eliminate (100%)
+        - [x] Confirmation Menu(100%)
     - [x] Open Mods Folder (100%)
     - [x] Refresh Directory Mods (100%)
     - [ ] Mod Info redirect to `Mod Repository Browser` via specific title/author or minecraft version
@@ -22,22 +21,22 @@ Should probably use a project board. Don't actually have a roadmap here.
     
 - [ ] Mod Repository Browser (0%)
     - [ ] Search by title/author or minecraft version (0%)
-    - [ ] Mod Versions Selection (0%)
-    - [ ] Download/Install to specific profile or Downloads Manager (0%)
+    - [x] Minecraft and Mod Versions Selection (100%)
+    - [x] Download/Install to specific profile or Downloads Manager (25%)
     - [ ] Build via GitHub Repository (no promises and bandwidth intensive)
 
 - [ ] Downloads Manager (0%)
     - [ ] Install to specific profile or keep in the cache (0%)
-    - [ ] Asynchronous downloader (0%)
+    - [x] Asynchronous downloader (100%) using [jddl](https://github.com/kamranzafar/jddl)
     
 - [ ] Settings (0%)
     - [ ] Change Custom Minecraft Directory (0%)
     - [ ] Add/Remove Custom Repositories (0%)
-        - [ ] Direct JSON DB (0%)
-        - [ ] API (0%)
+        - [X] Direct JSON DB (5%)
+        - [ ] ~~API (0%)~~
 
 
-#### API
+#### API (Future, missing resources to provide this)
 This will be most likely written in `NodeJS`.
 
 - [ ] Mod Repository API (5%)
