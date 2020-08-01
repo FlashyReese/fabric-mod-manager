@@ -1,23 +1,49 @@
 package me.flashyreese.fabricmm.util;
 
+import me.flashyreese.fabricmm.core.ConfigurationManager;
+import me.flashyreese.fabricmm.schema.repository.Mod;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UserInterfaceUtils {
 
-    public static ImageIcon getIconFromURL(String s) throws MalformedURLException {
+    public static ImageIcon getIconFromURL(String s) throws IOException {
+        Image image = null;
         URL url = new URL(s);
-        return new ImageIcon(url);
+        image = ImageIO.read(url);
+        return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
+    }
+
+    public static ImageIcon getImageIconFromCache(Mod mod) throws IOException {
+        File file = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR, String.format("%s.png", mod.getId()));
+        if(file.exists()){
+            return getIconFromFile(file);
+        }else{
+            try (BufferedInputStream in = new BufferedInputStream(new URL(mod.getIconUrl()).openStream());
+                 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                byte[] dataBuffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return getIconFromFile(file);
     }
 
     public static ImageIcon getIconFromFile(File file) throws IOException {
@@ -35,14 +61,18 @@ public class UserInterfaceUtils {
 
     public static String getEnglishStringList(String[] list){
         StringBuilder line = new StringBuilder();
-        for(int i = 0; i < list.length; i++) {
-            String currElement = list[i];
-            if(i == 0) {
-                line = new StringBuilder(currElement);
-            }else if(i == list.length - 1) {
-                line.append(" and ").append(currElement);
-            }else{
-                line.append(", ").append(currElement);
+        if(list == null){
+            line.append("None listed");
+        }else{
+            for(int i = 0; i < list.length; i++) {
+                String currElement = list[i];
+                if(i == 0) {
+                    line = new StringBuilder(currElement);
+                }else if(i == list.length - 1) {
+                    line.append(" and ").append(currElement);
+                }else{
+                    line.append(", ").append(currElement);
+                }
             }
         }
         return line.toString();
@@ -76,7 +106,9 @@ public class UserInterfaceUtils {
     }
 
     public static String filterEnvironment(String environment){
-        if(environment.equals("*")){
+        if(environment == null){
+            return "Not Specified";
+        }else if(environment.equals("*")){
             return "Client & Server";
         }else if(environment.equals("client")){
             return "Client";
