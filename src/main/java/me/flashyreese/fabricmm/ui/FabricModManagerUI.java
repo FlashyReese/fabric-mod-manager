@@ -6,10 +6,7 @@ import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 public class FabricModManagerUI extends JFrame {
 

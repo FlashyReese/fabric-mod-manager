@@ -1,7 +1,6 @@
 package me.flashyreese.fabricmm.ui.tab;
 
 import me.flashyreese.fabricmm.Application;
-import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.schema.repository.MinecraftVersion;
 import me.flashyreese.fabricmm.schema.repository.Mod;
 import me.flashyreese.fabricmm.schema.repository.ModVersion;
@@ -16,6 +15,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -45,7 +45,7 @@ public class ModRepositoryBrowserUI extends JPanel {
         download = new JButton();
     }
 
-    private void setupComponents() throws FileNotFoundException {
+    private void setupComponents() throws IOException {
         Dim2i searchBarDim = new Dim2i(10, 10, this.getWidth() / 8 * 3 - 20, 30);
         searchBar.setBounds(searchBarDim.getOriginX(), searchBarDim.getOriginY(), searchBarDim.getWidth(), searchBarDim.getHeight());
 

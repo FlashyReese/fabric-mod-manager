@@ -9,6 +9,7 @@ import me.flashyreese.fabricmm.schema.repository.Mod;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,11 +116,28 @@ public class ModUtils {
         return new Gson().fromJson(new FileReader("repo.json"), new TypeToken<List<Author>>(){}.getType());
     }
 
-    public static List<Mod> getModList() throws FileNotFoundException {
+    public static List<Mod> getModList() throws IOException {
         List<Mod> modList = new ArrayList<Mod>();
-        for(Author author: getAuthors()){
+        for(Author author:  getAuthorsFromRepository("https://raw.githubusercontent.com/FlashyReese/fabric-mod-repository/master/central.json")){
             modList.addAll(author.getMods());
         }
         return modList;
+    }
+
+    public static List<Author> getAuthorsFromRepository(String repositoryUrl) throws IOException {
+        List<Author> authors = new ArrayList<Author>();
+        URL url = new URL(repositoryUrl);
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        String json = in.lines().collect(Collectors.joining());
+        in.close();
+        List<String> listOfAuthors = new Gson().fromJson(json, new TypeToken<List<String>>(){}.getType());
+        for(String authorUrl: listOfAuthors){
+            URL url2 = new URL(authorUrl);
+            BufferedReader in2 = new BufferedReader(new InputStreamReader(url2.openStream()));
+            String json2 = in2.lines().collect(Collectors.joining());
+            Author author = new Gson().fromJson(json2, Author.class);
+            authors.add(author);
+        }
+        return authors;
     }
 }
