@@ -1,5 +1,6 @@
 package me.flashyreese.fabricmm.ui.components;
 
+import me.flashyreese.fabricmm.schema.repository.MinecraftVersion;
 import me.flashyreese.fabricmm.schema.repository.Mod;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
 
@@ -7,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ModList  extends JPanel {
 
@@ -31,7 +33,7 @@ public class ModList  extends JPanel {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    renderer.setText(mod.getName());
+                    renderer.setText(String.format("%s by %s", mod.getName(), mod.getAuthor().getName()));
                     renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", mod.getDescription()));
                 }
 
@@ -42,6 +44,38 @@ public class ModList  extends JPanel {
         this.setBorder(new LineBorder(Color.BLACK));
         add(jScrollPane1);
 
+    }
+
+    public void searchFilter(String searchTerm, String type){//Fixme: really jank
+        DefaultListModel<Mod> filteredItems = new DefaultListModel<Mod>();
+        ArrayList<Mod> listMods = new ArrayList<Mod>(listModel.getSize());
+        for (int i = 0; i < listModel.getSize(); i++) {
+            listMods.add(listModel.getElementAt(i));
+        }
+        if(searchTerm.isEmpty()){
+            list.setModel(listModel);
+            return;
+        }
+        for (Mod mod: listMods){
+            if(type.equals("Name")){
+                if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                    filteredItems.addElement(mod);
+                }
+            }else if(type.equals("Author")){
+                if (mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                    filteredItems.addElement(mod);
+                }
+            }else if(type.equals("Minecraft Version")){
+                for (MinecraftVersion minecraftVersion: mod.getMinecraftVersions()){
+                    if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
+                        if(!filteredItems.contains(mod)){
+                            filteredItems.addElement(mod);
+                        }
+                    }
+                }
+            }
+        }
+        list.setModel(filteredItems);
     }
 
     public JList<Mod> getList(){

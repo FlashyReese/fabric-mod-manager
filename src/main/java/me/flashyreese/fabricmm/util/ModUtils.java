@@ -119,7 +119,10 @@ public class ModUtils {
     public static List<Mod> getModList() throws IOException {
         List<Mod> modList = new ArrayList<Mod>();
         for(Author author:  getAuthorsFromRepository("https://raw.githubusercontent.com/FlashyReese/fabric-mod-repository/master/central.json")){
-            modList.addAll(author.getMods());
+            for (Mod mod: author.getMods()){
+                mod.setAuthor(author);
+                modList.add(mod);
+            }
         }
         return modList;
     }

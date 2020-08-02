@@ -12,6 +12,8 @@ import org.kamranzafar.jddl.DownloadTask;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,7 +25,7 @@ public class ModRepositoryBrowserUI extends JPanel {
 
     private JTextField searchBar;
     private ModList modList;
-    private JComboBox<String> searchType;
+    private JComboBox<String> filterType;
     private JComboBox<MinecraftVersion> minecraftVersion;
     private JComboBox<ModVersion> modVersion;
     private JButton download;
@@ -39,7 +41,7 @@ public class ModRepositoryBrowserUI extends JPanel {
     private void initComponents() {
         searchBar = new JTextField();
         modList = new ModList();
-        searchType = new JComboBox<String>();
+        filterType = new JComboBox<String>();
         minecraftVersion = new JComboBox<MinecraftVersion>();
         modVersion = new JComboBox<ModVersion>();
         download = new JButton();
@@ -48,6 +50,11 @@ public class ModRepositoryBrowserUI extends JPanel {
     private void setupComponents() throws IOException {
         Dim2i searchBarDim = new Dim2i(10, 10, this.getWidth() / 8 * 3 - 20, 30);
         searchBar.setBounds(searchBarDim.getOriginX(), searchBarDim.getOriginY(), searchBarDim.getWidth(), searchBarDim.getHeight());
+        searchBar.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent evt) {
+                modList.searchFilter(searchBar.getText(), (String)filterType.getSelectedItem());
+            }
+        });
 
         Dim2i modFileListDim = new Dim2i(10, 50, this.getWidth() / 2 - 20, this.getHeight() - 60);
         modList.setLocation(modFileListDim.getOriginX(), modFileListDim.getOriginY());
@@ -60,7 +67,10 @@ public class ModRepositoryBrowserUI extends JPanel {
         });
 
         Dim2i searchTypeDim = new Dim2i(this.getWidth() / 8 * 3, 10, this.getWidth() / 8 - 10, 30);
-        searchType.setBounds(searchTypeDim.getOriginX(), searchTypeDim.getOriginY(), searchTypeDim.getWidth(), searchTypeDim.getHeight());
+        filterType.setBounds(searchTypeDim.getOriginX(), searchTypeDim.getOriginY(), searchTypeDim.getWidth(), searchTypeDim.getHeight());
+        filterType.addItem("Name");
+        filterType.addItem("Author");
+        filterType.addItem("Minecraft Version");
 
         Dim2i minecraftVersionDim = new Dim2i(this.getWidth() / 2, 10, this.getWidth() / 6, 30);
         minecraftVersion.setBounds(minecraftVersionDim.getOriginX(), minecraftVersionDim.getOriginY(), minecraftVersionDim.getWidth(), minecraftVersionDim.getHeight());
@@ -104,7 +114,7 @@ public class ModRepositoryBrowserUI extends JPanel {
     private void loadComponents() {
         this.add(searchBar);
         this.add(modList);
-        this.add(searchType);
+        this.add(filterType);
         this.add(minecraftVersion);
         this.add(modVersion);
         this.add(download);
