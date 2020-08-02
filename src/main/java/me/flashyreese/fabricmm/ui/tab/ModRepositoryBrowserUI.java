@@ -68,6 +68,7 @@ public class ModRepositoryBrowserUI extends JPanel {
 
         Dim2i searchTypeDim = new Dim2i(this.getWidth() / 8 * 3, 10, this.getWidth() / 8 - 10, 30);
         filterType.setBounds(searchTypeDim.getOriginX(), searchTypeDim.getOriginY(), searchTypeDim.getWidth(), searchTypeDim.getHeight());
+        filterType.addItem("General");
         filterType.addItem("Name");
         filterType.addItem("Author");
         filterType.addItem("Minecraft Version");
@@ -162,6 +163,7 @@ public class ModRepositoryBrowserUI extends JPanel {
             ModVersion modVer = (ModVersion) modVersion.getSelectedItem();
             File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), String.format("%s-%s-%s.jar", mod.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()));
             DownloadTask task = new DownloadTask(new URL(modVer.getModUrl()), new FileOutputStream(fileName), new DownloadListener() {
+
                 String fname;
 
                 public void onUpdate(int bytes, int totalDownloaded) {
@@ -174,6 +176,7 @@ public class ModRepositoryBrowserUI extends JPanel {
 
                 public void onComplete() {
                     System.out.println( fname + " downloaded" );
+                    //Todo: add something here xd
                 }
 
                 public void onCancel() {

@@ -118,7 +118,7 @@ public class ModUtils {
 
     public static List<Mod> getModList() throws IOException {
         List<Mod> modList = new ArrayList<Mod>();
-        for(Author author:  getAuthorsFromRepository("https://raw.githubusercontent.com/FlashyReese/fabric-mod-repository/master/central.json")){
+        for(Author author:  getAuthorsFromRepositories()){
             for (Mod mod: author.getMods()){
                 mod.setAuthor(author);
                 modList.add(mod);
@@ -140,6 +140,15 @@ public class ModUtils {
             String json2 = in2.lines().collect(Collectors.joining());
             Author author = new Gson().fromJson(json2, Author.class);
             authors.add(author);
+        }
+        return authors;
+    }
+
+    public static List<Author> getAuthorsFromRepositories() throws IOException {
+        List<Author> authors = new ArrayList<Author>();
+        ArrayList<String> repositories = ConfigurationManager.getInstance().getRepositories();
+        for(String url: repositories){
+            authors.addAll(getAuthorsFromRepository(url));
         }
         return authors;
     }

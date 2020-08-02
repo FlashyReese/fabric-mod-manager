@@ -10,7 +10,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ModList  extends JPanel {
+public class ModList extends JPanel {
 
     private final DefaultListModel<Mod> listModel;
     private final JScrollPane jScrollPane1;
@@ -56,20 +56,37 @@ public class ModList  extends JPanel {
             list.setModel(listModel);
             return;
         }
-        for (Mod mod: listMods){
-            if(type.equals("Name")){
-                if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase())){
-                    filteredItems.addElement(mod);
+        if(type.equals("General")){
+            for (Mod mod: listMods){
+                if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase()) || mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                    if(!filteredItems.contains(mod)){
+                        filteredItems.addElement(mod);
+                    }
                 }
-            }else if(type.equals("Author")){
-                if (mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
-                    filteredItems.addElement(mod);
-                }
-            }else if(type.equals("Minecraft Version")){
                 for (MinecraftVersion minecraftVersion: mod.getMinecraftVersions()){
                     if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
                         if(!filteredItems.contains(mod)){
                             filteredItems.addElement(mod);
+                        }
+                    }
+                }
+            }
+        }else{
+            for (Mod mod: listMods){
+                if(type.equals("Name")){
+                    if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                        filteredItems.addElement(mod);
+                    }
+                }else if(type.equals("Author")){
+                    if (mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                        filteredItems.addElement(mod);
+                    }
+                }else if(type.equals("Minecraft Version")){
+                    for (MinecraftVersion minecraftVersion: mod.getMinecraftVersions()){
+                        if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
+                            if(!filteredItems.contains(mod)){
+                                filteredItems.addElement(mod);
+                            }
                         }
                     }
                 }
