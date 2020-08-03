@@ -39,7 +39,7 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
      */
     public InstalledModFileDropList() {
         setLayout(null);
-        listModel = new DefaultListModel<InstalledMod>();
+        listModel = new DefaultListModel<InstalledMod>();//Todo: filter list properly
         list = new JList<InstalledMod>();
         new DropTarget(list, this);
         list.setModel(listModel);
@@ -145,8 +145,7 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
     public void drop(DropTargetDropEvent evt) {
         int action = evt.getDropAction();
         evt.acceptDrop(action);
-        System.out.println(action);
-        try {
+        try {//Todo: add overlapping mod versions support - idea is to swap out old for new
             Transferable data = evt.getTransferable();
             if (data.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 @SuppressWarnings("unchecked")

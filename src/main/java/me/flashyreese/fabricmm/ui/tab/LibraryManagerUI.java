@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class LibraryManagerUI extends JPanel {
 
@@ -19,6 +21,8 @@ public class LibraryManagerUI extends JPanel {
     private JButton checkForModUpdate;
     private JButton openModsFolder;
     private JButton refreshMods;
+    private JButton modWebsite;
+    private JButton modIssues;
 
     private JPanel modInfoPanel;
     private JLabel modNameLabel;
@@ -48,6 +52,8 @@ public class LibraryManagerUI extends JPanel {
         checkForModUpdate = new JButton();
         openModsFolder = new JButton();
         refreshMods = new JButton();
+        modWebsite = new JButton();
+        modIssues = new JButton();
 
         modInfoPanel = new JPanel();
         modNameLabel = new JLabel();
@@ -116,7 +122,29 @@ public class LibraryManagerUI extends JPanel {
             JOptionPane.showMessageDialog(null, "This does nothing at the moment");
         });
 
-        Dim2i modInfoPanelDim = new Dim2i(this.getWidth() / 2 + 20, 10, this.getWidth() / 2 - 30, this.getHeight() - 90);
+        Dim2i modWebsiteDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
+        modWebsite.setBounds(modWebsiteDim.getOriginX(), modWebsiteDim.getOriginY(), modWebsiteDim.getWidth(), modWebsiteDim.getHeight());
+        modWebsite.setText("Website");
+        modWebsite.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getContact().get("homepage")));
+            } catch (IOException | URISyntaxException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        Dim2i modIssuesDim = new Dim2i(this.getWidth() / 4 * 3 + 5, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
+        modIssues.setBounds(modIssuesDim.getOriginX(), modIssuesDim.getOriginY(), modIssuesDim.getWidth(), modIssuesDim.getHeight());
+        modIssues.setText("Issues");
+        modIssues.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getContact().get("sources")));
+            } catch (IOException | URISyntaxException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        Dim2i modInfoPanelDim = new Dim2i(this.getWidth() / 2 + 20, 10, this.getWidth() / 2 - 30, this.getHeight() - 120);
         modInfoPanel.setBounds(modInfoPanelDim.getOriginX(), modInfoPanelDim.getOriginY(), modInfoPanelDim.getWidth(), modInfoPanelDim.getHeight());
         modInfoPanel.setBorder(new LineBorder(Color.DARK_GRAY));
         modInfoPanel.setLayout(null);
@@ -168,6 +196,8 @@ public class LibraryManagerUI extends JPanel {
         this.add(checkForModUpdate);
         this.add(openModsFolder);
         this.add(refreshMods);
+        this.add(modWebsite);
+        this.add(modIssues);
 
         installedModFileDropList.refresh();
     }
@@ -177,6 +207,8 @@ public class LibraryManagerUI extends JPanel {
             this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? "Disable" : "Enable");
             this.toggleInstalledModState.setEnabled(true);
             this.checkForModUpdate.setEnabled(true);
+            this.modWebsite.setEnabled(installedModFileDropList.getSelectedValue().getContact().containsKey("homepage"));
+            this.modIssues.setEnabled(installedModFileDropList.getSelectedValue().getContact().containsKey("sources"));
             InstalledMod selectedMod = installedModFileDropList.getSelectedValue();
             this.modName.setText(selectedMod.getName());
             this.modVersion.setText(selectedMod.getVersion());
@@ -187,6 +219,8 @@ public class LibraryManagerUI extends JPanel {
             this.toggleInstalledModState.setText("Enable");
             this.toggleInstalledModState.setEnabled(false);
             this.checkForModUpdate.setEnabled(false);
+            this.modWebsite.setEnabled(false);
+            this.modIssues.setEnabled(false);
             this.modName.setText("None selected!");
             this.modVersion.setText("None selected!");
             this.modId.setText("None selected!");

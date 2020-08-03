@@ -27,7 +27,9 @@ public class ModRepositoryBrowserUI extends JPanel {
     private ModList modList;
     private JComboBox<String> filterType;
     private JComboBox<MinecraftVersion> minecraftVersion;
+    private JLabel minecraftVersionLabel;
     private JComboBox<ModVersion> modVersion;
+    private JLabel modVersionLabel;
     private JButton download;
 
     public ModRepositoryBrowserUI(JTabbedPane jTabbedPane) throws Exception {
@@ -43,7 +45,9 @@ public class ModRepositoryBrowserUI extends JPanel {
         modList = new ModList();
         filterType = new JComboBox<String>();
         minecraftVersion = new JComboBox<MinecraftVersion>();
+        minecraftVersionLabel = new JLabel();
         modVersion = new JComboBox<ModVersion>();
+        modVersionLabel = new JLabel();
         download = new JButton();
     }
 
@@ -73,7 +77,11 @@ public class ModRepositoryBrowserUI extends JPanel {
         filterType.addItem("Author");
         filterType.addItem("Minecraft Version");
 
-        Dim2i minecraftVersionDim = new Dim2i(this.getWidth() / 2, 10, this.getWidth() / 6, 30);
+        Font labelFont = new Font("Tahoma", Font.BOLD, 12);
+        minecraftVersionLabel.setBounds(this.getWidth() / 2, this.getHeight() - 120, this.getWidth() / 4, 30);
+        minecraftVersionLabel.setText("Minecraft Version");
+        minecraftVersionLabel.setFont(labelFont);
+        Dim2i minecraftVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 120, this.getWidth() / 4, 30);
         minecraftVersion.setBounds(minecraftVersionDim.getOriginX(), minecraftVersionDim.getOriginY(), minecraftVersionDim.getWidth(), minecraftVersionDim.getHeight());
         minecraftVersion.setRenderer(new DefaultListCellRenderer(){
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -88,7 +96,10 @@ public class ModRepositoryBrowserUI extends JPanel {
             updateModVersions();
         });
 
-        Dim2i modVersionDim = new Dim2i(this.getWidth() / 6 * 4 + 10, 10, this.getWidth() / 6, 30);
+        modVersionLabel.setBounds(this.getWidth() / 2, this.getHeight() - 80, this.getWidth() / 4, 30);
+        modVersionLabel.setText("Mod Version");
+        modVersionLabel.setFont(labelFont);
+        Dim2i modVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 80, this.getWidth() / 4, 30);
         modVersion.setBounds(modVersionDim.getOriginX(), modVersionDim.getOriginY(), modVersionDim.getWidth(), modVersionDim.getHeight());
         modVersion.setRenderer(new DefaultListCellRenderer(){
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -100,7 +111,7 @@ public class ModRepositoryBrowserUI extends JPanel {
             }
         });
 
-        Dim2i downloadDim = new Dim2i(this.getWidth() / 6 * 5 + 20, 10, this.getWidth() / 6 - 30, 30);
+        Dim2i downloadDim = new Dim2i(this.getWidth() / 2, this.getHeight() - 40, this.getWidth() / 2 - 10, 30);
         download.setBounds(downloadDim.getOriginX(), downloadDim.getOriginY(), downloadDim.getWidth(), downloadDim.getHeight());
         download.setText("Download");
         download.addActionListener(e -> {
@@ -117,7 +128,9 @@ public class ModRepositoryBrowserUI extends JPanel {
         this.add(modList);
         this.add(filterType);
         this.add(minecraftVersion);
+        this.add(minecraftVersionLabel);
         this.add(modVersion);
+        this.add(modVersionLabel);
         this.add(download);
         onModFileDropListSelect();
     }
@@ -136,31 +149,32 @@ public class ModRepositoryBrowserUI extends JPanel {
     }
 
     private void updateMinecraftVersions(){
-        minecraftVersion.setSelectedItem(null);
         minecraftVersion.removeAllItems();
+        minecraftVersion.setSelectedItem(null);
         for(MinecraftVersion mcVer: modList.getSelectedValue().getMinecraftVersions()){
             minecraftVersion.addItem(mcVer);
         }
-        minecraftVersion.setSelectedIndex(0);
         updateModVersions();
     }
 
     private void updateModVersions(){
-        MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
-        if(mcVer != null){
-            modVersion.setSelectedItem(null);
+        if (minecraftVersion.getSelectedItem() instanceof MinecraftVersion){
+            MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
             modVersion.removeAllItems();
-            for(ModVersion modVer: mcVer.getModVersions()){
-                modVersion.addItem(modVer);
+            modVersion.setSelectedItem(null);
+            if(mcVer != null){
+                for(ModVersion modVer: mcVer.getModVersions()){
+                    modVersion.addItem(modVer);
+                }
             }
         }
     }
 
     private void downloadMod() throws MalformedURLException, FileNotFoundException {
         if(modList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
-            Mod mod = (Mod) modList.getSelectedValue();
+            Mod mod = modList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
-            ModVersion modVer = (ModVersion) modVersion.getSelectedItem();
+            ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies and refresh library listmodel
             File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), String.format("%s-%s-%s.jar", mod.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()));
             DownloadTask task = new DownloadTask(new URL(modVer.getModUrl()), new FileOutputStream(fileName), new DownloadListener() {
 

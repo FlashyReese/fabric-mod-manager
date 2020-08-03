@@ -10,6 +10,7 @@ public class Mod {
     private List<MinecraftVersion> minecraftVersions;
     private String name;
     private String description;
+    private String sources;
     private String iconUrl;
     private String id;
 
@@ -33,6 +34,10 @@ public class Mod {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getSources() {
+        return sources;
     }
 
     public String getIconUrl(){

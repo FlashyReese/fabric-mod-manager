@@ -1,7 +1,6 @@
 package me.flashyreese.fabricmm.ui;
 
 import me.flashyreese.fabricmm.ui.components.FabricModManagerMenuBar;
-import me.flashyreese.fabricmm.ui.tab.DownloadManagerUI;
 import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 
@@ -13,7 +12,7 @@ public class FabricModManagerUI extends JFrame {
     private JTabbedPane contentPane;
     private JPanel library;
     private JPanel modBrowser;
-    private JPanel downloadManager;
+    //private JPanel downloadManager;
 
     public FabricModManagerUI() throws Exception {
         initComponents();
@@ -36,14 +35,14 @@ public class FabricModManagerUI extends JFrame {
 
         library = new LibraryManagerUI(contentPane);
         modBrowser = new ModRepositoryBrowserUI(contentPane);
-        downloadManager = new DownloadManagerUI(contentPane);
+        //downloadManager = new DownloadManagerUI(contentPane);
     }
 
     private void setupComponents() {
         contentPane.updateUI();
         contentPane.addTab("Library", library); //Fixme: Panel Scaling macOS looks chopped off
         contentPane.addTab("Browse Mods", modBrowser);
-        contentPane.addTab("Download Manager", downloadManager);
+        //contentPane.addTab("Download Manager", downloadManager);
     }
 
     private void loadComponents(){
