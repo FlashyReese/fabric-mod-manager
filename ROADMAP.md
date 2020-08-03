@@ -19,8 +19,8 @@ Should probably use a project board. Don't actually have a roadmap here.
         - [ ] Mod Pack Updater `requires Mod Repository API` (0%)
     - [ ] Search Bar (0%)
     
-- [ ] Mod Repository Browser (0%)
-    - [ ] Search by title/author or minecraft version (0%)
+- [x] Mod Repository Browser (60%)
+    - [x] Search by title/author or minecraft version (100%)
     - [x] Minecraft and Mod Versions Selection (100%)
     - [x] Download/Install to specific profile or Downloads Manager (25%)
     - [ ] Build via GitHub Repository (no promises and bandwidth intensive)
@@ -36,7 +36,7 @@ Should probably use a project board. Don't actually have a roadmap here.
         - [ ] ~~API (0%)~~
 
 
-#### API (Future, missing resources to provide this)
+#### API (Future, missing resources to provide this. This is necessary for huge repositories)
 This will be most likely written in `NodeJS`.
 
 - [ ] Mod Repository API (5%)
