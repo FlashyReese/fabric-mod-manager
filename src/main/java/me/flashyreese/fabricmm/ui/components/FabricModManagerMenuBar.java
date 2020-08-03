@@ -2,11 +2,14 @@ package me.flashyreese.fabricmm.ui.components;
 
 import com.vdurmont.semver4j.Semver;
 import me.flashyreese.fabricmm.Application;
+import me.flashyreese.fabricmm.util.ModUtils;
 import org.json.JSONArray;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 public class FabricModManagerMenuBar extends JMenuBar {
 
     private JMenu helpMenu;
+    private JMenuItem openMinecraftLauncher;
     private JMenuItem checkForUpdates;
 
     public FabricModManagerMenuBar(){
@@ -26,6 +30,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
     private void initComponents(){
         helpMenu = new JMenu();
         checkForUpdates = new JMenuItem();
+        openMinecraftLauncher = new JMenuItem();
     }
 
     private void setupComponents(){
@@ -52,9 +57,22 @@ public class FabricModManagerMenuBar extends JMenuBar {
                 }
             }).start();
         });
+
+        openMinecraftLauncher.setText("Open Minecraft Launcher");
+        openMinecraftLauncher.addActionListener(e -> {
+            File launcher = ModUtils.findDefaultLauncherPath();
+            if(launcher.exists()){
+                try {
+                    Desktop.getDesktop().open(launcher);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
     }
 
     private void loadComponents(){
+        helpMenu.add(openMinecraftLauncher);
         helpMenu.add(checkForUpdates);
         this.add(helpMenu);
     }

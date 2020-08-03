@@ -21,5 +21,6 @@ bin/
 .project
 
 # fabric mod manager
+
 .cache/
 config/

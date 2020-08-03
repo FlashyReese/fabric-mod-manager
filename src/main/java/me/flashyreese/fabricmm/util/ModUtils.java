@@ -9,7 +9,10 @@ import me.flashyreese.fabricmm.schema.repository.Mod;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +82,19 @@ public class ModUtils {
             dir = new File(homeDir, ".minecraft");
         }
         return dir;
+    }
+
+    public static File findDefaultLauncherPath(){
+        File file;
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win") && System.getenv("ProgramFiles(X86)") != null){
+            file = new File(System.getenv("ProgramFiles(X86)"), "/Minecraft Launcher/MinecraftLauncher.exe");
+        }else if(os.contains("mac")){
+            file = new File(File.separator + "Applications" + File.separator + "Minecraft.app");
+        }else{
+            file = new File("/opt/minecraft-launcher/minecraft-launcher");//Fixme: currently broken
+        }
+        return file;
     }
 
     public static File getModsDirectory(){
@@ -152,4 +168,27 @@ public class ModUtils {
         }
         return authors;
     }
+
+    private static int getFileSize(URL url) {
+        URLConnection conn = null;
+        try {
+            conn = url.openConnection();
+            if(conn instanceof HttpURLConnection) {
+                ((HttpURLConnection)conn).setRequestMethod("HEAD");
+            }
+            conn.getInputStream();
+            return conn.getContentLength();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if(conn instanceof HttpURLConnection) {
+                ((HttpURLConnection)conn).disconnect();
+            }
+        }
+    }
+
+    public static boolean isAuthorUpToDate(String url, File author) throws MalformedURLException {
+        return author.length() == getFileSize(new URL(url));
+    }
+
 }
