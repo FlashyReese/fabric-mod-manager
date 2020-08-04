@@ -2,7 +2,10 @@ package me.flashyreese.fabricmm.ui.components;
 
 import com.vdurmont.semver4j.Semver;
 import me.flashyreese.fabricmm.Application;
+import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 import me.flashyreese.fabricmm.util.ModUtils;
+import me.flashyreese.fabricmrf.Repository;
+import me.flashyreese.fabricmrf.RepositoryManager;
 import org.json.JSONArray;
 
 import javax.swing.*;
@@ -19,22 +22,51 @@ public class FabricModManagerMenuBar extends JMenuBar {
 
     private JMenu helpMenu;
     private JMenuItem openMinecraftLauncher;
+    private JMenuItem updateLocalRepositories;
     private JMenuItem checkForUpdates;
 
-    public FabricModManagerMenuBar(){
+    public FabricModManagerMenuBar(RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI){
         initComponents();
-        setupComponents();
+        setupComponents(repositoryManager, modRepositoryBrowserUI);
         loadComponents();
     }
 
     private void initComponents(){
         helpMenu = new JMenu();
-        checkForUpdates = new JMenuItem();
         openMinecraftLauncher = new JMenuItem();
+        updateLocalRepositories = new JMenuItem();
+        checkForUpdates = new JMenuItem();
     }
 
-    private void setupComponents(){
+    private void setupComponents(RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI){
         helpMenu.setText("Help");
+
+        openMinecraftLauncher.setText("Open Minecraft Launcher");
+        openMinecraftLauncher.addActionListener(e -> {
+            File launcher = ModUtils.findDefaultLauncherPath();
+            if(launcher.exists()){
+                try {
+                    Desktop.getDesktop().open(launcher);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+
+        updateLocalRepositories.setText("Update Local Repositories");
+        updateLocalRepositories.addActionListener(e -> {
+            new Thread(() -> {
+                for(Repository repository: repositoryManager.getRepositories()){
+                    try {
+                        repositoryManager.updateLocalRepository(repository);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+                modRepositoryBrowserUI.updateModList(repositoryManager);
+            }).start();
+        });
+
         checkForUpdates.setText("Check for Updates...");
         checkForUpdates.addActionListener(e -> {
             new Thread(() -> {
@@ -57,22 +89,11 @@ public class FabricModManagerMenuBar extends JMenuBar {
                 }
             }).start();
         });
-
-        openMinecraftLauncher.setText("Open Minecraft Launcher");
-        openMinecraftLauncher.addActionListener(e -> {
-            File launcher = ModUtils.findDefaultLauncherPath();
-            if(launcher.exists()){
-                try {
-                    Desktop.getDesktop().open(launcher);
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-            }
-        });
     }
 
     private void loadComponents(){
         helpMenu.add(openMinecraftLauncher);
+        helpMenu.add(updateLocalRepositories);
         helpMenu.add(checkForUpdates);
         this.add(helpMenu);
     }

@@ -1,9 +1,11 @@
 package me.flashyreese.fabricmm.ui.tab;
 
 import me.flashyreese.fabricmm.Application;
-import me.flashyreese.fabricmm.schema.repository.MinecraftVersion;
-import me.flashyreese.fabricmm.schema.repository.Mod;
-import me.flashyreese.fabricmm.schema.repository.ModVersion;
+import me.flashyreese.fabricmrf.Repository;
+import me.flashyreese.fabricmrf.RepositoryManager;
+import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
+import me.flashyreese.fabricmrf.schema.repository.Mod;
+import me.flashyreese.fabricmrf.schema.repository.ModVersion;
 import me.flashyreese.fabricmm.ui.components.ModList;
 import me.flashyreese.fabricmm.util.Dim2i;
 import me.flashyreese.fabricmm.util.ModUtils;
@@ -17,7 +19,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -32,15 +33,15 @@ public class ModRepositoryBrowserUI extends JPanel {
     private JLabel modVersionLabel;
     private JButton download;
 
-    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane) throws Exception {
+    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager) throws Exception {
         setLayout(null);
         setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
-        setupComponents();
+        setupComponents(repositoryManager);
         loadComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws Exception {
         searchBar = new JTextField();
         modList = new ModList();
         filterType = new JComboBox<String>();
@@ -51,9 +52,10 @@ public class ModRepositoryBrowserUI extends JPanel {
         download = new JButton();
     }
 
-    private void setupComponents() throws IOException {
+    private void setupComponents(RepositoryManager repositoryManager){
         Dim2i searchBarDim = new Dim2i(10, 10, this.getWidth() / 8 * 3 - 20, 30);
         searchBar.setBounds(searchBarDim.getOriginX(), searchBarDim.getOriginY(), searchBarDim.getWidth(), searchBarDim.getHeight());
+        updateModList(repositoryManager);
         searchBar.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent evt) {
                 modList.searchFilter(searchBar.getText(), (String)filterType.getSelectedItem());
@@ -63,9 +65,6 @@ public class ModRepositoryBrowserUI extends JPanel {
         Dim2i modFileListDim = new Dim2i(10, 50, this.getWidth() / 2 - 20, this.getHeight() - 60);
         modList.setLocation(modFileListDim.getOriginX(), modFileListDim.getOriginY());
         modList.setSize(modFileListDim.getWidth(), modFileListDim.getHeight());
-        for(Mod mod: ModUtils.getModList()){//Fixme: Disaster
-            modList.addItem(mod);
-        }
         modList.getList().addListSelectionListener(arg0 -> {
             onModFileDropListSelect();
         });
@@ -170,7 +169,7 @@ public class ModRepositoryBrowserUI extends JPanel {
         }
     }
 
-    private void downloadMod() throws MalformedURLException, FileNotFoundException {
+    private void downloadMod() throws MalformedURLException, FileNotFoundException {//Fixme: literally
         if(modList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
             Mod mod = modList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
@@ -201,4 +200,11 @@ public class ModRepositoryBrowserUI extends JPanel {
         }
     }
 
+    public void updateModList(RepositoryManager repositoryManager) {
+        modList.removeAllItems();
+        for(Mod mod: repositoryManager.getModList()){
+            modList.addItem(mod);
+        }
+        modList.refresh();
+    }
 }

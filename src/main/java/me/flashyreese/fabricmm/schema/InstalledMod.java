@@ -12,7 +12,7 @@ public class InstalledMod {
     private String[] authors;
     private HashMap<String, String> contact;
     private String environment;
-    private String minecraftVersion = "";//Need Fabric modders to include this in fabric.mod.json
+    private String minecraftVersion;//Need Fabric modders to include this in fabric.mod.json
     private String installedPath;
 
     public String getId() {
@@ -106,13 +106,15 @@ public class InstalledMod {
     }
 
     public void assignMinecraftVersion() {
-        if(isInstalledViaFMM()){
-            File installedMod = new File(this.getInstalledPath());
-            String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
-            String[] splitString = fileName.split("__");
-            setMinecraftVersion(splitString[1]);
-        }else{
-            setMinecraftVersion("Not Available!");
+        if(minecraftVersion == null){
+            if(isInstalledViaFMM()){
+                File installedMod = new File(this.getInstalledPath());
+                String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
+                String[] splitString = fileName.split("__");
+                setMinecraftVersion(splitString[1]);
+            }else{
+                setMinecraftVersion("Not Available!");
+            }
         }
     }
 }

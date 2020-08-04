@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmm.ui.components;
 
-import me.flashyreese.fabricmm.schema.repository.MinecraftVersion;
-import me.flashyreese.fabricmm.schema.repository.Mod;
+import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
+import me.flashyreese.fabricmrf.schema.repository.Mod;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
 
 import javax.swing.*;

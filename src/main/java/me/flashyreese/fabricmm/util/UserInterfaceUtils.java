@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmm.util;
 
 import me.flashyreese.fabricmm.core.ConfigurationManager;
-import me.flashyreese.fabricmm.schema.repository.Mod;
+import me.flashyreese.fabricmrf.schema.repository.Mod;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,19 +14,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserInterfaceUtils {
 
-    public static ImageIcon getIconFromURL(String s) throws IOException {
-        Image image = null;
-        URL url = new URL(s);
-        image = ImageIO.read(url);
-        return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
-    }
-
-    public static ImageIcon getImageIconFromCache(Mod mod) throws IOException {
+    public static ImageIcon getImageIconFromCache(Mod mod) throws IOException {//Fixme: baddddddddd
         File file = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR, String.format("%s.png", mod.getId()));
         if(file.exists()){
             return getIconFromFile(file);
@@ -94,15 +85,6 @@ public class UserInterfaceUtils {
         }
 
         return titleCase.toString();
-    }
-
-    public static String hashMapToString(HashMap<String, String> map){
-        StringBuilder builder = new StringBuilder();
-        //<a href=\"https://github.com/FlashyReese/\">GitHub</a>
-        for (Map.Entry<String, String> entry: map.entrySet()){
-            builder.append("<a href=\"").append(entry.getValue()).append("\">").append(entry.getKey()).append("</a>");
-        }
-        return builder.toString();
     }
 
     public static String filterEnvironment(String environment){

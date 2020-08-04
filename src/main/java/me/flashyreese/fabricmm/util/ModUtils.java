@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.schema.InstalledMod;
-import me.flashyreese.fabricmm.schema.repository.Author;
-import me.flashyreese.fabricmm.schema.repository.Mod;
+import me.flashyreese.fabricmrf.Repository;
+import me.flashyreese.fabricmrf.RepositoryManager;
+import me.flashyreese.fabricmrf.schema.repository.Author;
+import me.flashyreese.fabricmrf.schema.repository.Mod;
+import me.flashyreese.util.FileUtil;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -105,91 +108,12 @@ public class ModUtils {
     public static InstalledMod changeInstalledModState(InstalledMod installedMod){
         File newFile;
         if(installedMod.isEnabled()){
-            newFile = changeExtension(new File(installedMod.getInstalledPath()), "fabricmod");
+            newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "fabricmod");
         }else{
-            newFile = changeExtension(new File(installedMod.getInstalledPath()), "jar");
+            newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "jar");
         }
         installedMod.setInstalledPath(newFile.getAbsolutePath());
         return installedMod;
-    }
-
-    public static File changeExtension(File file, String extension) {
-        String filename = file.getName();
-
-        if (filename.contains(".")) {
-            filename = filename.substring(0, filename.lastIndexOf('.'));
-        }
-        filename += "." + extension;
-
-        File newFile = file;
-        if(file.renameTo(new File(file.getParentFile(), filename))){
-            newFile = new File(file.getParentFile(), filename);
-        }
-        return newFile;
-    }
-
-
-    public static List<Author> getAuthors() throws FileNotFoundException {
-        return new Gson().fromJson(new FileReader("repo.json"), new TypeToken<List<Author>>(){}.getType());
-    }
-
-    public static List<Mod> getModList() throws IOException {
-        List<Mod> modList = new ArrayList<Mod>();
-        for(Author author:  getAuthorsFromRepositories()){
-            for (Mod mod: author.getMods()){
-                mod.setAuthor(author);
-                modList.add(mod);
-            }
-        }
-        return modList;
-    }
-
-    public static List<Author> getAuthorsFromRepository(String repositoryUrl) throws IOException {
-        List<Author> authors = new ArrayList<Author>();
-        URL url = new URL(repositoryUrl);
-        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-        String json = in.lines().collect(Collectors.joining());
-        in.close();
-        List<String> listOfAuthors = new Gson().fromJson(json, new TypeToken<List<String>>(){}.getType());
-        for(String authorUrl: listOfAuthors){
-            URL url2 = new URL(authorUrl);
-            BufferedReader in2 = new BufferedReader(new InputStreamReader(url2.openStream()));
-            String json2 = in2.lines().collect(Collectors.joining());
-            Author author = new Gson().fromJson(json2, Author.class);
-            authors.add(author);
-        }
-        return authors;
-    }
-
-    public static List<Author> getAuthorsFromRepositories() throws IOException {
-        List<Author> authors = new ArrayList<Author>();
-        ArrayList<String> repositories = ConfigurationManager.getInstance().getRepositories();
-        for(String url: repositories){
-            authors.addAll(getAuthorsFromRepository(url));
-        }
-        return authors;
-    }
-
-    private static int getFileSize(URL url) {
-        URLConnection conn = null;
-        try {
-            conn = url.openConnection();
-            if(conn instanceof HttpURLConnection) {
-                ((HttpURLConnection)conn).setRequestMethod("HEAD");
-            }
-            conn.getInputStream();
-            return conn.getContentLength();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if(conn instanceof HttpURLConnection) {
-                ((HttpURLConnection)conn).disconnect();
-            }
-        }
-    }
-
-    public static boolean isAuthorUpToDate(String url, File author) throws MalformedURLException {
-        return author.length() == getFileSize(new URL(url));
     }
 
 }
