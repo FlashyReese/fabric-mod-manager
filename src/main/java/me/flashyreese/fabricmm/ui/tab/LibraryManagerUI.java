@@ -107,6 +107,7 @@ public class LibraryManagerUI extends JPanel {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
+            installedModFileDropList.refresh();
         });
 
         Dim2i toggleInstalledModStateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 40, this.getWidth() / 2 - 30, 30);

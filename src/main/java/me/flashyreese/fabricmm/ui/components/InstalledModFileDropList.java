@@ -37,7 +37,7 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
      */
     public InstalledModFileDropList() {
         setLayout(null);
-        listModel = new DefaultListModel<InstalledMod>();//Todo: filter list properly
+        listModel = new DefaultListModel<InstalledMod>();
         list = new JList<InstalledMod>();
         new DropTarget(list, this);
         list.setModel(listModel);
@@ -169,6 +169,7 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
             e.printStackTrace();
         } finally {
             evt.dropComplete(true);
+            refresh();
         }
     }
 }
