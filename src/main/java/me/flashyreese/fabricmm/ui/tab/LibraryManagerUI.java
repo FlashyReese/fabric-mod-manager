@@ -26,11 +26,13 @@ public class LibraryManagerUI extends JPanel {
 
     private JPanel modInfoPanel;
     private JLabel modNameLabel;
+    private JLabel modMinecraftVersionLabel;
     private JLabel modVersionLabel;
     private JLabel modIdLabel;
     private JLabel modAuthorsLabel;
     private JLabel modEnvironmentLabel;
     private JLabel modName;
+    private JLabel modMinecraftVersion;
     private JLabel modVersion;
     private JLabel modId;
     private JLabel modAuthors;
@@ -57,11 +59,13 @@ public class LibraryManagerUI extends JPanel {
 
         modInfoPanel = new JPanel();
         modNameLabel = new JLabel();
+        modMinecraftVersionLabel = new JLabel();
         modVersionLabel = new JLabel();
         modIdLabel = new JLabel();
         modAuthorsLabel = new JLabel();
         modEnvironmentLabel = new JLabel();
         modName = new JLabel();
+        modMinecraftVersion = new JLabel();
         modVersion = new JLabel();
         modId = new JLabel();
         modAuthors = new JLabel();
@@ -110,7 +114,6 @@ public class LibraryManagerUI extends JPanel {
         toggleInstalledModState.addActionListener(e -> {
             if(installedModFileDropList.getSelectedValue() != null){
                 ModUtils.changeInstalledModState(installedModFileDropList.getSelectedValue());
-                this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? "Disable" : "Enable");
                 this.installedModFileDropList.refresh();
             }
         });
@@ -154,37 +157,44 @@ public class LibraryManagerUI extends JPanel {
         modNameLabel.setBounds(10, 10, labelWidth, 12);
         modNameLabel.setFont(labelFont);
         modNameLabel.setText("Name:");
-        modVersionLabel.setBounds(10, 40, labelWidth, 12);
+        modMinecraftVersionLabel.setBounds(10, 40, labelWidth, 12);
+        modMinecraftVersionLabel.setFont(labelFont);
+        modMinecraftVersionLabel.setText("Minecraft Version:");
+        modVersionLabel.setBounds(10, 70, labelWidth, 12);
         modVersionLabel.setFont(labelFont);
         modVersionLabel.setText("Version:");
-        modIdLabel.setBounds(10, 70, labelWidth, 12);
+        modIdLabel.setBounds(10, 100, labelWidth, 12);
         modIdLabel.setFont(labelFont);
         modIdLabel.setText("ID:");
-        modAuthorsLabel.setBounds(10, 100, labelWidth, 12);
+        modAuthorsLabel.setBounds(10, 130, labelWidth, 12);
         modAuthorsLabel.setFont(labelFont);
         modAuthorsLabel.setText("Authors:");
-        modEnvironmentLabel.setBounds(10, 130, labelWidth, 12);
+        modEnvironmentLabel.setBounds(10, 160, labelWidth, 12);
         modEnvironmentLabel.setFont(labelFont);
         modEnvironmentLabel.setText("Environment:");
         modName.setBounds(15, 25, labelWidth, 12);
         modName.setFont(modLabelFont);
-        modVersion.setBounds(15, 55, labelWidth, 12);
+        modMinecraftVersion.setBounds(15, 55, labelWidth, 12);
+        modMinecraftVersion.setFont(modLabelFont);
+        modVersion.setBounds(15, 85, labelWidth, 12);
         modVersion.setFont(modLabelFont);
-        modId.setBounds(15, 85, labelWidth, 12);
+        modId.setBounds(15, 115, labelWidth, 12);
         modId.setFont(modLabelFont);
-        modAuthors.setBounds(15, 115, labelWidth, 12);
+        modAuthors.setBounds(15, 145, labelWidth, 12);
         modAuthors.setFont(modLabelFont);
-        modEnvironment.setBounds(15, 145, labelWidth, 12);
+        modEnvironment.setBounds(15, 175, labelWidth, 12);
         modEnvironment.setFont(modLabelFont);
     }
 
     private void loadComponents(){
         modInfoPanel.add(modNameLabel);
+        modInfoPanel.add(modMinecraftVersionLabel);
         modInfoPanel.add(modVersionLabel);
         modInfoPanel.add(modIdLabel);
         modInfoPanel.add(modAuthorsLabel);
         modInfoPanel.add(modEnvironmentLabel);
         modInfoPanel.add(modName);
+        modInfoPanel.add(modMinecraftVersion);
         modInfoPanel.add(modVersion);
         modInfoPanel.add(modId);
         modInfoPanel.add(modAuthors);
@@ -211,6 +221,7 @@ public class LibraryManagerUI extends JPanel {
             this.modIssues.setEnabled(installedModFileDropList.getSelectedValue().getContact().containsKey("sources"));
             InstalledMod selectedMod = installedModFileDropList.getSelectedValue();
             this.modName.setText(selectedMod.getName());
+            this.modMinecraftVersion.setText(selectedMod.getMinecraftVersion());
             this.modVersion.setText(selectedMod.getVersion());
             this.modId.setText(selectedMod.getId());
             this.modAuthors.setText(UserInterfaceUtils.getEnglishStringList(selectedMod.getAuthors()));
@@ -222,6 +233,7 @@ public class LibraryManagerUI extends JPanel {
             this.modWebsite.setEnabled(false);
             this.modIssues.setEnabled(false);
             this.modName.setText("None selected!");
+            this.modMinecraftVersion.setText("None selected!");
             this.modVersion.setText("None selected!");
             this.modId.setText("None selected!");
             this.modAuthors.setText("None selected!");

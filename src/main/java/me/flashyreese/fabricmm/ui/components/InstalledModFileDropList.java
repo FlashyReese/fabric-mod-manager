@@ -1,6 +1,7 @@
 package me.flashyreese.fabricmm.ui.components;
 
 import me.flashyreese.fabricmm.schema.InstalledMod;
+import me.flashyreese.fabricmm.schema.repository.Mod;
 import me.flashyreese.fabricmm.util.ModUtils;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
 
@@ -87,22 +88,27 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
     }
 
     public void refresh() {
-        List<InstalledMod> installedModsEnabled = new ArrayList<InstalledMod>();
-        List<InstalledMod> installedModsDisabled = new ArrayList<InstalledMod>();
-        for(int i = 0; i < listModel.size(); i++){
-            InstalledMod currentMod = listModel.elementAt(i);
-            if(currentMod.isEnabled()){
-                installedModsEnabled.add(currentMod);
-            }else{
-                installedModsDisabled.add(currentMod);
+        filterListModel();
+        list.repaint();
+    }
+
+    public void filterListModel(){
+        DefaultListModel<InstalledMod> filteredItems = new DefaultListModel<InstalledMod>();
+        ArrayList<InstalledMod> listMods = new ArrayList<InstalledMod>(listModel.getSize());
+        for (int i = 0; i < listModel.getSize(); i++) {
+            listMods.add(listModel.getElementAt(i));
+        }
+        for (InstalledMod mod: listMods){
+            if (mod.isEnabled()){
+                filteredItems.addElement(mod);
             }
         }
-        listModel.removeAllElements();
-        List<InstalledMod> newList = Stream.concat(installedModsEnabled.stream(), installedModsDisabled.stream()).collect(Collectors.toList());
-        for(InstalledMod installedMod: newList){
-            listModel.addElement(installedMod);
+        for (InstalledMod mod: listMods){
+            if (!mod.isEnabled()){
+                filteredItems.addElement(mod);
+            }
         }
-        list.repaint();
+        list.setModel(filteredItems);
     }
 
     public void addItem(InstalledMod p) {

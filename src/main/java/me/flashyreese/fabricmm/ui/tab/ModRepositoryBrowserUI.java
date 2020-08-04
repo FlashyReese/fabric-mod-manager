@@ -175,7 +175,7 @@ public class ModRepositoryBrowserUI extends JPanel {
             Mod mod = modList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
             ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies and refresh library listmodel
-            File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), String.format("%s-%s-%s.jar", mod.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()));
+            File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), String.format("%s__%s__%s.jar", mod.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()));
             DownloadTask task = new DownloadTask(new URL(modVer.getModUrl()), new FileOutputStream(fileName), new DownloadListener() {
 
                 String fname;

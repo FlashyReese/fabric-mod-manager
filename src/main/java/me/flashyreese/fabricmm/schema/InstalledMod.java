@@ -1,5 +1,6 @@
 package me.flashyreese.fabricmm.schema;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class InstalledMod {
@@ -96,5 +97,22 @@ public class InstalledMod {
 
     public boolean isEnabled(){
         return this.getInstalledPath().endsWith(".jar");
+    }
+
+    private boolean isInstalledViaFMM(){
+        File installedMod = new File(this.getInstalledPath());
+        String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
+        return fileName.contains("__") && fileName.split("__").length == 3;
+    }
+
+    public void assignMinecraftVersion() {
+        if(isInstalledViaFMM()){
+            File installedMod = new File(this.getInstalledPath());
+            String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
+            String[] splitString = fileName.split("__");
+            setMinecraftVersion(splitString[1]);
+        }else{
+            setMinecraftVersion("Not Available!");
+        }
     }
 }

@@ -48,6 +48,7 @@ public class ModUtils {
                 }
                 installedMod.setIconPath(iconFile.getAbsolutePath());
                 installedMod.setInstalledPath(file.getAbsolutePath());
+                installedMod.assignMinecraftVersion();
             }
         }
         jarFile.close();
