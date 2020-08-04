@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class Application {
 
-    private static final Semver VERSION = new Semver("0.0.3-SNAPSHOT+build-20200801",Semver.SemverType.STRICT);
+    private static final Semver VERSION = new Semver("0.0.3-SNAPSHOT+build-20200804",Semver.SemverType.STRICT);
     public static final DirectDownloader DIRECT_DOWNLOADER = new DirectDownloader();
 
     public static void main(String[] args) throws InterruptedException {
