@@ -20,10 +20,14 @@ import java.util.stream.Collectors;
 
 public class FabricModManagerMenuBar extends JMenuBar {
 
+
+    private JMenu quickToolsMenu;
+    private JMenu repositoryMenu;
     private JMenu helpMenu;
     private JMenuItem openMinecraftLauncher;
     private JMenuItem updateLocalRepositories;
     private JMenuItem checkForUpdates;
+    private JMenuItem about;
 
     public FabricModManagerMenuBar(RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI){
         initComponents();
@@ -32,14 +36,17 @@ public class FabricModManagerMenuBar extends JMenuBar {
     }
 
     private void initComponents(){
+        quickToolsMenu = new JMenu();
+        repositoryMenu = new JMenu();
         helpMenu = new JMenu();
         openMinecraftLauncher = new JMenuItem();
         updateLocalRepositories = new JMenuItem();
         checkForUpdates = new JMenuItem();
+        about = new JMenuItem();
     }
 
     private void setupComponents(RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI){
-        helpMenu.setText("Help");
+        quickToolsMenu.setText("Quick Tools");
 
         openMinecraftLauncher.setText("Open Minecraft Launcher");
         openMinecraftLauncher.addActionListener(e -> {
@@ -53,48 +60,57 @@ public class FabricModManagerMenuBar extends JMenuBar {
             }
         });
 
+        repositoryMenu.setText("Repository");
+
         updateLocalRepositories.setText("Update Local Repositories");
-        updateLocalRepositories.addActionListener(e -> {
-            new Thread(() -> {
-                for(Repository repository: repositoryManager.getRepositories()){
-                    try {
-                        repositoryManager.updateLocalRepository(repository);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
+        updateLocalRepositories.addActionListener(e -> new Thread(() -> {
+            for(Repository repository: repositoryManager.getRepositories()){
+                try {
+                    repositoryManager.updateLocalRepository(repository);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
-                modRepositoryBrowserUI.updateModList(repositoryManager);
-            }).start();
-        });
+            }
+            modRepositoryBrowserUI.updateModList(repositoryManager);
+        }).start());
+
+        helpMenu.setText("Help");
 
         checkForUpdates.setText("Check for Updates...");
-        checkForUpdates.addActionListener(e -> {
-            new Thread(() -> {
-                try{
-                    URL url = new URL("https://api.github.com/repos/FlashyReese/fabric-mod-manager/releases");
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    String json = in.lines().collect(Collectors.joining());
-                    in.close();
-                    JSONArray jsonArray = new JSONArray(json);
-                    if(!jsonArray.isEmpty()){
-                        Semver latest = new Semver(jsonArray.getJSONObject(0).getString("tag_name"), Semver.SemverType.STRICT);
-                        if(Application.getVersion().isLowerThan(latest)){
-                            Desktop.getDesktop().browse(new URI("https://github.com/FlashyReese/fabric-mod-manager/releases"));
-                        }else{
-                            JOptionPane.showMessageDialog(null, "Up to date!");
-                        }
+        checkForUpdates.addActionListener(e -> new Thread(() -> {
+            try{
+                URL url = new URL("https://api.github.com/repos/FlashyReese/fabric-mod-manager/releases");
+                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                String json = in.lines().collect(Collectors.joining());
+                in.close();
+                JSONArray jsonArray = new JSONArray(json);
+                if(!jsonArray.isEmpty()){
+                    Semver latest = new Semver(jsonArray.getJSONObject(0).getString("tag_name"), Semver.SemverType.STRICT);
+                    if(Application.getVersion().isLowerThan(latest)){
+                        Desktop.getDesktop().browse(new URI("https://github.com/FlashyReese/fabric-mod-manager/releases"));
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Up to date!");
                     }
-                }catch (Exception ex){
-                    ex.printStackTrace();
                 }
-            }).start();
-        });
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }).start());
+
+        about.setText("About");
+        about.addActionListener(e -> JOptionPane.showMessageDialog(null, new MessageWithLink(
+                String.format("Fabric Mod Manager %s <br><p>Source can be found at " +
+                        "<a href=\"https://github.com/FlashyReese/fabric-mod-manager\">GitHub</a></p></br>",
+                        Application.getVersion().toString()))));
     }
 
     private void loadComponents(){
-        helpMenu.add(openMinecraftLauncher);
-        helpMenu.add(updateLocalRepositories);
+        quickToolsMenu.add(openMinecraftLauncher);
+        repositoryMenu.add(updateLocalRepositories);
         helpMenu.add(checkForUpdates);
+        helpMenu.add(about);
+        this.add(quickToolsMenu);
+        this.add(repositoryMenu);
         this.add(helpMenu);
     }
 }

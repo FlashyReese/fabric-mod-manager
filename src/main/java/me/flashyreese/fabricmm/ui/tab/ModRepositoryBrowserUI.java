@@ -33,11 +33,11 @@ public class ModRepositoryBrowserUI extends JPanel {
     private JLabel modVersionLabel;
     private JButton download;
 
-    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager) throws Exception {
+    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager, TrayIcon trayIcon) throws Exception {
         setLayout(null);
         setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
-        setupComponents(repositoryManager);
+        setupComponents(repositoryManager, trayIcon);
         loadComponents();
     }
 
@@ -52,7 +52,7 @@ public class ModRepositoryBrowserUI extends JPanel {
         download = new JButton();
     }
 
-    private void setupComponents(RepositoryManager repositoryManager){
+    private void setupComponents(RepositoryManager repositoryManager, TrayIcon trayIcon){
         Dim2i searchBarDim = new Dim2i(10, 10, this.getWidth() / 8 * 3 - 20, 30);
         searchBar.setBounds(searchBarDim.getOriginX(), searchBarDim.getOriginY(), searchBarDim.getWidth(), searchBarDim.getHeight());
         updateModList(repositoryManager);
@@ -115,7 +115,7 @@ public class ModRepositoryBrowserUI extends JPanel {
         download.setText("Download");
         download.addActionListener(e -> {
             try {
-                downloadMod();
+                downloadMod(trayIcon);
             } catch (MalformedURLException | FileNotFoundException malformedURLException) {
                 malformedURLException.printStackTrace();
             }
@@ -169,7 +169,7 @@ public class ModRepositoryBrowserUI extends JPanel {
         }
     }
 
-    private void downloadMod() throws MalformedURLException, FileNotFoundException {//Fixme: literally
+    private void downloadMod(TrayIcon trayIcon) throws MalformedURLException, FileNotFoundException {//Fixme: literally
         if(modList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
             Mod mod = modList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
@@ -189,7 +189,7 @@ public class ModRepositoryBrowserUI extends JPanel {
 
                 public void onComplete() {
                     System.out.println( fname + " downloaded" );
-                    //Todo: add something here xd
+                    trayIcon.displayMessage(String.format("%s %s for Minecraft %s", mod.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()), "Download Complete!", TrayIcon.MessageType.INFO);
                 }
 
                 public void onCancel() {

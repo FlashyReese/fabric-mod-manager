@@ -46,7 +46,7 @@ public class ModList extends JPanel {
 
     }
 
-    public void searchFilter(String searchTerm, String type){//Fixme: really jank
+    public void searchFilter(String searchTerm, String type){//Fixme: really jank, might include descriptions in general search
         DefaultListModel<Mod> filteredItems = new DefaultListModel<Mod>();
         ArrayList<Mod> listMods = new ArrayList<Mod>(listModel.getSize());
         for (int i = 0; i < listModel.getSize(); i++) {

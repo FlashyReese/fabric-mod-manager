@@ -29,16 +29,20 @@ public class UserInterfaceUtils {
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                 }
+                return getIconFromFile(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        return getIconFromFile(file);
+        return getIconFromImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("icon.png")));
     }
 
     public static ImageIcon getIconFromFile(File file) throws IOException {
         Image image = ImageIO.read(file);
+        return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
+    }
+
+    public static ImageIcon getIconFromImage(Image image){
         return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
     }
 

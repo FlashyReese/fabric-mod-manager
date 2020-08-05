@@ -8,7 +8,7 @@ public class InstalledMod {
     private String name;
     private String version;
     private String description;
-    private String iconPath;//Cached Locally
+    private String iconPath;
     private String[] authors;
     private HashMap<String, String> contact;
     private String environment;
@@ -19,16 +19,8 @@ public class InstalledMod {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getVersion() {
@@ -43,10 +35,6 @@ public class InstalledMod {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getIconPath() {
         return iconPath;
     }
@@ -59,24 +47,12 @@ public class InstalledMod {
         return authors;
     }
 
-    public void setAuthors(String[] authors) {
-        this.authors = authors;
-    }
-
     public HashMap<String, String> getContact() {
         return contact;
     }
 
-    public void setContact(HashMap<String, String> contact) {
-        this.contact = contact;
-    }
-
     public String getEnvironment() {
         return environment;
-    }
-
-    public void setEnvironment(String environment) {
-        this.environment = environment;
     }
 
     public String getMinecraftVersion() {

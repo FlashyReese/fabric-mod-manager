@@ -16,6 +16,8 @@ public class FabricModManagerUI extends JFrame {
     private JTabbedPane contentPane;
     private LibraryManagerUI library;
     private ModRepositoryBrowserUI modBrowser;
+    private SystemTray tray;
+    private TrayIcon trayIcon;
     //private DownloadManagerUI downloadManager;
 
     public FabricModManagerUI() throws Exception {
@@ -32,6 +34,9 @@ public class FabricModManagerUI extends JFrame {
     }
 
     private void initComponents() throws Exception {
+        tray = SystemTray.getSystemTray();
+        trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), "Fabric Mod Manager");
+
         repositoryManager = new RepositoryManager(ConfigurationManager.getInstance().REPOSITORY_CACHE_DIR, ConfigurationManager.getInstance().getRepositories());
         contentPane = new JTabbedPane();
         //Fixme: Jank
@@ -39,7 +44,7 @@ public class FabricModManagerUI extends JFrame {
         contentPane.setPreferredSize(new Dimension(854, 480));
 
         library = new LibraryManagerUI(contentPane);
-        modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager);
+        modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, trayIcon);
         //downloadManager = new DownloadManagerUI(contentPane);
     }
 
@@ -48,9 +53,13 @@ public class FabricModManagerUI extends JFrame {
         contentPane.addTab("Library", library); //Fixme: Panel Scaling macOS looks chopped off
         contentPane.addTab("Browse Mods", modBrowser);
         //contentPane.addTab("Download Manager", downloadManager);
+
+        trayIcon.setImageAutoSize(true);
+        //trayIcon.setToolTip("");
     }
 
-    private void loadComponents(){
+    private void loadComponents() throws AWTException {
+        tray.add(trayIcon);
         setContentPane(contentPane);
         setJMenuBar(new FabricModManagerMenuBar(repositoryManager, modBrowser));
     }
