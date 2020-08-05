@@ -9,10 +9,10 @@ import java.awt.*;
 
 public class Application {
 
-    private static final Semver VERSION = new Semver("0.0.4-SNAPSHOT+build-20200804",Semver.SemverType.STRICT);
+    private static final Semver VERSION = new Semver("0.0.5-SNAPSHOT+build-20200804",Semver.SemverType.STRICT);
     public static final DirectDownloader DIRECT_DOWNLOADER = new DirectDownloader();
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {

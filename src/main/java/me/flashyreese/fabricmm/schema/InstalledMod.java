@@ -1,5 +1,7 @@
 package me.flashyreese.fabricmm.schema;
 
+import me.flashyreese.common.i18n.TranslatableText;
+
 import java.io.File;
 import java.util.HashMap;
 
@@ -89,7 +91,7 @@ public class InstalledMod {
                 String[] splitString = fileName.split("__");
                 setMinecraftVersion(splitString[1]);
             }else{
-                setMinecraftVersion("Not Available!");
+                setMinecraftVersion(new TranslatableText("fmm.installed_mod.minecraft_version.not_available").toString());
             }
         }
     }

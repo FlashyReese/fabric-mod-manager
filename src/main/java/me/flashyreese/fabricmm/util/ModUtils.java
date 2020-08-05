@@ -1,21 +1,12 @@
 package me.flashyreese.fabricmm.util;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.schema.InstalledMod;
-import me.flashyreese.fabricmrf.Repository;
-import me.flashyreese.fabricmrf.RepositoryManager;
-import me.flashyreese.fabricmrf.schema.repository.Author;
-import me.flashyreese.fabricmrf.schema.repository.Mod;
-import me.flashyreese.util.FileUtil;
+import me.flashyreese.common.util.FileUtil;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;

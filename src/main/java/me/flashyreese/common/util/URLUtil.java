@@ -1,4 +1,4 @@
-package me.flashyreese.util;
+package me.flashyreese.common.util;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

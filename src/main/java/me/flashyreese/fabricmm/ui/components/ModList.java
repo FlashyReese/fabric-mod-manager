@@ -1,5 +1,7 @@
 package me.flashyreese.fabricmm.ui.components;
 
+import me.flashyreese.common.i18n.ParsableTranslatableText;
+import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
 import me.flashyreese.fabricmrf.schema.repository.Mod;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
@@ -33,7 +35,7 @@ public class ModList extends JPanel {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    renderer.setText(String.format("%s by %s", mod.getName(), mod.getAuthor().getName()));
+                    renderer.setText(new ParsableTranslatableText("fmm.mod_browser.mod_list.label", mod.getName(), mod.getAuthor().getName()).toString());
                     renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", mod.getDescription()));
                 }
 
@@ -56,7 +58,7 @@ public class ModList extends JPanel {
             list.setModel(listModel);
             return;
         }
-        if(type.equals("General")){
+        if(type.equals(new TranslatableText("fmm.mod_browser.filter.general").toString())){
             for (Mod mod: listMods){
                 if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase()) || mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
                     if(!filteredItems.contains(mod)){
@@ -73,15 +75,15 @@ public class ModList extends JPanel {
             }
         }else{
             for (Mod mod: listMods){
-                if(type.equals("Name")){
+                if(type.equals(new TranslatableText("fmm.mod_browser.filter.name").toString())){
                     if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase())){
                         filteredItems.addElement(mod);
                     }
-                }else if(type.equals("Author")){
+                }else if(type.equals(new TranslatableText("fmm.mod_browser.filter.author").toString())){
                     if (mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
                         filteredItems.addElement(mod);
                     }
-                }else if(type.equals("Minecraft Version")){
+                }else if(type.equals(new TranslatableText("fmm.mod_browser.filter.minecraft_version").toString())){
                     for (MinecraftVersion minecraftVersion: mod.getMinecraftVersions()){
                         if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
                             if(!filteredItems.contains(mod)){

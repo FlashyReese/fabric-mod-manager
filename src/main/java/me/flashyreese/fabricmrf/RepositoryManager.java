@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import me.flashyreese.fabricmrf.schema.repository.Author;
 import me.flashyreese.fabricmrf.schema.repository.Mod;
-import me.flashyreese.util.FileUtil;
-import me.flashyreese.util.URLUtil;
+import me.flashyreese.common.util.FileUtil;
+import me.flashyreese.common.util.URLUtil;
 
 import java.io.*;
 import java.net.MalformedURLException;

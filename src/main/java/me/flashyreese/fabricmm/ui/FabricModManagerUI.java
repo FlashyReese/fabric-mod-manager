@@ -1,5 +1,7 @@
 package me.flashyreese.fabricmm.ui;
 
+import me.flashyreese.common.i18n.I18nManager;
+import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.components.FabricModManagerMenuBar;
 import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
@@ -8,10 +10,11 @@ import me.flashyreese.fabricmrf.RepositoryManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 
 public class FabricModManagerUI extends JFrame {
 
-
+    private I18nManager i18nManager;
     private RepositoryManager repositoryManager;
     private JTabbedPane contentPane;
     private LibraryManagerUI library;
@@ -23,7 +26,7 @@ public class FabricModManagerUI extends JFrame {
     public FabricModManagerUI() throws Exception {
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Fabric Mod Manager");
+        setTitle(new TranslatableText("fmm.title").toString());
         setLayout(null);
         setResizable(false);
         setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("icon.png")));
@@ -34,8 +37,10 @@ public class FabricModManagerUI extends JFrame {
     }
 
     private void initComponents() throws Exception {
+        i18nManager = new I18nManager("assets/lang");
+        i18nManager.setLocale(Locale.US);
         tray = SystemTray.getSystemTray();
-        trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), "Fabric Mod Manager");
+        trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), new TranslatableText("fmm.title").toString());
 
         repositoryManager = new RepositoryManager(ConfigurationManager.getInstance().REPOSITORY_CACHE_DIR, ConfigurationManager.getInstance().getRepositories());
         contentPane = new JTabbedPane();
@@ -50,8 +55,8 @@ public class FabricModManagerUI extends JFrame {
 
     private void setupComponents() {
         contentPane.updateUI();
-        contentPane.addTab("Library", library); //Fixme: Panel Scaling macOS looks chopped off
-        contentPane.addTab("Browse Mods", modBrowser);
+        contentPane.addTab(new TranslatableText("fmm.library").toString(), library); //Fixme: Panel Scaling macOS looks chopped off
+        contentPane.addTab(new TranslatableText("fmm.mod_browser").toString(), modBrowser);
         //contentPane.addTab("Download Manager", downloadManager);
 
         trayIcon.setImageAutoSize(true);

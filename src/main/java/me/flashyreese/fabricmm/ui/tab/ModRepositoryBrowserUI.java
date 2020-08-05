@@ -1,5 +1,7 @@
 package me.flashyreese.fabricmm.ui.tab;
 
+import me.flashyreese.common.i18n.ParsableTranslatableText;
+import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmrf.Repository;
 import me.flashyreese.fabricmrf.RepositoryManager;
@@ -71,14 +73,14 @@ public class ModRepositoryBrowserUI extends JPanel {
 
         Dim2i searchTypeDim = new Dim2i(this.getWidth() / 8 * 3, 10, this.getWidth() / 8 - 10, 30);
         filterType.setBounds(searchTypeDim.getOriginX(), searchTypeDim.getOriginY(), searchTypeDim.getWidth(), searchTypeDim.getHeight());
-        filterType.addItem("General");
-        filterType.addItem("Name");
-        filterType.addItem("Author");
-        filterType.addItem("Minecraft Version");
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.general").toString());
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.name").toString());
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.author").toString());
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.minecraft_version").toString());
 
         Font labelFont = new Font("Tahoma", Font.BOLD, 12);
         minecraftVersionLabel.setBounds(this.getWidth() / 2, this.getHeight() - 120, this.getWidth() / 4, 30);
-        minecraftVersionLabel.setText("Minecraft Version");
+        minecraftVersionLabel.setText(new TranslatableText("fmm.mod_browser.minecraft_version").toString());
         minecraftVersionLabel.setFont(labelFont);
         Dim2i minecraftVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 120, this.getWidth() / 4, 30);
         minecraftVersion.setBounds(minecraftVersionDim.getOriginX(), minecraftVersionDim.getOriginY(), minecraftVersionDim.getWidth(), minecraftVersionDim.getHeight());
@@ -96,7 +98,7 @@ public class ModRepositoryBrowserUI extends JPanel {
         });
 
         modVersionLabel.setBounds(this.getWidth() / 2, this.getHeight() - 80, this.getWidth() / 4, 30);
-        modVersionLabel.setText("Mod Version");
+        modVersionLabel.setText(new TranslatableText("fmm.mod_browser.mod_version").toString());
         modVersionLabel.setFont(labelFont);
         Dim2i modVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 80, this.getWidth() / 4, 30);
         modVersion.setBounds(modVersionDim.getOriginX(), modVersionDim.getOriginY(), modVersionDim.getWidth(), modVersionDim.getHeight());
@@ -112,7 +114,7 @@ public class ModRepositoryBrowserUI extends JPanel {
 
         Dim2i downloadDim = new Dim2i(this.getWidth() / 2, this.getHeight() - 40, this.getWidth() / 2 - 10, 30);
         download.setBounds(downloadDim.getOriginX(), downloadDim.getOriginY(), downloadDim.getWidth(), downloadDim.getHeight());
-        download.setText("Download");
+        download.setText(new TranslatableText("fmm.mod_browser.download").toString());
         download.addActionListener(e -> {
             try {
                 downloadMod(trayIcon);
@@ -176,24 +178,19 @@ public class ModRepositoryBrowserUI extends JPanel {
             ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies and refresh library listmodel
             File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), String.format("%s__%s__%s.jar", mod.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()));
             DownloadTask task = new DownloadTask(new URL(modVer.getModUrl()), new FileOutputStream(fileName), new DownloadListener() {
-
-                String fname;
-
                 public void onUpdate(int bytes, int totalDownloaded) {
                 }
 
-                public void onStart(String fname, int size) {
-                    this.fname = fname;
-                    System.out.println( "Downloading " + fname + " of size " + size );
+                public void onStart(String fileName, int size) {
                 }
 
                 public void onComplete() {
-                    System.out.println( fname + " downloaded" );
-                    trayIcon.displayMessage(String.format("%s %s for Minecraft %s", mod.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()), "Download Complete!", TrayIcon.MessageType.INFO);
+                    trayIcon.displayMessage(new ParsableTranslatableText("fmm.mod_browser.tray_icon.download_complete.caption",
+                            mod.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()).toString(),
+                            new TranslatableText("fmm.mod_browser.tray_icon.download_complete.text").toString(), TrayIcon.MessageType.INFO);
                 }
 
                 public void onCancel() {
-                    System.out.println( fname + " cancelled" );
                 }
             });
             Application.DIRECT_DOWNLOADER.download(task);

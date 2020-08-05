@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmm.core;
 
 import com.google.gson.reflect.TypeToken;
-import me.flashyreese.util.FileUtil;
+import me.flashyreese.common.util.FileUtil;
 
 import java.io.*;
 import java.util.ArrayList;

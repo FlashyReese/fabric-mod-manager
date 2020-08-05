@@ -1,6 +1,7 @@
 package me.flashyreese.fabricmm.ui.components;
 
 import com.vdurmont.semver4j.Semver;
+import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 import me.flashyreese.fabricmm.util.ModUtils;
@@ -46,9 +47,9 @@ public class FabricModManagerMenuBar extends JMenuBar {
     }
 
     private void setupComponents(RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI){
-        quickToolsMenu.setText("Quick Tools");
+        quickToolsMenu.setText(new TranslatableText("fmm.menubar.quick_tools").toString());
 
-        openMinecraftLauncher.setText("Open Minecraft Launcher");
+        openMinecraftLauncher.setText(new TranslatableText("fmm.menubar.quick_tools.open_minecraft_launcher").toString());
         openMinecraftLauncher.addActionListener(e -> {
             File launcher = ModUtils.findDefaultLauncherPath();
             if(launcher.exists()){
@@ -60,9 +61,9 @@ public class FabricModManagerMenuBar extends JMenuBar {
             }
         });
 
-        repositoryMenu.setText("Repository");
+        repositoryMenu.setText(new TranslatableText("fmm.menubar.repository").toString());
 
-        updateLocalRepositories.setText("Update Local Repositories");
+        updateLocalRepositories.setText(new TranslatableText("fmm.menubar.repository.update_local_repositories").toString());
         updateLocalRepositories.addActionListener(e -> new Thread(() -> {
             for(Repository repository: repositoryManager.getRepositories()){
                 try {
@@ -74,9 +75,9 @@ public class FabricModManagerMenuBar extends JMenuBar {
             modRepositoryBrowserUI.updateModList(repositoryManager);
         }).start());
 
-        helpMenu.setText("Help");
+        helpMenu.setText(new TranslatableText("fmm.menubar.help").toString());
 
-        checkForUpdates.setText("Check for Updates...");
+        checkForUpdates.setText(new TranslatableText("fmm.menubar.help.check_for_updates").toString());
         checkForUpdates.addActionListener(e -> new Thread(() -> {
             try{
                 URL url = new URL("https://api.github.com/repos/FlashyReese/fabric-mod-manager/releases");
@@ -89,7 +90,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
                     if(Application.getVersion().isLowerThan(latest)){
                         Desktop.getDesktop().browse(new URI("https://github.com/FlashyReese/fabric-mod-manager/releases"));
                     }else{
-                        JOptionPane.showMessageDialog(null, "Up to date!");
+                        JOptionPane.showMessageDialog(null, new TranslatableText("fmm.menubar.help.check_for_updates.up_to_date").toString());
                     }
                 }
             }catch (Exception ex){
@@ -97,7 +98,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
             }
         }).start());
 
-        about.setText("About");
+        about.setText(new TranslatableText("fmm.menubar.help.about").toString());
         about.addActionListener(e -> JOptionPane.showMessageDialog(null, new MessageWithLink(
                 String.format("Fabric Mod Manager %s <br><p>Source can be found at " +
                         "<a href=\"https://github.com/FlashyReese/fabric-mod-manager\">GitHub</a></p></br>",

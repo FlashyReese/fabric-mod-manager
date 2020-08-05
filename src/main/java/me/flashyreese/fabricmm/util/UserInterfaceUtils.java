@@ -1,5 +1,6 @@
 package me.flashyreese.fabricmm.util;
 
+import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmrf.schema.repository.Mod;
 
@@ -54,7 +55,7 @@ public class UserInterfaceUtils {
         return new ImageIcon(mage.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
     }
 
-    public static String getEnglishStringList(String[] list){
+    public static String getEnglishStringList(String[] list){//Fixme: This will need a patch
         StringBuilder line = new StringBuilder();
         if(list == null){
             line.append("None listed");
@@ -93,13 +94,13 @@ public class UserInterfaceUtils {
 
     public static String filterEnvironment(String environment){
         if(environment == null){
-            return "Not Specified";
+            return new TranslatableText("fmm.filter_environment.null").toString();
         }else if(environment.equals("*")){
-            return "Client & Server";
+            return new TranslatableText("fmm.filter_environment.both").toString();
         }else if(environment.equals("client")){
-            return "Client";
+            return new TranslatableText("fmm.filter_environment.client").toString();
         }else{
-            return "Server";
+            return new TranslatableText("fmm.filter_environment.server").toString();
         }
     }
 }

@@ -1,5 +1,7 @@
 package me.flashyreese.fabricmm.ui.popmenu;
 
+import me.flashyreese.common.i18n.ParsableTranslatableText;
+import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.ui.components.InstalledModFileDropList;
 import me.flashyreese.fabricmm.util.ModUtils;
@@ -24,14 +26,16 @@ public class InstalledModPopUpMenu extends JPopupMenu {
     }
 
     private void setupComponents(InstalledModFileDropList installedModFileDropList){
-        toggle.setText(installedModFileDropList.getSelectedValue().isEnabled() ? "Disable" : "Enable");
+        toggle.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new TranslatableText("fmm.library.disable").toString() : new TranslatableText("fmm.library.enable").toString());
         toggle.addActionListener(arg0 -> {
             ModUtils.changeInstalledModState(installedModFileDropList.getSelectedValue());
             installedModFileDropList.refresh();
         });
-        delete.setText("Delete");
+        delete.setText(new TranslatableText("fmm.library.pop_menu.delete").toString());
         delete.addActionListener(arg0 -> {
-            int result = JOptionPane.showConfirmDialog(null,String.format("Are you sure you want to delete '%s'?", installedModFileDropList.getSelectedValue().getName()), "Delete Mod", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, new ParsableTranslatableText("fmm.library.pop_menu.delete.message",
+                    installedModFileDropList.getSelectedValue().getName()).toString(), new TranslatableText("fmm.library.pop_menu.delete.title").toString(),
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             if(result == JOptionPane.YES_OPTION){
                 InstalledMod installedMod = installedModFileDropList.getSelectedValue();
                 File location = new File(installedMod.getInstalledPath());

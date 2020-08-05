@@ -1,4 +1,4 @@
-package me.flashyreese.util;
+package me.flashyreese.common.util;
 
 import com.google.gson.Gson;
 
@@ -54,5 +54,20 @@ public class FileUtil {
             newFile = new File(file.getParentFile(), filename);
         }
         return newFile;
+    }
+
+    public static String getFileNameWithExtension(File file) throws Exception {
+        if (file.isDirectory()){
+            throw new Exception("Not a valid file");
+        }
+        return file.getName();
+    }
+
+    public static String getFileName(File file) throws Exception {
+        String fileNameWithExtension = getFileNameWithExtension(file);
+        if(fileNameWithExtension.contains(".")){
+            return fileNameWithExtension.substring(0, fileNameWithExtension.lastIndexOf('.'));
+        }
+        return fileNameWithExtension;
     }
 }

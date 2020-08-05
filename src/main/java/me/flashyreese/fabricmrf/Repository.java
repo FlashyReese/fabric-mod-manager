@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmrf;
 
 import me.flashyreese.fabricmrf.schema.repository.Author;
-import me.flashyreese.util.URLUtil;
+import me.flashyreese.common.util.URLUtil;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
