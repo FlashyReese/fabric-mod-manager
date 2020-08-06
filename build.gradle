@@ -5,22 +5,35 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-group 'me.flashyreese'
-version '0.0.5-SNAPSHOT+build-20200804'
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+group project.group as Object
+version project.version as Object
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.json:json:20200518'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'org.apache.logging.log4j:log4j-api:2.13.3'
-    implementation 'org.apache.logging.log4j:log4j-core:2.13.3'
-    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.3'
-    implementation 'com.vdurmont:semver4j:3.1.0'
+    implementation "org.json:json:${project.json_version}"
+    implementation "com.google.code.gson:gson:${project.gson_version}"
+    implementation "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
+    implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${project.log4j_version}"
+    implementation "com.vdurmont:semver4j:${project.semver4j_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "fabric.mod.manager.json"
+        expand "version": project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "fabric.mod.manager.json"
+    }
 }
 
 jar {

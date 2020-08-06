@@ -1,6 +1,16 @@
 package me.flashyreese.common.util;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.jar.JarEntry;
+import java.util.stream.Collectors;
 
 public class JarUtil {
 
@@ -21,5 +31,13 @@ public class JarUtil {
             return fileNameWithExtension.substring(0, fileNameWithExtension.lastIndexOf('.'));
         }
         return fileNameWithExtension;
+    }
+
+    public static String readTextFile(String resource) throws IOException {
+        InputStream stream = Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(resource)).openStream();
+        final BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+        String string = br.lines().collect(Collectors.joining());
+        br.close();
+        return string;
     }
 }
