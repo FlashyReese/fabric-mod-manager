@@ -3,7 +3,9 @@ package me.flashyreese.fabricmm.ui.tab;
 import me.flashyreese.common.i18n.ParsableTranslatableText;
 import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.Application;
+import me.flashyreese.fabricmm.util.CurseUtils;
 import me.flashyreese.fabricmrf.RepositoryManager;
+import me.flashyreese.fabricmrf.schema.repository.Author;
 import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
 import me.flashyreese.fabricmrf.schema.repository.Mod;
 import me.flashyreese.fabricmrf.schema.repository.ModVersion;
@@ -20,6 +22,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -204,9 +207,19 @@ public class ModRepositoryBrowserUI extends JPanel{
 
     public void updateModList(RepositoryManager repositoryManager) {
         modList.removeAllItems();
-        for(Mod mod: repositoryManager.getModList()){
-            modList.addItem(mod);
+        try {
+            for (Author author: CurseUtils.getAuthors()){
+                for (Mod mod: author.getMods()){
+                    mod.setAuthor(author);
+                    modList.addItem(mod);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        /*for(Mod mod: repositoryManager.getModList()){
+            modList.addItem(mod);
+        }*/
         modList.refresh();
     }
 }

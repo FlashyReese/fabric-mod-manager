@@ -14,4 +14,12 @@ public class MinecraftVersion {
     public String getMinecraftVersion(){
         return minecraftVersion;
     }
+
+    public void setModVersions(List<ModVersion> modVersions) {
+        this.modVersions = modVersions;
+    }
+
+    public void setMinecraftVersion(String minecraftVersion) {
+        this.minecraftVersion = minecraftVersion;
+    }
 }

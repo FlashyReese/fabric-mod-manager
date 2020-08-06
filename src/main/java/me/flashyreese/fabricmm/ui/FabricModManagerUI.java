@@ -49,7 +49,7 @@ public class FabricModManagerUI extends JFrame {
         contentPane = new JTabbedPane();
         //Fixme: Jank
         contentPane.setLocation(0, 0);
-        contentPane.setPreferredSize(new Dimension(854, 480));
+        contentPane.setPreferredSize(new Dimension(1280, 720));
 
         library = new LibraryManagerUI(contentPane);
         modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, trayIcon);

@@ -1,16 +1,23 @@
 package me.flashyreese.fabricmm.util;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
+import me.flashyreese.fabricmm.schema.CurseAddon;
+import me.flashyreese.fabricmm.schema.CurseFile;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.common.util.FileUtil;
+import me.flashyreese.fabricmrf.schema.repository.Author;
+import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
+import me.flashyreese.fabricmrf.schema.repository.Mod;
+import me.flashyreese.fabricmrf.schema.repository.ModVersion;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -105,6 +112,88 @@ public class ModUtils {
         }
         installedMod.setInstalledPath(newFile.getAbsolutePath());
         return installedMod;
+    }
+
+    public static CurseAddon getCurseAddon(String json, boolean includeFiles) throws IOException {
+        CurseAddon curseAddon = new Gson().fromJson(json, CurseAddon.class);
+        if (includeFiles){
+            URL url = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s/files", curseAddon.getId()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String filesJson = in.lines().collect(Collectors.joining());
+            in.close();
+            ArrayList<CurseFile> files = new Gson().fromJson(filesJson, new TypeToken<ArrayList<CurseFile>>(){}.getType());
+            files.removeIf(curseFile -> !curseFile.getGameVersion().contains("Fabric"));
+            for (CurseFile curseFile: files){
+                curseFile.removeFabricFromGameVersion();
+            }
+            curseAddon.setFiles(files);
+        }
+        return curseAddon;
+    }
+
+    public static CurseAddon getCurseAddonFromProjectID(long id, boolean includeFiles) throws IOException {
+        URL url = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s", id));
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        String addonJson = in.lines().collect(Collectors.joining());
+        in.close();
+        return getCurseAddon(addonJson, includeFiles);
+    }
+
+    public static Author convertCurseAddonToAuthor(CurseAddon curseAddon){
+        Author author = new Author();
+        author.setName(curseAddon.getAuthors().get(0).getName());
+        HashMap<String, String> contacts = new HashMap<String, String>();
+        contacts.put("curseForgeUrl", curseAddon.getAuthors().get(0).getUrl());
+        author.setContacts(contacts);
+        author.setMods(new ArrayList<Mod>());
+        Mod mod = new Mod();
+        //mod.setAuthor(author);StackOverflow
+        mod.setDescription(curseAddon.getSummary());
+        mod.setIconUrl(curseAddon.getDefaultCurseAttachment().getThumbnailUrl());
+        mod.setId(curseAddon.getSlug());
+        mod.setMinecraftVersions(convertCurseFilesToMinecraftVersions(curseAddon.getFiles()));
+        mod.setName(curseAddon.getName());
+        author.getMods().add(mod);
+        return author;
+    }
+
+    public static ArrayList<MinecraftVersion> convertCurseFilesToMinecraftVersions(ArrayList<CurseFile> curseFiles){
+        Mod mod = new Mod();
+        mod.setMinecraftVersions(new ArrayList<MinecraftVersion>());
+        for (CurseFile curseFile: curseFiles){
+            for (String minecraftVersion: curseFile.getGameVersion()){
+                if (mod.containsMinecraftVersion(minecraftVersion)){
+                    MinecraftVersion currentMcVer = mod.getMinecraftVersion(minecraftVersion);
+                    ModVersion modVersion = new ModVersion();
+                    modVersion.setModVersion(curseFile.getDisplayName());//Fixme: trim jar extension;
+                    modVersion.setModUrl(curseFile.getDownloadUrl());
+                    currentMcVer.getModVersions().add(modVersion);
+                    //Fixme: loop dependency here
+                }else{
+                    MinecraftVersion mcVer = new MinecraftVersion();
+                    mcVer.setMinecraftVersion(minecraftVersion);
+                    mcVer.setModVersions(new ArrayList<ModVersion>());
+                    ModVersion modVersion = new ModVersion();
+                    modVersion.setModVersion(curseFile.getDisplayName());//Fixme: trim jar extension;
+                    modVersion.setModUrl(curseFile.getDownloadUrl());
+                    //Fixme: loop dependency here
+                    mcVer.getModVersions().add(modVersion);
+                    mod.getMinecraftVersions().add(mcVer);
+                }
+            }
+        }
+        return mod.getMinecraftVersions();
+    }
+
+    public static Author mergeAuthors(Author author, Author author2){
+        if (author.getName().equalsIgnoreCase(author2.getName())){
+            Author authorNew = author;
+            for (Mod mod: author2.getMods()){
+                authorNew.getMods().add(mod);
+            }
+            return authorNew;
+        }
+        return author;
     }
 
 }
