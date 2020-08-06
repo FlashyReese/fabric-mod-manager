@@ -2,7 +2,7 @@
 # Fabric Mod Manager
 Fabric Mod Manager is a do-all mod manager written in Java for Fabric. It is currently being developed, and it is at its early stages of development.
 
-NOTE: This is will only be able update mods that have opted-in for the [Fabric Mod Repository](https://github.com/FlashyReese/fabric-mod-repository)!
+__NOTE__: This is will only be able update mods that have opted-in for the [Fabric Mod Repository](https://github.com/FlashyReese/fabric-mod-repository)!
 
 ## Getting Started
 Use `gradlew shadowJar` to build project.
