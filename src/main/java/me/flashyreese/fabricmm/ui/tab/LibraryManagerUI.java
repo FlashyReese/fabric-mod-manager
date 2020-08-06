@@ -46,7 +46,7 @@ public class LibraryManagerUI extends JPanel {
         initComponents();
         setupComponents();
         loadComponents();
-        onModFileDropListSelect();
+        updateComponentsText();
     }
 
     private void initComponents(){
@@ -87,7 +87,6 @@ public class LibraryManagerUI extends JPanel {
 
         Dim2i openModsFolderDim = new Dim2i(10, this.getHeight() - 40, this.getWidth() / 2 / 2, 30);
         openModsFolder.setBounds(openModsFolderDim.getOriginX(), openModsFolderDim.getOriginY(), openModsFolderDim.getWidth(), openModsFolderDim.getHeight());
-        openModsFolder.setText(new TranslatableText("fmm.library.open_mods_folder").toString());
         openModsFolder.addActionListener(e -> {
             try {
                 Desktop.getDesktop().open(ModUtils.getModsDirectory());
@@ -98,7 +97,6 @@ public class LibraryManagerUI extends JPanel {
 
         Dim2i refreshModsDim = new Dim2i(this.getWidth() / 2 / 2 + 10, this.getHeight() - 40, this.getWidth() / 2 / 2, 30);
         refreshMods.setBounds(refreshModsDim.getOriginX(), refreshModsDim.getOriginY(), refreshModsDim.getWidth(), refreshModsDim.getHeight());
-        refreshMods.setText(new TranslatableText("fmm.library.refresh_mods").toString());
         refreshMods.addActionListener(e -> {
             installedModFileDropList.removeAllItems();
             try {
@@ -122,14 +120,12 @@ public class LibraryManagerUI extends JPanel {
 
         Dim2i checkForModUpdateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 70, this.getWidth() / 2 - 30, 30);
         checkForModUpdate.setBounds(checkForModUpdateDim.getOriginX(), checkForModUpdateDim.getOriginY(), checkForModUpdateDim.getWidth(), checkForModUpdateDim.getHeight());
-        checkForModUpdate.setText(new TranslatableText("fmm.library.check_for_update").toString());
         checkForModUpdate.addActionListener(e -> {
             JOptionPane.showMessageDialog(null, "This does nothing at the moment");
         });
 
         Dim2i modWebsiteDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
         modWebsite.setBounds(modWebsiteDim.getOriginX(), modWebsiteDim.getOriginY(), modWebsiteDim.getWidth(), modWebsiteDim.getHeight());
-        modWebsite.setText(new TranslatableText("fmm.library.website").toString());
         modWebsite.addActionListener(e -> {
             try {
                 Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getContact().get("homepage")));
@@ -140,7 +136,6 @@ public class LibraryManagerUI extends JPanel {
 
         Dim2i modIssuesDim = new Dim2i(this.getWidth() / 4 * 3 + 5, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
         modIssues.setBounds(modIssuesDim.getOriginX(), modIssuesDim.getOriginY(), modIssuesDim.getWidth(), modIssuesDim.getHeight());
-        modIssues.setText(new TranslatableText("fmm.library.issues").toString());
         modIssues.addActionListener(e -> {
             try {
                 Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getContact().get("sources")));
@@ -158,22 +153,16 @@ public class LibraryManagerUI extends JPanel {
         int labelWidth = modInfoPanel.getWidth() - 20;
         modNameLabel.setBounds(10, 10, labelWidth, 12);
         modNameLabel.setFont(labelFont);
-        modNameLabel.setText(new TranslatableText("fmm.library.mod_info.name").toString());
         modMinecraftVersionLabel.setBounds(10, 40, labelWidth, 12);
         modMinecraftVersionLabel.setFont(labelFont);
-        modMinecraftVersionLabel.setText(new TranslatableText("fmm.library.mod_info.minecraft_version").toString());
         modVersionLabel.setBounds(10, 70, labelWidth, 12);
         modVersionLabel.setFont(labelFont);
-        modVersionLabel.setText(new TranslatableText("fmm.library.mod_info.version").toString());
         modIdLabel.setBounds(10, 100, labelWidth, 12);
         modIdLabel.setFont(labelFont);
-        modIdLabel.setText(new TranslatableText("fmm.library.mod_info.id").toString());
         modAuthorsLabel.setBounds(10, 130, labelWidth, 12);
         modAuthorsLabel.setFont(labelFont);
-        modAuthorsLabel.setText(new TranslatableText("fmm.library.mod_info.authors").toString());
         modEnvironmentLabel.setBounds(10, 160, labelWidth, 12);
         modEnvironmentLabel.setFont(labelFont);
-        modEnvironmentLabel.setText(new TranslatableText("fmm.library.mod_info.environment").toString());
         modName.setBounds(15, 25, labelWidth, 12);
         modName.setFont(modLabelFont);
         modMinecraftVersion.setBounds(15, 55, labelWidth, 12);
@@ -214,6 +203,21 @@ public class LibraryManagerUI extends JPanel {
         installedModFileDropList.refresh();
     }
 
+    public void updateComponentsText(){
+        openModsFolder.setText(new TranslatableText("fmm.library.open_mods_folder").toString());
+        refreshMods.setText(new TranslatableText("fmm.library.refresh_mods").toString());
+        checkForModUpdate.setText(new TranslatableText("fmm.library.check_for_update").toString());
+        modWebsite.setText(new TranslatableText("fmm.library.website").toString());
+        modIssues.setText(new TranslatableText("fmm.library.issues").toString());
+        modEnvironmentLabel.setText(new TranslatableText("fmm.library.mod_info.environment").toString());
+        modNameLabel.setText(new TranslatableText("fmm.library.mod_info.name").toString());
+        modMinecraftVersionLabel.setText(new TranslatableText("fmm.library.mod_info.minecraft_version").toString());
+        modVersionLabel.setText(new TranslatableText("fmm.library.mod_info.version").toString());
+        modIdLabel.setText(new TranslatableText("fmm.library.mod_info.id").toString());
+        modAuthorsLabel.setText(new TranslatableText("fmm.library.mod_info.authors").toString());
+        onModFileDropListSelect();
+    }
+
     private void onModFileDropListSelect(){
         if(installedModFileDropList.getSelectedValue() != null){
             this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new TranslatableText("fmm.library.disable").toString() : new TranslatableText("fmm.library.enable").toString());
@@ -223,6 +227,7 @@ public class LibraryManagerUI extends JPanel {
             this.modIssues.setEnabled(installedModFileDropList.getSelectedValue().getContact().containsKey("sources"));
             InstalledMod selectedMod = installedModFileDropList.getSelectedValue();
             this.modName.setText(selectedMod.getName());
+            selectedMod.assignMinecraftVersion();
             this.modMinecraftVersion.setText(selectedMod.getMinecraftVersion());
             this.modVersion.setText(selectedMod.getVersion());
             this.modId.setText(selectedMod.getId());

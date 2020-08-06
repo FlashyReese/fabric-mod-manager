@@ -4,6 +4,7 @@
 	"fmm.menubar.quick_tools.open_minecraft_launcher":"Open Minecraft Launcher",
 	"fmm.menubar.repository":"Repository",
 	"fmm.menubar.repository.update_local_repositories":"Update Local Repositories",
+	"fmm.menubar.language":"Language",
 	"fmm.menubar.help":"Help",
 	"fmm.menubar.help.check_for_updates":"Check for Updates...",
 	"fmm.menubar.help.check_for_updates.up_to_date":"Up to date!",

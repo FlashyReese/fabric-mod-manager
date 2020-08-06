@@ -3,7 +3,6 @@ package me.flashyreese.fabricmm.ui.tab;
 import me.flashyreese.common.i18n.ParsableTranslatableText;
 import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.Application;
-import me.flashyreese.fabricmrf.Repository;
 import me.flashyreese.fabricmrf.RepositoryManager;
 import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
 import me.flashyreese.fabricmrf.schema.repository.Mod;
@@ -24,7 +23,7 @@ import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ModRepositoryBrowserUI extends JPanel {
+public class ModRepositoryBrowserUI extends JPanel{
 
     private JTextField searchBar;
     private ModList modList;
@@ -41,6 +40,7 @@ public class ModRepositoryBrowserUI extends JPanel {
         initComponents();
         setupComponents(repositoryManager, trayIcon);
         loadComponents();
+        updateComponentsText();
     }
 
     private void initComponents() throws Exception {
@@ -68,19 +68,14 @@ public class ModRepositoryBrowserUI extends JPanel {
         modList.setLocation(modFileListDim.getOriginX(), modFileListDim.getOriginY());
         modList.setSize(modFileListDim.getWidth(), modFileListDim.getHeight());
         modList.getList().addListSelectionListener(arg0 -> {
-            onModFileDropListSelect();
+            onModListSelect();
         });
 
         Dim2i searchTypeDim = new Dim2i(this.getWidth() / 8 * 3, 10, this.getWidth() / 8 - 10, 30);
         filterType.setBounds(searchTypeDim.getOriginX(), searchTypeDim.getOriginY(), searchTypeDim.getWidth(), searchTypeDim.getHeight());
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.general").toString());
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.name").toString());
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.author").toString());
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.minecraft_version").toString());
 
         Font labelFont = new Font("Tahoma", Font.BOLD, 12);
         minecraftVersionLabel.setBounds(this.getWidth() / 2, this.getHeight() - 120, this.getWidth() / 4, 30);
-        minecraftVersionLabel.setText(new TranslatableText("fmm.mod_browser.minecraft_version").toString());
         minecraftVersionLabel.setFont(labelFont);
         Dim2i minecraftVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 120, this.getWidth() / 4, 30);
         minecraftVersion.setBounds(minecraftVersionDim.getOriginX(), minecraftVersionDim.getOriginY(), minecraftVersionDim.getWidth(), minecraftVersionDim.getHeight());
@@ -98,7 +93,6 @@ public class ModRepositoryBrowserUI extends JPanel {
         });
 
         modVersionLabel.setBounds(this.getWidth() / 2, this.getHeight() - 80, this.getWidth() / 4, 30);
-        modVersionLabel.setText(new TranslatableText("fmm.mod_browser.mod_version").toString());
         modVersionLabel.setFont(labelFont);
         Dim2i modVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 80, this.getWidth() / 4, 30);
         modVersion.setBounds(modVersionDim.getOriginX(), modVersionDim.getOriginY(), modVersionDim.getWidth(), modVersionDim.getHeight());
@@ -114,7 +108,6 @@ public class ModRepositoryBrowserUI extends JPanel {
 
         Dim2i downloadDim = new Dim2i(this.getWidth() / 2, this.getHeight() - 40, this.getWidth() / 2 - 10, 30);
         download.setBounds(downloadDim.getOriginX(), downloadDim.getOriginY(), downloadDim.getWidth(), downloadDim.getHeight());
-        download.setText(new TranslatableText("fmm.mod_browser.download").toString());
         download.addActionListener(e -> {
             try {
                 downloadMod(trayIcon);
@@ -133,10 +126,22 @@ public class ModRepositoryBrowserUI extends JPanel {
         this.add(modVersion);
         this.add(modVersionLabel);
         this.add(download);
-        onModFileDropListSelect();
     }
 
-    private void onModFileDropListSelect(){
+
+    public void updateComponentsText(){
+        filterType.removeAllItems();
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.general").toString());
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.name").toString());
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.author").toString());
+        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.minecraft_version").toString());
+        minecraftVersionLabel.setText(new TranslatableText("fmm.mod_browser.minecraft_version").toString());
+        modVersionLabel.setText(new TranslatableText("fmm.mod_browser.mod_version").toString());
+        download.setText(new TranslatableText("fmm.mod_browser.download").toString());
+        onModListSelect();
+    }
+
+    private void onModListSelect(){
         if(modList.getSelectedValue() != null){
             updateMinecraftVersions();
             minecraftVersion.setEnabled(true);

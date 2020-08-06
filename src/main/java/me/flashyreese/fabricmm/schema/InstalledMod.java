@@ -84,15 +84,16 @@ public class InstalledMod {
     }
 
     public void assignMinecraftVersion() {
-        if(minecraftVersion == null){
-            if(isInstalledViaFMM()){
-                File installedMod = new File(this.getInstalledPath());
-                String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
-                String[] splitString = fileName.split("__");
-                setMinecraftVersion(splitString[1]);
-            }else{
-                setMinecraftVersion(new TranslatableText("fmm.installed_mod.minecraft_version.not_available").toString());
-            }
+        /*if(minecraftVersion == null){
+            //Was using this
+        }*/
+        if(isInstalledViaFMM()){
+            File installedMod = new File(this.getInstalledPath());
+            String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
+            String[] splitString = fileName.split("__");
+            setMinecraftVersion(splitString[1]);
+        }else{
+            setMinecraftVersion(new TranslatableText("fmm.installed_mod.minecraft_version.not_available").toString());
         }
     }
 }
