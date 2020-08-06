@@ -37,15 +37,15 @@ Should probably use a project board. Don't actually have a roadmap here.
 
 
 #### ~~API (Future, missing resources to provide this. This is necessary for huge repositories)~~
-This will be most likely written in `NodeJS`.
+~~This will be most likely written in `NodeJS`.~~
 
-- [ ] Mod Repository API (5%)
-    - [x] Schematics (75%)
-    - [ ] Query via GraphQL (no promises)
+- [ ] ~~Mod Repository API (5%)~~
+    - [x] ~~Schematics (75%)~~
+    - [ ] ~~Query via GraphQL (no promises)~~
    
-- [x] Mod Repository Local API (10%) meant for [Fabric Mod Repository](https://github.com/FlashyReese/fabric-mod-repository)
+- [x] ~~Mod Repository Local API (10%) meant for [Fabric Mod Repository](https://github.com/FlashyReese/fabric-mod-repository).~~
 
 #### Database
-This will be most likely split into 2. Using `GitHub` as repository which will make the application memory intensive. ~~Using `MongoDB` as an actual database and query using the API. How do I plan to populate these? Well no idea.~~
+~~This will be most likely split into 2. Using `GitHub` as repository which will make the application memory intensive. Using `MongoDB` as an actual database and query using the API. How do I plan to populate these? Well no idea.~~
 - [ ] ~~Mod Repository using [Fabric Mod Repository](https://github.com/FlashyReese/fabric-mod-repository).~~ I will be keeping this for testing might keep it as an update strategy.
 - [x] Curse Forge API. **NOTE**: this will only allow projects that are opted in.
