@@ -1,8 +1,8 @@
 package me.flashyreese.fabricmm.util;
 
 import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.fabricmm.api.schema.repository.Project;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
-import me.flashyreese.fabricmrf.schema.repository.Mod;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,24 +18,24 @@ import java.net.URL;
 
 public class UserInterfaceUtils {
 
-    public static ImageIcon getImageIconFromCache(Mod mod) throws IOException {//Fixme: baddddddddd
-        File file = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR, String.format("%s.png", mod.getId()));
+    public static ImageIcon getImageIconFromCache(Project project) throws Exception {//Fixme: baddddddddd
+        File file = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR, String.format("%s.png", project.getId()));
         if(file.exists()){
             return getIconFromFile(file);
         }else{
-            try (BufferedInputStream in = new BufferedInputStream(new URL(mod.getIconUrl()).openStream());
-                 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            try {
+                BufferedInputStream in = new BufferedInputStream(new URL(project.getIconUrl()).openStream());
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
                 byte[] dataBuffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                 }
                 return getIconFromFile(file);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                return getIconFromImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("icon.png")));
             }
         }
-        return getIconFromImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource("icon.png")));
     }
 
     public static ImageIcon getIconFromFile(File file) throws IOException {

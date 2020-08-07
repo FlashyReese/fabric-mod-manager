@@ -3,11 +3,9 @@ package me.flashyreese.fabricmm.ui.tab;
 import me.flashyreese.common.i18n.ParsableTranslatableText;
 import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.Application;
-import me.flashyreese.fabricmrf.RepositoryManager;
-import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
-import me.flashyreese.fabricmrf.schema.repository.Mod;
-import me.flashyreese.fabricmrf.schema.repository.ModVersion;
-import me.flashyreese.fabricmm.ui.components.ModList;
+import me.flashyreese.fabricmm.api.RepositoryManager;
+import me.flashyreese.fabricmm.api.schema.repository.*;
+import me.flashyreese.fabricmm.ui.components.ProjectList;
 import me.flashyreese.fabricmm.util.Dim2i;
 import me.flashyreese.fabricmm.util.ModUtils;
 import org.kamranzafar.jddl.DownloadListener;
@@ -26,7 +24,7 @@ import java.net.URL;
 public class ModRepositoryBrowserUI extends JPanel{
 
     private JTextField searchBar;
-    private ModList modList;
+    private ProjectList projectList;
     private JComboBox<String> filterType;
     private JComboBox<MinecraftVersion> minecraftVersion;
     private JLabel minecraftVersionLabel;
@@ -45,7 +43,7 @@ public class ModRepositoryBrowserUI extends JPanel{
 
     private void initComponents() throws Exception {
         searchBar = new JTextField();
-        modList = new ModList();
+        projectList = new ProjectList();
         filterType = new JComboBox<String>();
         minecraftVersion = new JComboBox<MinecraftVersion>();
         minecraftVersionLabel = new JLabel();
@@ -60,15 +58,15 @@ public class ModRepositoryBrowserUI extends JPanel{
         updateModList(repositoryManager);
         searchBar.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent evt) {
-                modList.searchFilter(searchBar.getText(), (String)filterType.getSelectedItem());
+                SwingUtilities.invokeLater(() -> projectList.searchFilter(searchBar.getText(), (String)filterType.getSelectedItem()));
             }
         });
 
         Dim2i modFileListDim = new Dim2i(10, 50, this.getWidth() / 2 - 20, this.getHeight() - 60);
-        modList.setLocation(modFileListDim.getOriginX(), modFileListDim.getOriginY());
-        modList.setSize(modFileListDim.getWidth(), modFileListDim.getHeight());
-        modList.getList().addListSelectionListener(arg0 -> {
-            onModListSelect();
+        projectList.setLocation(modFileListDim.getOriginX(), modFileListDim.getOriginY());
+        projectList.setSize(modFileListDim.getWidth(), modFileListDim.getHeight());
+        projectList.getList().addListSelectionListener(arg0 -> {
+            onProjectListSelect();
         });
 
         Dim2i searchTypeDim = new Dim2i(this.getWidth() / 8 * 3, 10, this.getWidth() / 8 - 10, 30);
@@ -119,7 +117,7 @@ public class ModRepositoryBrowserUI extends JPanel{
 
     private void loadComponents() {
         this.add(searchBar);
-        this.add(modList);
+        this.add(projectList);
         this.add(filterType);
         this.add(minecraftVersion);
         this.add(minecraftVersionLabel);
@@ -138,11 +136,11 @@ public class ModRepositoryBrowserUI extends JPanel{
         minecraftVersionLabel.setText(new TranslatableText("fmm.mod_browser.minecraft_version").toString());
         modVersionLabel.setText(new TranslatableText("fmm.mod_browser.mod_version").toString());
         download.setText(new TranslatableText("fmm.mod_browser.download").toString());
-        onModListSelect();
+        onProjectListSelect();
     }
 
-    private void onModListSelect(){
-        if(modList.getSelectedValue() != null){
+    private void onProjectListSelect(){
+        if(projectList.getSelectedValue() != null){
             updateMinecraftVersions();
             minecraftVersion.setEnabled(true);
             modVersion.setEnabled(true);
@@ -157,17 +155,17 @@ public class ModRepositoryBrowserUI extends JPanel{
     private void updateMinecraftVersions(){
         minecraftVersion.removeAllItems();
         minecraftVersion.setSelectedItem(null);
-        for(MinecraftVersion mcVer: modList.getSelectedValue().getMinecraftVersions()){
+        for(MinecraftVersion mcVer: projectList.getSelectedValue().getMinecraftVersions()){
             minecraftVersion.addItem(mcVer);
         }
         updateModVersions();
     }
 
     private void updateModVersions(){
+        modVersion.removeAllItems();
+        modVersion.setSelectedItem(null);
         if (minecraftVersion.getSelectedItem() instanceof MinecraftVersion){
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
-            modVersion.removeAllItems();
-            modVersion.setSelectedItem(null);
             if(mcVer != null){
                 for(ModVersion modVer: mcVer.getModVersions()){
                     modVersion.addItem(modVer);
@@ -177,11 +175,11 @@ public class ModRepositoryBrowserUI extends JPanel{
     }
 
     private void downloadMod(TrayIcon trayIcon) throws MalformedURLException, FileNotFoundException {//Fixme: literally
-        if(modList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
-            Mod mod = modList.getSelectedValue();
+        if(projectList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
+            Project project = projectList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
             ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies and refresh library listmodel
-            File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), String.format("%s__%s__%s.jar", mod.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()));
+            File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), String.format("%s__%s__%s.jar", project.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()));
             DownloadTask task = new DownloadTask(new URL(modVer.getModUrl()), new FileOutputStream(fileName), new DownloadListener() {
                 public void onUpdate(int bytes, int totalDownloaded) {
                 }
@@ -191,7 +189,7 @@ public class ModRepositoryBrowserUI extends JPanel{
 
                 public void onComplete() {
                     trayIcon.displayMessage(new ParsableTranslatableText("fmm.mod_browser.tray_icon.download_complete.caption",
-                            mod.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()).toString(),
+                            project.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()).toString(),
                             new TranslatableText("fmm.mod_browser.tray_icon.download_complete.text").toString(), TrayIcon.MessageType.INFO);
                 }
 
@@ -203,10 +201,13 @@ public class ModRepositoryBrowserUI extends JPanel{
     }
 
     public void updateModList(RepositoryManager repositoryManager) {
-        modList.removeAllItems();
-        for(Mod mod: repositoryManager.getModList()){
-            modList.addItem(mod);
+        projectList.removeAllItems();
+        for(User user: repositoryManager.getUsers()){
+            for (Project project: user.getProjects()){
+                project.setUser(user);
+                projectList.addItem(project);
+            }
         }
-        modList.refresh();
+        projectList.refresh();
     }
 }

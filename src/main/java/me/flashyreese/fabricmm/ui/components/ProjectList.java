@@ -2,41 +2,40 @@ package me.flashyreese.fabricmm.ui.components;
 
 import me.flashyreese.common.i18n.ParsableTranslatableText;
 import me.flashyreese.common.i18n.TranslatableText;
-import me.flashyreese.fabricmrf.schema.repository.MinecraftVersion;
-import me.flashyreese.fabricmrf.schema.repository.Mod;
+import me.flashyreese.fabricmm.api.schema.repository.MinecraftVersion;
+import me.flashyreese.fabricmm.api.schema.repository.Project;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class ModList extends JPanel {
+public class ProjectList extends JPanel {
 
-    private final DefaultListModel<Mod> listModel;
+    private final DefaultListModel<Project> listModel;
     private final JScrollPane jScrollPane1;
-    private final JList<Mod> list;
+    private final JList<Project> list;
 
-    public ModList() {
+    public ProjectList() {
         setLayout(null);
-        listModel = new DefaultListModel<Mod>();
-        list = new JList<Mod>();
+        listModel = new DefaultListModel<Project>();
+        list = new JList<Project>();
         list.setModel(listModel);
         list.setDragEnabled(true);
         list.setCellRenderer(new DefaultListCellRenderer(){
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(value instanceof Mod) {
-                    Mod mod = (Mod)value;
+                if(value instanceof Project) {
+                    Project project = (Project)value;
                     try {
-                        renderer.setIcon(UserInterfaceUtils.getImageIconFromCache(mod));
-                    } catch (IOException e) {
+                        renderer.setIcon(UserInterfaceUtils.getImageIconFromCache(project));
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    renderer.setText(new ParsableTranslatableText("fmm.mod_browser.mod_list.label", mod.getName(), mod.getAuthor().getName()).toString());
-                    renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", mod.getDescription()));
+                    renderer.setText(new ParsableTranslatableText("fmm.mod_browser.mod_list.label", project.getName(), project.getUser().getName()).toString());
+                    renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", project.getDescription()));
                 }
 
                 return renderer;
@@ -49,45 +48,45 @@ public class ModList extends JPanel {
     }
 
     public void searchFilter(String searchTerm, String type){//Fixme: really jank, might include descriptions in general search
-        DefaultListModel<Mod> filteredItems = new DefaultListModel<Mod>();
-        ArrayList<Mod> listMods = new ArrayList<Mod>(listModel.getSize());
+        DefaultListModel<Project> filteredItems = new DefaultListModel<Project>();
+        ArrayList<Project> listProjects = new ArrayList<>(listModel.getSize());
         for (int i = 0; i < listModel.getSize(); i++) {
-            listMods.add(listModel.getElementAt(i));
+            listProjects.add(listModel.getElementAt(i));
         }
         if(searchTerm.isEmpty()){
             list.setModel(listModel);
             return;
         }
         if(type.equals(new TranslatableText("fmm.mod_browser.filter.general").toString())){
-            for (Mod mod: listMods){
-                if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase()) || mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
-                    if(!filteredItems.contains(mod)){
-                        filteredItems.addElement(mod);
+            for (Project project: listProjects){
+                if (project.getName().toLowerCase().contains(searchTerm.toLowerCase()) || project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                    if(!filteredItems.contains(project)){
+                        filteredItems.addElement(project);
                     }
                 }
-                for (MinecraftVersion minecraftVersion: mod.getMinecraftVersions()){
+                for (MinecraftVersion minecraftVersion: project.getMinecraftVersions()){
                     if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
-                        if(!filteredItems.contains(mod)){
-                            filteredItems.addElement(mod);
+                        if(!filteredItems.contains(project)){
+                            filteredItems.addElement(project);
                         }
                     }
                 }
             }
         }else{
-            for (Mod mod: listMods){
+            for (Project project: listProjects){
                 if(type.equals(new TranslatableText("fmm.mod_browser.filter.name").toString())){
-                    if (mod.getName().toLowerCase().contains(searchTerm.toLowerCase())){
-                        filteredItems.addElement(mod);
+                    if (project.getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                        filteredItems.addElement(project);
                     }
                 }else if(type.equals(new TranslatableText("fmm.mod_browser.filter.author").toString())){
-                    if (mod.getAuthor().getName().toLowerCase().contains(searchTerm.toLowerCase())){
-                        filteredItems.addElement(mod);
+                    if (project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                        filteredItems.addElement(project);
                     }
                 }else if(type.equals(new TranslatableText("fmm.mod_browser.filter.minecraft_version").toString())){
-                    for (MinecraftVersion minecraftVersion: mod.getMinecraftVersions()){
+                    for (MinecraftVersion minecraftVersion: project.getMinecraftVersions()){
                         if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
-                            if(!filteredItems.contains(mod)){
-                                filteredItems.addElement(mod);
+                            if(!filteredItems.contains(project)){
+                                filteredItems.addElement(project);
                             }
                         }
                     }
@@ -97,11 +96,11 @@ public class ModList extends JPanel {
         list.setModel(filteredItems);
     }
 
-    public JList<Mod> getList(){
+    public JList<Project> getList(){
         return list;
     }
 
-    public Mod getSelectedValue() {
+    public Project getSelectedValue() {
         return list.getSelectedValue();
     }
 
@@ -113,7 +112,7 @@ public class ModList extends JPanel {
         list.repaint();
     }
 
-    public void addItem(Mod p) {
+    public void addItem(Project p) {
         listModel.addElement(p);
     }
 

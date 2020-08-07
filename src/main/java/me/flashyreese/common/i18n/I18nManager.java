@@ -1,18 +1,21 @@
 package me.flashyreese.common.i18n;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import me.flashyreese.common.util.FileUtil;
 import me.flashyreese.common.util.JarUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 public class I18nManager {
 
@@ -89,7 +92,12 @@ public class I18nManager {
                 final String name = entry.getName();
                 if (name.startsWith(languageDirectory + "/") && name.endsWith(".json")) {
                     if (JarUtil.getFileName(entry).equalsIgnoreCase(locale.toString())){
-                        translations.putAll(new Gson().fromJson(new BufferedReader(new InputStreamReader(jar.getInputStream(entry), StandardCharsets.UTF_8)), new TypeToken<HashMap<String, String>>(){}.getType()));
+                        Moshi moshi = new Moshi.Builder().build();
+                        Type type = Types.newParameterizedType(Map.class, String.class, String.class);
+                        JsonAdapter<Map<String,String>> adapter = moshi.adapter(type);
+                        String json = new BufferedReader(new InputStreamReader(jar.getInputStream(entry), StandardCharsets.UTF_8)).lines().collect(Collectors.joining());
+                        Map<String,String> map = adapter.fromJson(json);
+                        translations.putAll(map);
                         break;
                     }
                 }
@@ -103,7 +111,12 @@ public class I18nManager {
                     final File languages = new File(url.toURI());
                     for (File language : Objects.requireNonNull(languages.listFiles())) {
                         if (FileUtil.getFileName(language).equalsIgnoreCase(locale.toString())){
-                            translations.putAll(new Gson().fromJson(new BufferedReader(new InputStreamReader(new FileInputStream(language), StandardCharsets.UTF_8)), new TypeToken<HashMap<String, String>>(){}.getType()));
+                            Moshi moshi = new Moshi.Builder().build();
+                            Type type = Types.newParameterizedType(Map.class, String.class, String.class);
+                            JsonAdapter<Map<String,String>> adapter = moshi.adapter(type);
+                            String json = new BufferedReader(new InputStreamReader(new FileInputStream(language), StandardCharsets.UTF_8)).lines().collect(Collectors.joining());
+                            Map<String,String> map = adapter.fromJson(json);
+                            translations.putAll(map);
                             break;
                         }
                     }

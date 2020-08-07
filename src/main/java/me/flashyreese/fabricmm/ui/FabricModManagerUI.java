@@ -2,11 +2,11 @@ package me.flashyreese.fabricmm.ui;
 
 import me.flashyreese.common.i18n.I18nManager;
 import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.components.FabricModManagerMenuBar;
 import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
-import me.flashyreese.fabricmrf.RepositoryManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,11 +45,11 @@ public class FabricModManagerUI extends JFrame {
         tray = SystemTray.getSystemTray();
         trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), new TranslatableText("fmm.title").toString());
 
-        repositoryManager = new RepositoryManager(ConfigurationManager.getInstance().REPOSITORY_CACHE_DIR, ConfigurationManager.getInstance().getRepositories());
+        repositoryManager = new RepositoryManager(ConfigurationManager.getInstance().REPOSITORY_CACHE_DIR, "https://raw.githubusercontent.com/FlashyReese/fabric-mod-repository/master/curse.json");
         contentPane = new JTabbedPane();
         //Fixme: Jank
         contentPane.setLocation(0, 0);
-        contentPane.setPreferredSize(new Dimension(854, 480));
+        contentPane.setPreferredSize(new Dimension(1280, 720));
 
         library = new LibraryManagerUI(contentPane);
         modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, trayIcon);
