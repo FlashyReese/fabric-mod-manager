@@ -14,10 +14,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class RepositoryManager {
-    private final ArrayList<User> users;
+    private volatile List<User> users;
     private final File repositoryCache;
     private final String repositoryUrl;
 
@@ -39,6 +43,8 @@ public class RepositoryManager {
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String repository = in.lines().collect(Collectors.joining());
         List<User> usersRepository = adapter.fromJson(repository);
+        final ExecutorService executor = Executors.newFixedThreadPool(8);
+        final List<Future<?>> futures = new ArrayList<>();
         for (User user: usersRepository){
             for (Project project: user.getProjects()){
                 if(project.getCurseForgeProject() != -1){
@@ -54,13 +60,27 @@ public class RepositoryManager {
                         List<MinecraftVersion> minecraftVersions = jsonAdapter.fromJson(projectJson);
                         project.setMinecraftVersions(minecraftVersions);
                     }else{
-                        downloadProjectFile(project);
+                        Future<?> future = executor.submit(() -> {
+                            try {
+                                downloadProjectFile(project);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        futures.add(future);
                     }
                 }else{
                     List<MinecraftVersion> minecraftVersions = new ArrayList<>();
                     project.setMinecraftVersions(minecraftVersions);
                 }
             }
+        }
+        try {
+            for (Future<?> future : futures) {
+                future.get();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
         users.addAll(usersRepository);
     }
@@ -76,6 +96,9 @@ public class RepositoryManager {
 
     private void downloadProjectFile(Project project) throws Exception {
         CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject());
+        if (curseAddon.getDefaultCurseAttachment() != null && curseAddon.getDefaultCurseAttachment().getThumbnailUrl() != null){
+            project.setIconUrl(curseAddon.getDefaultCurseAttachment().getThumbnailUrl());
+        }
         List<MinecraftVersion> minecraftVersions = convertCurseAddonToMinecraftFiles(curseAddon);
         Moshi moshi = new Moshi.Builder().build();
         JsonAdapter<List<MinecraftVersion>> jsonAdapter = moshi.adapter(Types.newParameterizedType(List.class, MinecraftVersion.class));
@@ -159,7 +182,7 @@ public class RepositoryManager {
         return project.getMinecraftVersions();
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 

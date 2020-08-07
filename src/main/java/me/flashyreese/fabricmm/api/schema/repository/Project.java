@@ -46,6 +46,10 @@ public class Project {
         this.minecraftVersions = minecraftVersions;
     }
 
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
     public User getUser() {
         return user;
     }
