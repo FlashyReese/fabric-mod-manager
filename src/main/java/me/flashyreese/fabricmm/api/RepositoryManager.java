@@ -1,7 +1,5 @@
 package me.flashyreese.fabricmm.api;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -94,7 +92,9 @@ public class RepositoryManager {
     }
 
     private CurseAddon getCurseAddon(String json) throws Exception {
-        CurseAddon curseAddon = new Gson().fromJson(json, CurseAddon.class);
+        Moshi moshi = new Moshi.Builder().build();
+        CurseAddon curseAddon = moshi.adapter(CurseAddon.class).fromJson(json);
+        assert curseAddon != null;
         processCurseFiles(curseAddon);
         return curseAddon;
     }
@@ -104,7 +104,11 @@ public class RepositoryManager {
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String filesJson = in.lines().collect(Collectors.joining());
         in.close();
-        ArrayList<CurseFile> files = new Gson().fromJson(filesJson, new TypeToken<ArrayList<CurseFile>>(){}.getType());
+        Moshi moshi = new Moshi.Builder().build();
+        Type type = Types.newParameterizedType(List.class, CurseFile.class);
+        JsonAdapter<List<CurseFile>> jsonAdapter = moshi.adapter(type);
+        List<CurseFile> files = jsonAdapter.fromJson(filesJson);
+        assert files != null;
         files.removeIf(curseFile -> !curseFile.isFabricModFile());
         for (CurseFile curseFile: files){
             curseFile.removeFabricFromGameVersion();
@@ -125,7 +129,7 @@ public class RepositoryManager {
         return getCurseAddon(addonJson);
     }
 
-    private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(ArrayList<CurseFile> curseFiles) throws Exception {
+    private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(List<CurseFile> curseFiles) throws Exception {
         Project project = new Project();
         project.setMinecraftVersions(new ArrayList<>());
         for (CurseFile curseFile: curseFiles){

@@ -23,11 +23,7 @@ public class ParsableText{
     private String format(String text, String... args) {
         for(int i = 0; i < args.length; i++) {
             if(!text.contains("{" + ( i + 1) + "}")) {
-                //System.out.println("Missing notation to parse: " + args[i]);
                 continue;
-            }
-            if(text.contains("{" + (i+2) + "}") && i + 1 == args.length){
-                //System.out.println("Missing object to parse: {" + (i+2) + "}");
             }
             text = text.replaceAll("\\{" + (i+1) + "}", args[i]);
         }

@@ -1,6 +1,6 @@
 package me.flashyreese.fabricmm.util;
 
-import com.google.gson.Gson;
+import com.squareup.moshi.Moshi;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.common.util.FileUtil;
@@ -23,7 +23,7 @@ public class ModUtils {
             final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(jarFile.getInputStream(fabricSchema), StandardCharsets.UTF_8));
             String fabricSchemaJson = bufferedReader.lines().collect(Collectors.joining());
             bufferedReader.close();
-            installedMod = new Gson().fromJson(fabricSchemaJson, InstalledMod.class);
+            installedMod = new Moshi.Builder().build().adapter(InstalledMod.class).fromJson(fabricSchemaJson);
             JSONObject fabricSchemaJsonObject = new JSONObject(fabricSchemaJson);
             String icon = fabricSchemaJsonObject.getString("icon");
             final JarEntry iconJarEntry = jarFile.getJarEntry(icon);

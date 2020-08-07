@@ -1,10 +1,6 @@
 package me.flashyreese.fabricmm.core;
 
-import com.google.gson.reflect.TypeToken;
-import me.flashyreese.common.util.FileUtil;
-
 import java.io.*;
-import java.util.ArrayList;
 
 public class ConfigurationManager {
 
@@ -14,8 +10,6 @@ public class ConfigurationManager {
     public final File MOD_CACHE_DIR = new File(".cache/mods/");
     public final File REPOSITORY_CACHE_DIR = new File(".cache/repositories/");
     public final File CONFIG_DIR = new File("config/");
-
-    private final File REPOSITORIES = new File(CONFIG_DIR, "repositories.json");
 
     public ConfigurationManager() {
         try {
@@ -38,15 +32,6 @@ public class ConfigurationManager {
         if(!CONFIG_DIR.exists()){
             CONFIG_DIR.mkdirs();
         }
-        if(!REPOSITORIES.exists()){
-            ArrayList<String> repositories = new ArrayList<String>();
-            repositories.add("https://raw.githubusercontent.com/FlashyReese/fabric-mod-repository/master/central.json");
-            FileUtil.writeJson(REPOSITORIES, repositories);
-        }
-    }
-
-    public ArrayList<String> getRepositories(){
-        return FileUtil.readJson(REPOSITORIES, new TypeToken<ArrayList<String>>(){}.getType());
     }
 
     public static ConfigurationManager getInstance(){

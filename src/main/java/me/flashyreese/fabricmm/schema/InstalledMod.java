@@ -3,7 +3,7 @@ package me.flashyreese.fabricmm.schema;
 import me.flashyreese.common.i18n.TranslatableText;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.Map;
 
 public class InstalledMod {
     private String id;
@@ -12,9 +12,9 @@ public class InstalledMod {
     private String description;
     private String iconPath;
     private String[] authors;
-    private HashMap<String, String> contact;
+    private Map<String, String> contact;
     private String environment;
-    private String minecraftVersion;//Need Fabric modders to include this in fabric.mod.json
+    private String minecraftVersion;//Need Fabric modders to include this in fabric.mod.json depends section
     private String installedPath;
 
     public String getId() {
@@ -49,7 +49,7 @@ public class InstalledMod {
         return authors;
     }
 
-    public HashMap<String, String> getContact() {
+    public Map<String, String> getContact() {
         return contact;
     }
 

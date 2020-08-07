@@ -1,23 +1,27 @@
 package me.flashyreese.common.util;
 
-import com.google.gson.Gson;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.stream.Collectors;
 
 public class FileUtil {
     public static <T> T readJson(File file, Type type) {
-        Gson gson = new Gson();
+        Moshi moshi = new Moshi.Builder().build();
+        JsonAdapter<T> jsonAdapter = moshi.adapter(type);
         FileReader fileReader = null;
         BufferedReader buffered = null;
         try {
             fileReader = new FileReader(file);
             buffered = new BufferedReader(fileReader);
-            return gson.fromJson(fileReader, type);
+            return jsonAdapter.fromJson(buffered.lines().collect(Collectors.joining()));
         } catch (Exception ex) {
             ex.printStackTrace();
         }finally {
             try {
+                assert buffered != null;
                 buffered.close();
                 fileReader.close();
             } catch (IOException e) {
@@ -27,10 +31,10 @@ public class FileUtil {
         return null;
     }
 
-    public static void writeJson(File file, Object object) {
+    public static void writeJson(File file, Object object, Type type) {
         try {
-            Gson gson = new Gson();
-            String json = gson.toJson(object);
+            Moshi moshi = new Moshi.Builder().build();
+            String json = moshi.adapter(type).toJson(object);
             FileWriter fw = new FileWriter(file);
             fw.write(json);
             fw.flush();

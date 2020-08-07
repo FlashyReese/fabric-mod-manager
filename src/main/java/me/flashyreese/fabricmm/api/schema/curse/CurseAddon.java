@@ -1,19 +1,19 @@
 package me.flashyreese.fabricmm.api.schema.curse;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CurseAddon {
     private long id;
     private String name;
-    private ArrayList<CurseAuthor> authors;
-    private ArrayList<CurseAttachment> attachments;
+    private List<CurseAuthor> authors;
+    private List<CurseAttachment> attachments;
     private String websiteUrl;
     private String summary;
     private float downloadCount;
     private String slug;
-    private ArrayList<CurseFile> latestFiles;
+    private List<CurseFile> latestFiles;
 
-    private ArrayList<CurseFile> files;
+    private List<CurseFile> files;
 
     public long getId() {
         return id;
@@ -23,11 +23,11 @@ public class CurseAddon {
         return name;
     }
 
-    public ArrayList<CurseAuthor> getAuthors() {
+    public List<CurseAuthor> getAuthors() {
         return authors;
     }
 
-    public ArrayList<CurseAttachment> getAttachments() {
+    public List<CurseAttachment> getAttachments() {
         return attachments;
     }
 
@@ -47,15 +47,15 @@ public class CurseAddon {
         return slug;
     }
 
-    public ArrayList<CurseFile> getFiles() {
+    public List<CurseFile> getFiles() {
         return files;
     }
 
-    public void setFiles(ArrayList<CurseFile> files) {
+    public void setFiles(List<CurseFile> files) {
         this.files = files;
     }
 
-    public ArrayList<CurseFile> getLatestFiles() {
+    public List<CurseFile> getLatestFiles() {
         return latestFiles;
     }
 
