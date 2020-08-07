@@ -11,6 +11,7 @@ public class CurseFile {
     private String downloadUrl;
     private ArrayList<CurseDependency> dependencies;
     private ArrayList<String> gameVersion;
+    private ArrayList<CurseModule> modules;
 
     public String getDisplayName() {
         return displayName;
@@ -40,7 +41,20 @@ public class CurseFile {
         return gameVersion;
     }
 
+    public ArrayList<CurseModule> getModules() {
+        return modules;
+    }
+
     public void removeFabricFromGameVersion(){
         getGameVersion().remove("Fabric");
+    }
+
+    public boolean isFabricModFile(){
+        for (CurseModule curseModule: getModules()){
+            if (curseModule.isFabricMod()){
+                return true;
+            }
+        }
+        return false;
     }
 }

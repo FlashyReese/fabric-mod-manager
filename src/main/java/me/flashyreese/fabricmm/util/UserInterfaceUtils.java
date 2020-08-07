@@ -18,20 +18,21 @@ import java.net.URL;
 
 public class UserInterfaceUtils {
 
-    public static ImageIcon getImageIconFromCache(Mod mod) throws IOException {//Fixme: baddddddddd
+    public static ImageIcon getImageIconFromCache(Mod mod) throws Exception {//Fixme: baddddddddd
         File file = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR, String.format("%s.png", mod.getId()));
         if(file.exists()){
             return getIconFromFile(file);
         }else{
-            try (BufferedInputStream in = new BufferedInputStream(new URL(mod.getIconUrl()).openStream());
-                 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            try {
+                BufferedInputStream in = new BufferedInputStream(new URL(mod.getIconUrl()).openStream());
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
                 byte[] dataBuffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                 }
                 return getIconFromFile(file);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

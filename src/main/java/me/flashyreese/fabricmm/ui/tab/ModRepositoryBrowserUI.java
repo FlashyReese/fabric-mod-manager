@@ -214,12 +214,12 @@ public class ModRepositoryBrowserUI extends JPanel{
                     modList.addItem(mod);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        /*for(Mod mod: repositoryManager.getModList()){
+        for(Mod mod: repositoryManager.getModList()){
             modList.addItem(mod);
-        }*/
+        }
         modList.refresh();
     }
 }

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.lang.reflect.Array;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -114,6 +115,33 @@ public class ModUtils {
         return installedMod;
     }
 
+    public static ArrayList<CurseAddon> getFabricCurseAddons(boolean includeFiles) throws IOException, InterruptedException {
+        URL url = new URL("https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&pagesize=5000&categoryId=4780");
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        String filesJson = in.lines().collect(Collectors.joining());
+        in.close();
+        ArrayList<CurseAddon> curseAddons = new Gson().fromJson(filesJson, new TypeToken<ArrayList<CurseAddon>>(){}.getType());//Fixme: and doesn't check latestFile;
+        if (includeFiles){
+            for (CurseAddon curseAddon: curseAddons){
+                System.out.println(curseAddon.getName());
+                URL url2 = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s/files", curseAddon.getId()));
+                BufferedReader in2 = new BufferedReader(new InputStreamReader(url2.openStream()));
+                String filesJson2 = in2.lines().collect(Collectors.joining());
+                in2.close();
+                ArrayList<CurseFile> files = new Gson().fromJson(filesJson2, new TypeToken<ArrayList<CurseFile>>(){}.getType());
+                files.removeIf(curseFile -> !curseFile.getGameVersion().contains("Fabric") && !curseFile.isFabricModFile());
+                for (CurseFile curseFile: files){
+                    curseFile.removeFabricFromGameVersion();
+                }
+                curseAddon.setFiles(files);
+                for (CurseFile latestFile: curseAddon.getLatestFiles()){
+                    curseAddon.getFiles().add(latestFile);
+                }
+            }
+        }
+        return curseAddons;
+    }
+
     public static CurseAddon getCurseAddon(String json, boolean includeFiles) throws IOException {
         CurseAddon curseAddon = new Gson().fromJson(json, CurseAddon.class);
         if (includeFiles){
@@ -122,11 +150,14 @@ public class ModUtils {
             String filesJson = in.lines().collect(Collectors.joining());
             in.close();
             ArrayList<CurseFile> files = new Gson().fromJson(filesJson, new TypeToken<ArrayList<CurseFile>>(){}.getType());
-            files.removeIf(curseFile -> !curseFile.getGameVersion().contains("Fabric"));
+            files.removeIf(curseFile -> !curseFile.getGameVersion().contains("Fabric") && !curseFile.isFabricModFile());
             for (CurseFile curseFile: files){
                 curseFile.removeFabricFromGameVersion();
             }
             curseAddon.setFiles(files);
+            for (CurseFile latestFile: curseAddon.getLatestFiles()){
+                curseAddon.getFiles().add(latestFile);
+            }
         }
         return curseAddon;
     }
@@ -139,7 +170,7 @@ public class ModUtils {
         return getCurseAddon(addonJson, includeFiles);
     }
 
-    public static Author convertCurseAddonToAuthor(CurseAddon curseAddon){
+    public static Author convertCurseAddonToAuthor(CurseAddon curseAddon, boolean includeFiles){
         Author author = new Author();
         author.setName(curseAddon.getAuthors().get(0).getName());
         HashMap<String, String> contacts = new HashMap<String, String>();
@@ -149,9 +180,13 @@ public class ModUtils {
         Mod mod = new Mod();
         //mod.setAuthor(author);StackOverflow
         mod.setDescription(curseAddon.getSummary());
-        mod.setIconUrl(curseAddon.getDefaultCurseAttachment().getThumbnailUrl());
+        if (curseAddon.getDefaultCurseAttachment() != null && curseAddon.getDefaultCurseAttachment().getThumbnailUrl() != null){
+            mod.setIconUrl(curseAddon.getDefaultCurseAttachment().getThumbnailUrl());
+        }
         mod.setId(curseAddon.getSlug());
-        mod.setMinecraftVersions(convertCurseFilesToMinecraftVersions(curseAddon.getFiles()));
+        if (includeFiles){
+            mod.setMinecraftVersions(convertCurseFilesToMinecraftVersions(curseAddon.getFiles()));
+        }
         mod.setName(curseAddon.getName());
         author.getMods().add(mod);
         return author;

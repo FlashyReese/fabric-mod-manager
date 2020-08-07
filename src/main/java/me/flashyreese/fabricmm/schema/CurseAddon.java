@@ -11,6 +11,7 @@ public class CurseAddon {
     private String summary;
     private float downloadCount;
     private String slug;
+    private ArrayList<CurseFile> latestFiles;
 
     private ArrayList<CurseFile> files;
 
@@ -54,10 +55,16 @@ public class CurseAddon {
         this.files = files;
     }
 
+    public ArrayList<CurseFile> getLatestFiles() {
+        return latestFiles;
+    }
+
     public CurseAttachment getDefaultCurseAttachment(){
-        for (CurseAttachment curseAttachment: getAttachments()){
-            if (curseAttachment.isDefault()){
-                return curseAttachment;
+        if(getAttachments() != null){
+            for (CurseAttachment curseAttachment: getAttachments()){
+                if (curseAttachment.isDefault()){
+                    return curseAttachment;
+                }
             }
         }
         return null;

@@ -1,19 +1,21 @@
 package me.flashyreese.fabricmm.util;
 
+import me.flashyreese.common.util.FileUtil;
 import me.flashyreese.fabricmm.schema.CurseAddon;
 import me.flashyreese.fabricmrf.schema.repository.Author;
 import me.flashyreese.fabricmrf.schema.repository.Mod;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class CurseUtils {
 
-    public static long[] projectIDs = new long[]{/*248787, 394468, 372124, 360438, 354231, 393442*/};
+    public static long[] projectIDs = new long[]{/*248787, 394468, 372124, 360438, 354231, 393442*/}; // 2 seconds for 6 authors
     public static ArrayList<Author> authors = new ArrayList<>();
 
-    public static ArrayList<Author> getAuthors() throws IOException {
-        for (long id: projectIDs){
+    public static ArrayList<Author> getAuthors() throws IOException, InterruptedException {
+        /*for (long id: projectIDs){
             CurseAddon test = ModUtils.getCurseAddonFromProjectID(id, true);
             Author authorTest = ModUtils.convertCurseAddonToAuthor(test);
             if(containsAuthor(authorTest)){
@@ -24,8 +26,20 @@ public class CurseUtils {
             }else{
                 authors.add(authorTest);
             }
+        }*/
+        for (CurseAddon curseAddon: ModUtils.getFabricCurseAddons(true)){
+            CurseAddon test = curseAddon;
+            Author authorTest = ModUtils.convertCurseAddonToAuthor(test, true);
+            if(containsAuthor(authorTest)){
+                Author existingAuthor = getAuthor(authorTest.getName());
+                for (Mod mod: authorTest.getMods()){
+                    existingAuthor.getMods().add(mod);
+                }
+            }else{
+                authors.add(authorTest);
+            }
         }
-        //System.out.println(new Gson().toJson(authors));
+        FileUtil.writeJson(new File("some ridiculous amount of data.json"), authors);
         return authors;
     }
 

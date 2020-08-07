@@ -32,7 +32,7 @@ public class ModList extends JPanel {
                     Mod mod = (Mod)value;
                     try {
                         renderer.setIcon(UserInterfaceUtils.getImageIconFromCache(mod));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     renderer.setText(new ParsableTranslatableText("fmm.mod_browser.mod_list.label", mod.getName(), mod.getAuthor().getName()).toString());
