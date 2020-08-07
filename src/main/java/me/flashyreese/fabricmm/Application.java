@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import org.kamranzafar.jddl.DirectDownloader;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Application {
 
@@ -16,12 +15,13 @@ public class Application {
 
     public static void main(String[] args) throws Exception {
         VERSION = new Semver(new JSONObject(JarUtil.readTextFile("fabric.mod.manager.json")).getString("version"), Semver.SemverType.STRICT);
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        EventQueue.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             FabricModManagerUI fabricModManagerUI = null;
             try {
                 fabricModManagerUI = new FabricModManagerUI();

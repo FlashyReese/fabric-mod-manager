@@ -1,13 +1,12 @@
-package me.flashyreese.fabricmrf.schema.repository;
+package me.flashyreese.fabricmm.api.schema.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 public class ModVersion {
 
     private String modVersion;
     private String modUrl;
-    private HashMap<String, String> dependencies;
+    private Map<String, String> dependencies;
 
     public String getModVersion ()
     {
@@ -19,7 +18,7 @@ public class ModVersion {
         return modUrl;
     }
 
-    public HashMap<String, String>  getDependencies ()
+    public Map<String, String>  getDependencies ()
     {
         return dependencies;
     }
@@ -32,7 +31,7 @@ public class ModVersion {
         this.modUrl = modUrl;
     }
 
-    public void setDependencies(HashMap<String, String>  dependencies) {
+    public void setDependencies(Map<String, String>  dependencies) {
         this.dependencies = dependencies;
     }
 }

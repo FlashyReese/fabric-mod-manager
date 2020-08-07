@@ -1,4 +1,4 @@
-package me.flashyreese.fabricmm.schema;
+package me.flashyreese.fabricmm.api.schema.curse;
 
 import java.util.ArrayList;
 

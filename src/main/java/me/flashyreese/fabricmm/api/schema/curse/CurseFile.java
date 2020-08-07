@@ -1,4 +1,4 @@
-package me.flashyreese.fabricmm.schema;
+package me.flashyreese.fabricmm.api.schema.curse;
 
 import java.util.ArrayList;
 
@@ -47,6 +47,7 @@ public class CurseFile {
 
     public void removeFabricFromGameVersion(){
         getGameVersion().remove("Fabric");
+        getGameVersion().remove("Forge");//Some people are just weird
     }
 
     public boolean isFabricModFile(){

@@ -4,17 +4,14 @@ import com.vdurmont.semver4j.Semver;
 import me.flashyreese.common.i18n.I18nManager;
 import me.flashyreese.common.i18n.TranslatableText;
 import me.flashyreese.fabricmm.Application;
+import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 import me.flashyreese.fabricmm.util.ModUtils;
-import me.flashyreese.fabricmrf.Repository;
-import me.flashyreese.fabricmrf.RepositoryManager;
 import org.json.JSONArray;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -67,14 +64,14 @@ public class FabricModManagerMenuBar extends JMenuBar {
         });
 
         updateLocalRepositories.addActionListener(e -> new Thread(() -> {
-            for(Repository repository: repositoryManager.getRepositories()){
+            /*for(Repository repository: repositoryManager.getRepositories()){
                 try {
                     repositoryManager.updateLocalRepository(repository);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
             }
-            modRepositoryBrowserUI.updateModList(repositoryManager);
+            modRepositoryBrowserUI.updateModList(repositoryManager);*/
         }).start());
 
         checkForUpdates.addActionListener(e -> new Thread(() -> {
