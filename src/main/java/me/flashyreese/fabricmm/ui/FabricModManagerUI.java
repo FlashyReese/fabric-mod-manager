@@ -75,6 +75,7 @@ public class FabricModManagerUI extends JFrame {
     }
 
     public void updateComponentsText(){
+        int index = contentPane.getSelectedIndex();
         contentPane.removeAll();
         contentPane.addTab(new TranslatableText("fmm.library").toString(), library); //Fixme: Panel Scaling macOS looks chopped off
         contentPane.addTab(new TranslatableText("fmm.mod_browser").toString(), modBrowser);
@@ -82,6 +83,7 @@ public class FabricModManagerUI extends JFrame {
         library.updateComponentsText();
         modBrowser.updateComponentsText();
         menuBar.updateComponentsText();
+        contentPane.setSelectedIndex(index == -1 ? 0 : index);
     }
 
 }
