@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation "org.json:json:${project.json_version}"
     implementation "com.google.code.findbugs:jsr305:${project.jsr305_version}"
+    implementation "joda-time:joda-time:${project.joda_version}"
     implementation "com.squareup.moshi:moshi:${project.moshi_version}"
     implementation "org.apache.logging.log4j:log4j-api:${project.log4j_version}"
     implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"

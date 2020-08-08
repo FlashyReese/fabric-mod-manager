@@ -12,6 +12,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -171,6 +172,7 @@ public class RepositoryManager {
                     MinecraftVersion currentMcVer = project.getMinecraftVersion(minecraftVersion);
                     if (!currentMcVer.containsModVersion(curseFile.getDisplayName())){
                         ModVersion modVersion = new ModVersion();
+                        modVersion.setReleasedDate(curseFile.getFileDate());
                         modVersion.setModVersion(curseFile.getDisplayName());
                         modVersion.setModUrl(curseFile.getDownloadUrl());
                         currentMcVer.getModVersions().add(modVersion);
@@ -178,9 +180,12 @@ public class RepositoryManager {
                     }
                 }else{
                     MinecraftVersion mcVer = new MinecraftVersion();
+                    mcVer.setReleasedDate(curseFile.getFileDate());
+                    //mcVer.setReleasedDate(curseFile.getGameVersionDateReleased()); CurseForge is broken
                     mcVer.setMinecraftVersion(minecraftVersion);
                     mcVer.setModVersions(new ArrayList<>());
                     ModVersion modVersion = new ModVersion();
+                    modVersion.setReleasedDate(curseFile.getFileDate());
                     modVersion.setModVersion(curseFile.getDisplayName());
                     modVersion.setModUrl(curseFile.getDownloadUrl());
                     //Fixme: loop dependency here
@@ -188,6 +193,10 @@ public class RepositoryManager {
                     project.getMinecraftVersions().add(mcVer);
                 }
             }
+        }
+        Collections.sort(project.getMinecraftVersions(), Collections.reverseOrder());
+        for (MinecraftVersion minecraftVersion: project.getMinecraftVersions()){
+            Collections.sort(minecraftVersion.getModVersions(), Collections.reverseOrder());
         }
         return project.getMinecraftVersions();
     }

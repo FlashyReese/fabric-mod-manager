@@ -1,6 +1,5 @@
 package me.flashyreese.fabricmm.api.schema.curse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CurseFile {
@@ -13,6 +12,7 @@ public class CurseFile {
     private List<CurseDependency> dependencies;
     private List<String> gameVersion;
     private List<CurseModule> modules;
+    private String gameVersionDateReleased;
 
     public String getDisplayName() {
         return displayName;
@@ -44,6 +44,10 @@ public class CurseFile {
 
     public List<CurseModule> getModules() {
         return modules;
+    }
+
+    public String getGameVersionDateReleased() {
+        return gameVersionDateReleased;
     }
 
     public void removeFabricFromGameVersion(){
