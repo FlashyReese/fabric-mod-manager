@@ -36,6 +36,7 @@ public class RepositoryManager {
     }
 
     private void loadLocalRepositories(boolean force) throws Exception {
+        users.clear();
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, User.class);
         JsonAdapter<List<User>> adapter = moshi.adapter(type);
