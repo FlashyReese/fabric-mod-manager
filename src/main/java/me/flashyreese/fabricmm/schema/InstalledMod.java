@@ -14,6 +14,7 @@ public class InstalledMod {
     private String[] authors;
     private Map<String, String> contact;
     private String environment;
+    private Map<String, String> depends;
     private String minecraftVersion;//Need Fabric modders to include this in fabric.mod.json depends section
     private String installedPath;
 
@@ -80,14 +81,13 @@ public class InstalledMod {
     private boolean isInstalledViaFMM(){
         File installedMod = new File(this.getInstalledPath());
         String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
-        return fileName.contains("__") && fileName.split("__").length == 3;
+        return fileName.contains("__") && fileName.split("__").length == 3;//Fixme: Jank
     }
 
     public void assignMinecraftVersion() {
-        /*if(minecraftVersion == null){
-            //Was using this
-        }*/
-        if(isInstalledViaFMM()){
+        if (depends != null && depends.containsKey("minecraft")){
+            setMinecraftVersion(depends.get("minecraft"));
+        }else if(isInstalledViaFMM()){
             File installedMod = new File(this.getInstalledPath());
             String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
             String[] splitString = fileName.split("__");
