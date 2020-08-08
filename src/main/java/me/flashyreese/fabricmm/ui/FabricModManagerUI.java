@@ -14,6 +14,8 @@ import java.util.Locale;
 
 public class FabricModManagerUI extends JFrame {
 
+    private final int SCALE = 65;
+
     private I18nManager i18nManager;
     private RepositoryManager repositoryManager;
     private JTabbedPane contentPane;
@@ -40,7 +42,7 @@ public class FabricModManagerUI extends JFrame {
 
     private void initComponents() throws Exception {
         i18nManager = new I18nManager("assets/lang");
-        i18nManager.setLocale(Locale.US);
+        i18nManager.setLocale(Locale.US);//Todo: addLoadFromConfig
 
         tray = SystemTray.getSystemTray();
         trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), new TranslatableText("fmm.title").toString());
@@ -49,7 +51,7 @@ public class FabricModManagerUI extends JFrame {
         contentPane = new JTabbedPane();
         //Fixme: Jank
         contentPane.setLocation(0, 0);
-        contentPane.setPreferredSize(new Dimension(1280, 720));
+        contentPane.setPreferredSize(new Dimension(16* SCALE, 9* SCALE));
 
         library = new LibraryManagerUI(contentPane);
         modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, trayIcon);

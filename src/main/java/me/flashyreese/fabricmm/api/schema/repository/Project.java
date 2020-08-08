@@ -10,8 +10,8 @@ public class Project {
     private String sourcesUrl;
     private int curseForgeProject;
 
+    private String projectUrl;
     private List<MinecraftVersion> minecraftVersions;//Curse will parse to this
-
     private User user;
 
     public String getId() {
@@ -36,6 +36,14 @@ public class Project {
 
     public int getCurseForgeProject() {
         return curseForgeProject;
+    }
+
+    public String getProjectUrl() {
+        return projectUrl;
+    }
+
+    public void setProjectUrl(String projectUrl) {
+        this.projectUrl = projectUrl;
     }
 
     public List<MinecraftVersion> getMinecraftVersions() {

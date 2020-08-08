@@ -29,7 +29,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
     private JMenu languageMenu;
     private JMenu helpMenu;
     private JMenuItem openMinecraftLauncher;
-    private JMenuItem updateLocalRepositories;
+    private JMenuItem updateLocalRepository;
     private JMenuItem checkForUpdates;
     private JMenuItem about;
 
@@ -46,7 +46,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
         languageMenu = new JMenu();
         helpMenu = new JMenu();
         openMinecraftLauncher = new JMenuItem();
-        updateLocalRepositories = new JMenuItem();
+        updateLocalRepository = new JMenuItem();
         checkForUpdates = new JMenuItem();
         about = new JMenuItem();
     }
@@ -63,15 +63,13 @@ public class FabricModManagerMenuBar extends JMenuBar {
             }
         });
 
-        updateLocalRepositories.addActionListener(e -> new Thread(() -> {
-            /*for(Repository repository: repositoryManager.getRepositories()){
-                try {
-                    repositoryManager.updateLocalRepository(repository);
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+        updateLocalRepository.addActionListener(e -> new Thread(() -> {
+            try {
+                repositoryManager.updateLocalRepository();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
-            modRepositoryBrowserUI.updateModList(repositoryManager);*/
+            modRepositoryBrowserUI.updateModList(repositoryManager);
         }).start());
 
         checkForUpdates.addActionListener(e -> new Thread(() -> {
@@ -104,7 +102,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
 
     private void loadComponents(){
         quickToolsMenu.add(openMinecraftLauncher);
-        repositoryMenu.add(updateLocalRepositories);
+        repositoryMenu.add(updateLocalRepository);
         helpMenu.add(checkForUpdates);
         helpMenu.add(about);
         this.add(quickToolsMenu);
@@ -117,7 +115,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
         quickToolsMenu.setText(new TranslatableText("fmm.menubar.quick_tools").toString());
         openMinecraftLauncher.setText(new TranslatableText("fmm.menubar.quick_tools.open_minecraft_launcher").toString());
         repositoryMenu.setText(new TranslatableText("fmm.menubar.repository").toString());
-        updateLocalRepositories.setText(new TranslatableText("fmm.menubar.repository.update_local_repositories").toString());
+        updateLocalRepository.setText(new TranslatableText("fmm.menubar.repository.update_local_repository").toString());
         languageMenu.setText(new TranslatableText("fmm.menubar.language").toString());
         helpMenu.setText(new TranslatableText("fmm.menubar.help").toString());
         checkForUpdates.setText(new TranslatableText("fmm.menubar.help.check_for_updates").toString());

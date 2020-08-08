@@ -38,13 +38,33 @@ public class UserInterfaceUtils {
         }
     }
 
+    public static ImageIcon getIconFromResource(String resource, int scale){
+        return getIconFromImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource(resource)), scale, Image.SCALE_SMOOTH);
+    }
+
+    public static ImageIcon getGrayScaledIconFromResource(String resource, int scale){
+        Image image = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource(resource));
+        ImageFilter filter = new GrayFilter(true, 50);
+        ImageProducer producer = new FilteredImageSource(image.getSource(), filter);
+        Image mage = Toolkit.getDefaultToolkit().createImage(producer);
+        return getIconFromImage(mage, scale, Image.SCALE_SMOOTH);
+    }
+
     public static ImageIcon getIconFromFile(File file) throws IOException {
         Image image = ImageIO.read(file);
-        return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
+        return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
     }
 
     public static ImageIcon getIconFromImage(Image image){
-        return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
+        return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
+    }
+
+    public static ImageIcon getIconFromImage(Image image, int scale){
+        return new ImageIcon(image.getScaledInstance(scale, scale, Image.SCALE_SMOOTH));
+    }
+
+    public static ImageIcon getIconFromImage(Image image, int scale, int hints){
+        return new ImageIcon(image.getScaledInstance(scale, scale, hints));
     }
 
     public static ImageIcon getGrayScaledIconFromFile(File file) throws IOException {
@@ -52,7 +72,7 @@ public class UserInterfaceUtils {
         ImageFilter filter = new GrayFilter(true, 50);
         ImageProducer producer = new FilteredImageSource(image.getSource(), filter);
         Image mage = Toolkit.getDefaultToolkit().createImage(producer);
-        return new ImageIcon(mage.getScaledInstance(64, 64, Image.SCALE_DEFAULT));
+        return new ImageIcon(mage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
     }
 
     public static String getEnglishStringList(String[] list){//Fixme: This will need a patch

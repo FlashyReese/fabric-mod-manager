@@ -32,10 +32,10 @@ public class RepositoryManager {
         this.repositoryCache = repositoryCache;
         this.repositoryUrl = repositoryUrl;
         this.users = new ArrayList<>();
-        loadLocalRepositories();
+        loadLocalRepositories(false);
     }
 
-    private void loadLocalRepositories() throws Exception {
+    private void loadLocalRepositories(boolean force) throws Exception {
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, User.class);
         JsonAdapter<List<User>> adapter = moshi.adapter(type);
@@ -49,7 +49,7 @@ public class RepositoryManager {
             for (Project project: user.getProjects()){
                 if(project.getCurseForgeProject() != -1){
                     File projectJsonFile = getProjectFile(project.getCurseForgeProject());
-                    if (projectJsonFile != null){
+                    if (projectJsonFile != null && !force){
                         Type newType = Types.newParameterizedType(List.class, MinecraftVersion.class);
                         JsonAdapter<List<MinecraftVersion>> jsonAdapter = moshi.adapter(newType);
                         FileReader fileReader = new FileReader(projectJsonFile);
@@ -59,6 +59,7 @@ public class RepositoryManager {
                         fileReader.close();
                         List<MinecraftVersion> minecraftVersions = jsonAdapter.fromJson(projectJson);
                         project.setMinecraftVersions(minecraftVersions);
+                        loadProjectInfo(project);
                     }else{
                         Future<?> future = executor.submit(() -> {
                             try {
@@ -95,10 +96,11 @@ public class RepositoryManager {
     }
 
     private void downloadProjectFile(Project project) throws Exception {
-        CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject());
+        CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), true);
         if (curseAddon.getDefaultCurseAttachment() != null && curseAddon.getDefaultCurseAttachment().getThumbnailUrl() != null){
             project.setIconUrl(curseAddon.getDefaultCurseAttachment().getThumbnailUrl());
         }
+        project.setProjectUrl(curseAddon.getWebsiteUrl());
         List<MinecraftVersion> minecraftVersions = convertCurseAddonToMinecraftFiles(curseAddon);
         Moshi moshi = new Moshi.Builder().build();
         JsonAdapter<List<MinecraftVersion>> jsonAdapter = moshi.adapter(Types.newParameterizedType(List.class, MinecraftVersion.class));
@@ -110,15 +112,22 @@ public class RepositoryManager {
         project.setMinecraftVersions(minecraftVersions);
     }
 
+    private void loadProjectInfo(Project project) throws Exception {
+        CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), false);
+        project.setProjectUrl(curseAddon.getWebsiteUrl());
+    }
+
     public List<MinecraftVersion> convertCurseAddonToMinecraftFiles(CurseAddon curseAddon) throws Exception {
         return convertCurseFilesToMinecraftVersions(curseAddon.getFiles());
     }
 
-    private CurseAddon getCurseAddon(String json) throws Exception {
+    private CurseAddon getCurseAddon(String json, boolean includesFiles) throws Exception {
         Moshi moshi = new Moshi.Builder().build();
         CurseAddon curseAddon = moshi.adapter(CurseAddon.class).fromJson(json);
         assert curseAddon != null;
-        processCurseFiles(curseAddon);
+        if(includesFiles){
+            processCurseFiles(curseAddon);
+        }
         return curseAddon;
     }
 
@@ -144,12 +153,12 @@ public class RepositoryManager {
         }
     }
 
-    private CurseAddon getCurseAddonFromProjectID(long id) throws Exception {
+    private CurseAddon getCurseAddonFromProjectID(long id, boolean includeFiles) throws Exception {
         URL url = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s", id));
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String addonJson = in.lines().collect(Collectors.joining());
         in.close();
-        return getCurseAddon(addonJson);
+        return getCurseAddon(addonJson, includeFiles);
     }
 
     private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(List<CurseFile> curseFiles) throws Exception {
@@ -180,6 +189,11 @@ public class RepositoryManager {
             }
         }
         return project.getMinecraftVersions();
+    }
+
+
+    public void updateLocalRepository() throws Exception {
+        loadLocalRepositories(true);
     }
 
     public List<User> getUsers() {
