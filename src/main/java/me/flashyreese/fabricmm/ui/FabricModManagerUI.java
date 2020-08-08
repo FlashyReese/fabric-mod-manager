@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmm.ui;
 
 import me.flashyreese.common.i18n.I18nManager;
-import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.components.FabricModManagerMenuBar;
@@ -45,7 +45,7 @@ public class FabricModManagerUI extends JFrame {
         i18nManager.setLocale(Locale.US);//Todo: addLoadFromConfig
 
         tray = SystemTray.getSystemTray();
-        trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), new TranslatableText("fmm.title").toString());
+        trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), new I18nText("fmm.title").toString());
 
         repositoryManager = new RepositoryManager(ConfigurationManager.getInstance().REPOSITORY_CACHE_DIR, "https://raw.githubusercontent.com/FlashyReese/fabric-mod-repository/master/curse.json");
         contentPane = new JTabbedPane();
@@ -77,9 +77,9 @@ public class FabricModManagerUI extends JFrame {
     public void updateComponentsText(){
         int index = contentPane.getSelectedIndex();
         contentPane.removeAll();
-        contentPane.addTab(new TranslatableText("fmm.library").toString(), library); //Fixme: Panel Scaling macOS looks chopped off
-        contentPane.addTab(new TranslatableText("fmm.mod_browser").toString(), modBrowser);
-        setTitle(new TranslatableText("fmm.title").toString());
+        contentPane.addTab(new I18nText("fmm.library").toString(), library); //Fixme: Panel Scaling macOS looks cropped off
+        contentPane.addTab(new I18nText("fmm.mod_browser").toString(), modBrowser);
+        setTitle(new I18nText("fmm.title").toString());
         library.updateComponentsText();
         modBrowser.updateComponentsText();
         menuBar.updateComponentsText();

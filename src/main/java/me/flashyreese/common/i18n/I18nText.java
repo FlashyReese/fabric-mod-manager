@@ -1,9 +1,9 @@
 package me.flashyreese.common.i18n;
 
-public class TranslatableText {
-    private String key;
+public class I18nText {
+    private final String key;
 
-    public TranslatableText(String key){
+    public I18nText(String key){
         this.key = key;
     }
 

@@ -1,6 +1,6 @@
 package me.flashyreese.fabricmm.util;
 
-import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.api.schema.repository.Project;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 
@@ -114,13 +114,13 @@ public class UserInterfaceUtils {
 
     public static String filterEnvironment(String environment){
         if(environment == null){
-            return new TranslatableText("fmm.filter_environment.null").toString();
+            return new I18nText("fmm.filter_environment.null").toString();
         }else if(environment.equals("*")){
-            return new TranslatableText("fmm.filter_environment.both").toString();
+            return new I18nText("fmm.filter_environment.both").toString();
         }else if(environment.equals("client")){
-            return new TranslatableText("fmm.filter_environment.client").toString();
+            return new I18nText("fmm.filter_environment.client").toString();
         }else{
-            return new TranslatableText("fmm.filter_environment.server").toString();
+            return new I18nText("fmm.filter_environment.server").toString();
         }
     }
 }

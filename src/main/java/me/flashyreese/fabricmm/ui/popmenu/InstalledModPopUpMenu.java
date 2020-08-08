@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmm.ui.popmenu;
 
-import me.flashyreese.common.i18n.ParsableTranslatableText;
-import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.common.i18n.ParsableI18nText;
+import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.ui.components.InstalledModFileDropList;
 import me.flashyreese.fabricmm.util.ModUtils;
@@ -26,15 +26,15 @@ public class InstalledModPopUpMenu extends JPopupMenu {
     }
 
     private void setupComponents(InstalledModFileDropList installedModFileDropList){
-        toggle.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new TranslatableText("fmm.library.disable").toString() : new TranslatableText("fmm.library.enable").toString());
+        toggle.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new I18nText("fmm.library.disable").toString() : new I18nText("fmm.library.enable").toString());
         toggle.addActionListener(arg0 -> {
             ModUtils.changeInstalledModState(installedModFileDropList.getSelectedValue());
             installedModFileDropList.updateUI();
         });
-        delete.setText(new TranslatableText("fmm.library.pop_menu.delete").toString());
+        delete.setText(new I18nText("fmm.library.pop_menu.delete").toString());
         delete.addActionListener(arg0 -> {
-            int result = JOptionPane.showConfirmDialog(null, new ParsableTranslatableText("fmm.library.pop_menu.delete.message",
-                    installedModFileDropList.getSelectedValue().getName()).toString(), new TranslatableText("fmm.library.pop_menu.delete.title").toString(),
+            int result = JOptionPane.showConfirmDialog(null, new ParsableI18nText("fmm.library.pop_menu.delete.message",
+                    installedModFileDropList.getSelectedValue().getName()).toString(), new I18nText("fmm.library.pop_menu.delete.title").toString(),
                     JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             if(result == JOptionPane.YES_OPTION){
                 InstalledMod installedMod = installedModFileDropList.getSelectedValue();
