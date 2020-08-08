@@ -389,6 +389,6 @@ public class ModRepositoryBrowserUI extends JPanel{
                 projectList.addItem(project);
             }
         }
-        projectList.refresh();
+        projectList.updateUI();
     }
 }

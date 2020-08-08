@@ -108,8 +108,11 @@ public class ProjectList extends JPanel {
         listModel.removeAllElements();
     }
 
-    public void refresh() {
-        list.repaint();
+    public void updateUI() {
+        super.updateUI();
+        if (list != null){
+            list.updateUI();
+        }
     }
 
     public void addItem(Project p) {

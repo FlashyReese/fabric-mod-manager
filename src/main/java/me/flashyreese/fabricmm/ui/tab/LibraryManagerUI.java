@@ -106,7 +106,7 @@ public class LibraryManagerUI extends JPanel {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
-            installedModFileDropList.refresh();
+            installedModFileDropList.updateUI();
         });
 
         Dim2i toggleInstalledModStateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 40, this.getWidth() / 2 - 30, 30);
@@ -114,7 +114,7 @@ public class LibraryManagerUI extends JPanel {
         toggleInstalledModState.addActionListener(e -> {
             if(installedModFileDropList.getSelectedValue() != null){
                 ModUtils.changeInstalledModState(installedModFileDropList.getSelectedValue());
-                this.installedModFileDropList.refresh();
+                this.installedModFileDropList.updateUI();
             }
         });
 
@@ -206,7 +206,7 @@ public class LibraryManagerUI extends JPanel {
         this.add(modWebsite);
         this.add(modIssues);
 
-        installedModFileDropList.refresh();
+        installedModFileDropList.updateUI();
     }
 
     public void updateComponentsText(){

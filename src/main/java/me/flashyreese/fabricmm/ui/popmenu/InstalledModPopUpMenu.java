@@ -29,7 +29,7 @@ public class InstalledModPopUpMenu extends JPopupMenu {
         toggle.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new TranslatableText("fmm.library.disable").toString() : new TranslatableText("fmm.library.enable").toString());
         toggle.addActionListener(arg0 -> {
             ModUtils.changeInstalledModState(installedModFileDropList.getSelectedValue());
-            installedModFileDropList.refresh();
+            installedModFileDropList.updateUI();
         });
         delete.setText(new TranslatableText("fmm.library.pop_menu.delete").toString());
         delete.addActionListener(arg0 -> {
@@ -41,7 +41,7 @@ public class InstalledModPopUpMenu extends JPopupMenu {
                 File location = new File(installedMod.getInstalledPath());
                 if(location.delete()){
                     installedModFileDropList.removeSelectedItem();
-                    installedModFileDropList.refresh();
+                    installedModFileDropList.updateUI();
                 }
             }
         });

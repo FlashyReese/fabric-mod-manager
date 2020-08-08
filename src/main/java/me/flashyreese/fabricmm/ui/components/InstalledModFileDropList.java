@@ -84,28 +84,34 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
         listModel.removeAllElements();
     }
 
-    public void refresh() {
+    @Override
+    public void updateUI() {
+        super.updateUI();
         filterListModel();
-        list.repaint();
+        if (list != null){
+            list.updateUI();
+        }
     }
 
     public void filterListModel(){
-        DefaultListModel<InstalledMod> filteredItems = new DefaultListModel<InstalledMod>();
-        ArrayList<InstalledMod> listMods = new ArrayList<InstalledMod>(listModel.getSize());
-        for (int i = 0; i < listModel.getSize(); i++) {
-            listMods.add(listModel.getElementAt(i));
-        }
-        for (InstalledMod mod: listMods){
-            if (mod.isEnabled()){
-                filteredItems.addElement(mod);
+        if (listModel != null){
+            DefaultListModel<InstalledMod> filteredItems = new DefaultListModel<InstalledMod>();
+            ArrayList<InstalledMod> listMods = new ArrayList<InstalledMod>(listModel.getSize());
+            for (int i = 0; i < listModel.getSize(); i++) {
+                listMods.add(listModel.getElementAt(i));
             }
-        }
-        for (InstalledMod mod: listMods){
-            if (!mod.isEnabled()){
-                filteredItems.addElement(mod);
+            for (InstalledMod mod: listMods){
+                if (mod.isEnabled()){
+                    filteredItems.addElement(mod);
+                }
             }
+            for (InstalledMod mod: listMods){
+                if (!mod.isEnabled()){
+                    filteredItems.addElement(mod);
+                }
+            }
+            list.setModel(filteredItems);
         }
-        list.setModel(filteredItems);
     }
 
     public void addItem(InstalledMod p) {
@@ -169,7 +175,7 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
             e.printStackTrace();
         } finally {
             evt.dropComplete(true);
-            refresh();
+            updateUI();
         }
     }
 }
