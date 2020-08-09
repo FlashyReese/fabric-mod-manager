@@ -14,6 +14,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public class LibraryManagerUI extends JPanel {
 
@@ -124,17 +125,17 @@ public class LibraryManagerUI extends JPanel {
         modWebsite.setBounds(modWebsiteDim.getOriginX(), modWebsiteDim.getOriginY(), modWebsiteDim.getWidth(), modWebsiteDim.getHeight());
         modWebsite.addActionListener(e -> {
             try {
-                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getContact().get("homepage")));
+                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getModMetadata().getContact().get("homepage")));
             } catch (IOException | URISyntaxException ioException) {
                 ioException.printStackTrace();
             }
         });
 
-        Dim2i modIssuesDim = new Dim2i(this.getWidth() / 4 * 3 + 5, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
+        Dim2i modIssuesDim = new Dim2i(this.getWidth() / 4 * 3 + 7, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
         modIssues.setBounds(modIssuesDim.getOriginX(), modIssuesDim.getOriginY(), modIssuesDim.getWidth(), modIssuesDim.getHeight());
         modIssues.addActionListener(e -> {
             try {
-                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getContact().get("sources")));
+                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getModMetadata().getContact().get("sources")));
             } catch (IOException | URISyntaxException ioException) {
                 ioException.printStackTrace();
             }
@@ -222,19 +223,19 @@ public class LibraryManagerUI extends JPanel {
 
     private void onModFileDropListSelect(){
         if(installedModFileDropList.getSelectedValue() != null){
+            InstalledMod selectedMod = installedModFileDropList.getSelectedValue();
             this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new I18nText("fmm.library.disable").toString() : new I18nText("fmm.library.enable").toString());
             this.toggleInstalledModState.setEnabled(true);
             this.checkForModUpdate.setEnabled(true);
-            this.modWebsite.setEnabled(installedModFileDropList.getSelectedValue().getContact().containsKey("homepage"));
-            this.modIssues.setEnabled(installedModFileDropList.getSelectedValue().getContact().containsKey("sources"));
-            InstalledMod selectedMod = installedModFileDropList.getSelectedValue();
-            this.modName.setText(selectedMod.getName());
+            this.modWebsite.setEnabled(selectedMod.getModMetadata().getContact().containsKey("homepage"));
+            this.modIssues.setEnabled(selectedMod.getModMetadata().getContact().containsKey("sources"));
+            this.modName.setText(selectedMod.getModMetadata().getName());
             selectedMod.assignMinecraftVersion();
             this.modMinecraftVersion.setText(selectedMod.getMinecraftVersion());
-            this.modVersion.setText(selectedMod.getVersion());
-            this.modId.setText(selectedMod.getId());
-            this.modAuthors.setText(UserInterfaceUtils.getEnglishStringList(selectedMod.getAuthors()));
-            this.modEnvironment.setText(UserInterfaceUtils.filterEnvironment(selectedMod.getEnvironment()));
+            this.modVersion.setText(selectedMod.getModMetadata().getVersion());
+            this.modId.setText(selectedMod.getModMetadata().getId());
+            this.modAuthors.setText(UserInterfaceUtils.getEnglishStringList((ArrayList<String>) selectedMod.getModMetadata().getAuthors()));
+            this.modEnvironment.setText(UserInterfaceUtils.filterEnvironment(selectedMod.getModMetadata().getEnvironment()));
         }else{
             this.toggleInstalledModState.setText(new I18nText("fmm.library.enable").toString());
             this.toggleInstalledModState.setEnabled(false);

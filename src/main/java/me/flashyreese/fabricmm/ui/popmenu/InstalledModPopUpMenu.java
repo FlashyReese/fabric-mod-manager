@@ -34,7 +34,7 @@ public class InstalledModPopUpMenu extends JPopupMenu {
         delete.setText(new I18nText("fmm.library.pop_menu.delete").toString());
         delete.addActionListener(arg0 -> {
             int result = JOptionPane.showConfirmDialog(null, new ParsableI18nText("fmm.library.pop_menu.delete.message",
-                    installedModFileDropList.getSelectedValue().getName()).toString(), new I18nText("fmm.library.pop_menu.delete.title").toString(),
+                    installedModFileDropList.getSelectedValue().getModMetadata().getName()).toString(), new I18nText("fmm.library.pop_menu.delete.title").toString(),
                     JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
             if(result == JOptionPane.YES_OPTION){
                 InstalledMod installedMod = installedModFileDropList.getSelectedValue();

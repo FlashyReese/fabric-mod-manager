@@ -2,9 +2,9 @@ package me.flashyreese.fabricmm.util;
 
 import com.squareup.moshi.Moshi;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
+import me.flashyreese.fabricmm.schema.FabricModMetadata;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.common.util.FileUtil;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -16,20 +16,18 @@ import java.util.stream.Collectors;
 public class ModUtils {
 
     public static InstalledMod getInstalledModFromJar(File file) throws IOException {
-        InstalledMod installedMod = null;
+        InstalledMod installedMod = new InstalledMod();
         final JarFile jarFile = new JarFile(file);
         final JarEntry fabricSchema = jarFile.getJarEntry("fabric.mod.json");
         if(fabricSchema != null) {
             final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(jarFile.getInputStream(fabricSchema), StandardCharsets.UTF_8));
             String fabricSchemaJson = bufferedReader.lines().collect(Collectors.joining());
             bufferedReader.close();
-            installedMod = new Moshi.Builder().build().adapter(InstalledMod.class).fromJson(fabricSchemaJson);
-            JSONObject fabricSchemaJsonObject = new JSONObject(fabricSchemaJson);
-            String icon = fabricSchemaJsonObject.getString("icon");//Fixme: Jank
-            final JarEntry iconJarEntry = jarFile.getJarEntry(icon);
+            FabricModMetadata fabricModMetadata = new Moshi.Builder().build().adapter(FabricModMetadata.class).fromJson(fabricSchemaJson);
+            installedMod.setModMetadata(fabricModMetadata);
+            final JarEntry iconJarEntry = jarFile.getJarEntry(installedMod.getModMetadata().getIcon());
             if (iconJarEntry != null){
-                assert installedMod != null;
-                File iconFile = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getId()));
+                File iconFile = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getModMetadata().getId()));
                 if(!iconFile.exists()){
                     InputStream inputStream = jarFile.getInputStream(iconJarEntry);
                     FileOutputStream fileOutputStream = new FileOutputStream(iconFile);

@@ -3,40 +3,12 @@ package me.flashyreese.fabricmm.schema;
 import me.flashyreese.common.i18n.I18nText;
 
 import java.io.File;
-import java.util.Map;
 
 public class InstalledMod {
-    private String id;
-    private String name;
-    private String version;
-    private String description;
     private String iconPath;
-    private String[] authors;
-    private Map<String, String> contact;
-    private String environment;
-    private Map<String, String> depends;
     private String minecraftVersion;//Need Fabric modders to include this in fabric.mod.json depends section
     private String installedPath;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getDescription() {
-        return description;
-    }
+    private FabricModMetadata modMetadata;
 
     public String getIconPath() {
         return iconPath;
@@ -44,18 +16,6 @@ public class InstalledMod {
 
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
-    }
-
-    public String[] getAuthors() {
-        return authors;
-    }
-
-    public Map<String, String> getContact() {
-        return contact;
-    }
-
-    public String getEnvironment() {
-        return environment;
     }
 
     public String getMinecraftVersion() {
@@ -74,6 +34,14 @@ public class InstalledMod {
         this.installedPath = installedPath;
     }
 
+    public FabricModMetadata getModMetadata() {
+        return modMetadata;
+    }
+
+    public void setModMetadata(FabricModMetadata modMetadata) {
+        this.modMetadata = modMetadata;
+    }
+
     public boolean isEnabled(){
         return this.getInstalledPath().endsWith(".jar");
     }
@@ -85,8 +53,8 @@ public class InstalledMod {
     }
 
     public void assignMinecraftVersion() {
-        if (depends != null && depends.containsKey("minecraft")){
-            setMinecraftVersion(depends.get("minecraft"));
+        if (modMetadata.getDepends() != null && modMetadata.getDepends().containsKey("minecraft")){
+            setMinecraftVersion(modMetadata.getDepends().get("minecraft"));
         }else if(isInstalledViaFMM()){
             File installedMod = new File(this.getInstalledPath());
             String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));

@@ -59,8 +59,8 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
                         e.printStackTrace();
                         renderer.setIcon(FileSystemView.getFileSystemView().getSystemIcon(file));
                     }
-                    renderer.setText(String.format("%s %s", mod.getName(), mod.getVersion()));
-                    renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", mod.getDescription()));
+                    renderer.setText(String.format("%s %s", mod.getModMetadata().getName(), mod.getModMetadata().getVersion()));
+                    renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", mod.getModMetadata().getDescription()));
                 }
 
                 return renderer;
@@ -162,13 +162,11 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
                 for (File file : files) {
                     if(file.getName().endsWith(".jar") || file.getName().endsWith(".fabricmod")){
                         InstalledMod mod = ModUtils.getInstalledModFromJar(file);
-                        if(mod != null){
-                            File newFile = new File(ModUtils.getModsDirectory(), file.getName());
-                            Files.copy(file.toPath(), newFile.toPath());
-                            if (newFile.length() == file.length()){
-                                InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
-                                listModel.addElement(newMod);
-                            }
+                        File newFile = new File(ModUtils.getModsDirectory(), file.getName());
+                        Files.copy(file.toPath(), newFile.toPath());
+                        if (newFile.length() == file.length()){
+                            InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
+                            listModel.addElement(newMod);
                         }
                     }
                 }
