@@ -86,4 +86,11 @@ public class FabricModManagerUI extends JFrame {
         contentPane.setSelectedIndex(index == -1 ? 0 : index);
     }
 
+    public RepositoryManager getRepositoryManager() {
+        return repositoryManager;
+    }
+
+    public ModRepositoryBrowserUI getModBrowser() {
+        return modBrowser;
+    }
 }

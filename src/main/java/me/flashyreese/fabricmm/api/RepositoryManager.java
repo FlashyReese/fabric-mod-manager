@@ -38,7 +38,6 @@ public class RepositoryManager {
         this.repositoryCache = repositoryCache;
         this.repositoryUrl = repositoryUrl;
         this.users = new ArrayList<>();
-        loadLocalRepositories(false);
     }
 
     private void loadLocalRepositories(boolean force) throws Exception {

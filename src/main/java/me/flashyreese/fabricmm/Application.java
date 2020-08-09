@@ -29,7 +29,17 @@ public class Application {
                 e.printStackTrace();
             }
             fabricModManagerUI.setVisible(true);
+            FabricModManagerUI finalFabricModManagerUI = fabricModManagerUI;
+            new Thread(() -> {
+                try {
+                    finalFabricModManagerUI.getRepositoryManager().updateLocalRepository();
+                    finalFabricModManagerUI.getModBrowser().updateModList(finalFabricModManagerUI.getRepositoryManager());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
         });
+
         Thread downloaderThread = new Thread(DIRECT_DOWNLOADER);
         downloaderThread.start();
         downloaderThread.join();
