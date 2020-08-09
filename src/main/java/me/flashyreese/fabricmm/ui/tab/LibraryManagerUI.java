@@ -1,6 +1,6 @@
 package me.flashyreese.fabricmm.ui.tab;
 
-import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.ui.components.InstalledModFileDropList;
 import me.flashyreese.fabricmm.ui.components.InstalledModPopClickListener;
@@ -80,9 +80,7 @@ public class LibraryManagerUI extends JPanel {
         for(InstalledMod installedMod: ModUtils.getInstalledModsFromDir(ModUtils.getModsDirectory())){
             installedModFileDropList.addItem(installedMod);
         }
-        installedModFileDropList.getList().addListSelectionListener(arg0 -> {
-            onModFileDropListSelect();
-        });
+        installedModFileDropList.getList().addListSelectionListener(arg0 -> onModFileDropListSelect());
         installedModFileDropList.getList().addMouseListener(new InstalledModPopClickListener(installedModFileDropList));
 
         Dim2i openModsFolderDim = new Dim2i(10, this.getHeight() - 40, this.getWidth() / 2 / 2, 30);
@@ -120,9 +118,7 @@ public class LibraryManagerUI extends JPanel {
 
         Dim2i checkForModUpdateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 70, this.getWidth() / 2 - 30, 30);
         checkForModUpdate.setBounds(checkForModUpdateDim.getOriginX(), checkForModUpdateDim.getOriginY(), checkForModUpdateDim.getWidth(), checkForModUpdateDim.getHeight());
-        checkForModUpdate.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, "This does nothing at the moment");
-        });
+        checkForModUpdate.addActionListener(e -> JOptionPane.showMessageDialog(null, "This does nothing at the moment"));
 
         Dim2i modWebsiteDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
         modWebsite.setBounds(modWebsiteDim.getOriginX(), modWebsiteDim.getOriginY(), modWebsiteDim.getWidth(), modWebsiteDim.getHeight());
@@ -210,23 +206,23 @@ public class LibraryManagerUI extends JPanel {
     }
 
     public void updateComponentsText(){
-        openModsFolder.setText(new TranslatableText("fmm.library.open_mods_folder").toString());
-        refreshMods.setText(new TranslatableText("fmm.library.refresh_mods").toString());
-        checkForModUpdate.setText(new TranslatableText("fmm.library.check_for_update").toString());
-        modWebsite.setText(new TranslatableText("fmm.library.website").toString());
-        modIssues.setText(new TranslatableText("fmm.library.issues").toString());
-        modEnvironmentLabel.setText(new TranslatableText("fmm.library.mod_info.environment").toString());
-        modNameLabel.setText(new TranslatableText("fmm.library.mod_info.name").toString());
-        modMinecraftVersionLabel.setText(new TranslatableText("fmm.library.mod_info.minecraft_version").toString());
-        modVersionLabel.setText(new TranslatableText("fmm.library.mod_info.version").toString());
-        modIdLabel.setText(new TranslatableText("fmm.library.mod_info.id").toString());
-        modAuthorsLabel.setText(new TranslatableText("fmm.library.mod_info.authors").toString());
+        openModsFolder.setText(new I18nText("fmm.library.open_mods_folder").toString());
+        refreshMods.setText(new I18nText("fmm.library.refresh_mods").toString());
+        checkForModUpdate.setText(new I18nText("fmm.library.check_for_update").toString());
+        modWebsite.setText(new I18nText("fmm.library.website").toString());
+        modIssues.setText(new I18nText("fmm.library.issues").toString());
+        modEnvironmentLabel.setText(new I18nText("fmm.library.mod_info.environment").toString());
+        modNameLabel.setText(new I18nText("fmm.library.mod_info.name").toString());
+        modMinecraftVersionLabel.setText(new I18nText("fmm.library.mod_info.minecraft_version").toString());
+        modVersionLabel.setText(new I18nText("fmm.library.mod_info.version").toString());
+        modIdLabel.setText(new I18nText("fmm.library.mod_info.id").toString());
+        modAuthorsLabel.setText(new I18nText("fmm.library.mod_info.authors").toString());
         onModFileDropListSelect();
     }
 
     private void onModFileDropListSelect(){
         if(installedModFileDropList.getSelectedValue() != null){
-            this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new TranslatableText("fmm.library.disable").toString() : new TranslatableText("fmm.library.enable").toString());
+            this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new I18nText("fmm.library.disable").toString() : new I18nText("fmm.library.enable").toString());
             this.toggleInstalledModState.setEnabled(true);
             this.checkForModUpdate.setEnabled(true);
             this.modWebsite.setEnabled(installedModFileDropList.getSelectedValue().getContact().containsKey("homepage"));
@@ -240,17 +236,17 @@ public class LibraryManagerUI extends JPanel {
             this.modAuthors.setText(UserInterfaceUtils.getEnglishStringList(selectedMod.getAuthors()));
             this.modEnvironment.setText(UserInterfaceUtils.filterEnvironment(selectedMod.getEnvironment()));
         }else{
-            this.toggleInstalledModState.setText(new TranslatableText("fmm.library.enable").toString());
+            this.toggleInstalledModState.setText(new I18nText("fmm.library.enable").toString());
             this.toggleInstalledModState.setEnabled(false);
             this.checkForModUpdate.setEnabled(false);
             this.modWebsite.setEnabled(false);
             this.modIssues.setEnabled(false);
-            this.modName.setText(new TranslatableText("fmm.library.none_selected").toString());
-            this.modMinecraftVersion.setText(new TranslatableText("fmm.library.none_selected").toString());
-            this.modVersion.setText(new TranslatableText("fmm.library.none_selected").toString());
-            this.modId.setText(new TranslatableText("fmm.library.none_selected").toString());
-            this.modAuthors.setText(new TranslatableText("fmm.library.none_selected").toString());
-            this.modEnvironment.setText(new TranslatableText("fmm.library.none_selected").toString());
+            this.modName.setText(new I18nText("fmm.library.none_selected").toString());
+            this.modMinecraftVersion.setText(new I18nText("fmm.library.none_selected").toString());
+            this.modVersion.setText(new I18nText("fmm.library.none_selected").toString());
+            this.modId.setText(new I18nText("fmm.library.none_selected").toString());
+            this.modAuthors.setText(new I18nText("fmm.library.none_selected").toString());
+            this.modEnvironment.setText(new I18nText("fmm.library.none_selected").toString());
         }
     }
 

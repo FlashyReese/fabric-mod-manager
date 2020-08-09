@@ -2,16 +2,16 @@ package me.flashyreese.common.i18n;
 
 public class ParsableText{
 
-    private String parsableText;
-    private String[] args;
+    private final String parsableText;
+    private final String[] args;
 
     public ParsableText(String parsableText, String... args){
         this.parsableText = parsableText;
         this.args = args;
     }
 
-    public ParsableText(TranslatableText translatableText, String... args){
-        this.parsableText = translatableText.toString();
+    public ParsableText(I18nText i18nText, String... args){
+        this.parsableText = i18nText.toString();
         this.args = args;
     }
 

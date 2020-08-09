@@ -2,7 +2,7 @@ package me.flashyreese.fabricmm.ui.components;
 
 import com.vdurmont.semver4j.Semver;
 import me.flashyreese.common.i18n.I18nManager;
-import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
@@ -84,7 +84,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
                     if(Application.getVersion().isLowerThan(latest)){
                         Desktop.getDesktop().browse(new URI("https://github.com/FlashyReese/fabric-mod-manager/releases"));
                     }else{
-                        JOptionPane.showMessageDialog(null, new TranslatableText("fmm.menubar.help.check_for_updates.up_to_date").toString());
+                        JOptionPane.showMessageDialog(null, new I18nText("fmm.menubar.help.check_for_updates.up_to_date").toString());
                     }
                 }
             }catch (Exception ex){
@@ -112,14 +112,14 @@ public class FabricModManagerMenuBar extends JMenuBar {
     }
 
     public void updateComponentsText(){
-        quickToolsMenu.setText(new TranslatableText("fmm.menubar.quick_tools").toString());
-        openMinecraftLauncher.setText(new TranslatableText("fmm.menubar.quick_tools.open_minecraft_launcher").toString());
-        repositoryMenu.setText(new TranslatableText("fmm.menubar.repository").toString());
-        updateLocalRepository.setText(new TranslatableText("fmm.menubar.repository.update_local_repository").toString());
-        languageMenu.setText(new TranslatableText("fmm.menubar.language").toString());
-        helpMenu.setText(new TranslatableText("fmm.menubar.help").toString());
-        checkForUpdates.setText(new TranslatableText("fmm.menubar.help.check_for_updates").toString());
-        about.setText(new TranslatableText("fmm.menubar.help.about").toString());
+        quickToolsMenu.setText(new I18nText("fmm.menubar.quick_tools").toString());
+        openMinecraftLauncher.setText(new I18nText("fmm.menubar.quick_tools.open_minecraft_launcher").toString());
+        repositoryMenu.setText(new I18nText("fmm.menubar.repository").toString());
+        updateLocalRepository.setText(new I18nText("fmm.menubar.repository.update_local_repository").toString());
+        languageMenu.setText(new I18nText("fmm.menubar.language").toString());
+        helpMenu.setText(new I18nText("fmm.menubar.help").toString());
+        checkForUpdates.setText(new I18nText("fmm.menubar.help.check_for_updates").toString());
+        about.setText(new I18nText("fmm.menubar.help.about").toString());
     }
 
     private void loadAvailableLocales(FabricModManagerUI fabricModManagerUI, I18nManager i18nManager){
@@ -128,6 +128,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
             JMenuItem menuItem = new JMenuItem();
             menuItem.setText(locale.getDisplayName());
             menuItem.addActionListener(e -> {
+
                 try {
                     i18nManager.setLocale(locale);
                 } catch (Exception exception) {

@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 
 public class InstalledModPopClickListener extends MouseAdapter {
 
-    private InstalledModFileDropList installedModFileDropList;
+    private final InstalledModFileDropList installedModFileDropList;
 
     public InstalledModPopClickListener(InstalledModFileDropList installedModFileDropList) {
         this.installedModFileDropList = installedModFileDropList;

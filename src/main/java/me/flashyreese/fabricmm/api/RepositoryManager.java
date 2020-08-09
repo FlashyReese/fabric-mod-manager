@@ -22,13 +22,15 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class RepositoryManager {
-    private volatile List<User> users;
+    private final List<User> users;
     private final File repositoryCache;
     private final String repositoryUrl;
 
     public RepositoryManager(File repositoryCache, String repositoryUrl) throws Exception {
-        if(repositoryCache.exists()){
-            repositoryCache.mkdirs();
+        if(!repositoryCache.exists()){
+            if(!repositoryCache.mkdirs()){
+                throw new Exception("Some went wrong creating directories");
+            }
         }
         this.repositoryCache = repositoryCache;
         this.repositoryUrl = repositoryUrl;
@@ -47,6 +49,7 @@ public class RepositoryManager {
         List<User> usersRepository = adapter.fromJson(repository);
         final ExecutorService executor = Executors.newFixedThreadPool(8);
         final List<Future<?>> futures = new ArrayList<>();
+        assert usersRepository != null;
         for (User user: usersRepository){
             for (Project project: user.getProjects()){
                 if(project.getCurseForgeProject() != -1){
@@ -119,7 +122,7 @@ public class RepositoryManager {
         project.setProjectUrl(curseAddon.getWebsiteUrl());
     }
 
-    public List<MinecraftVersion> convertCurseAddonToMinecraftFiles(CurseAddon curseAddon) throws Exception {
+    public List<MinecraftVersion> convertCurseAddonToMinecraftFiles(CurseAddon curseAddon) {
         return convertCurseFilesToMinecraftVersions(curseAddon.getFiles());
     }
 
@@ -163,7 +166,7 @@ public class RepositoryManager {
         return getCurseAddon(addonJson, includeFiles);
     }
 
-    private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(List<CurseFile> curseFiles) throws Exception {
+    private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(List<CurseFile> curseFiles) {
         Project project = new Project();
         project.setMinecraftVersions(new ArrayList<>());
         for (CurseFile curseFile: curseFiles){
@@ -194,9 +197,9 @@ public class RepositoryManager {
                 }
             }
         }
-        Collections.sort(project.getMinecraftVersions(), Collections.reverseOrder());
+        project.getMinecraftVersions().sort(Collections.reverseOrder());
         for (MinecraftVersion minecraftVersion: project.getMinecraftVersions()){
-            Collections.sort(minecraftVersion.getModVersions(), Collections.reverseOrder());
+            minecraftVersion.getModVersions().sort(Collections.reverseOrder());
         }
         return project.getMinecraftVersions();
     }

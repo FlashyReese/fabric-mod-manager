@@ -37,8 +37,8 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
      */
     public InstalledModFileDropList() {
         setLayout(null);
-        listModel = new DefaultListModel<InstalledMod>();
-        list = new JList<InstalledMod>();
+        listModel = new DefaultListModel<>();
+        list = new JList<>();
         new DropTarget(list, this);
         list.setModel(listModel);
         list.setDragEnabled(true);
@@ -95,8 +95,8 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
 
     public void filterListModel(){
         if (listModel != null){
-            DefaultListModel<InstalledMod> filteredItems = new DefaultListModel<InstalledMod>();
-            ArrayList<InstalledMod> listMods = new ArrayList<InstalledMod>(listModel.getSize());
+            DefaultListModel<InstalledMod> filteredItems = new DefaultListModel<>();
+            ArrayList<InstalledMod> listMods = new ArrayList<>(listModel.getSize());
             for (int i = 0; i < listModel.getSize(); i++) {
                 listMods.add(listModel.getElementAt(i));
             }
@@ -165,8 +165,10 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
                         if(mod != null){
                             File newFile = new File(ModUtils.getModsDirectory(), file.getName());
                             Files.copy(file.toPath(), newFile.toPath());
-                            InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
-                            listModel.addElement(newMod);
+                            if (newFile.length() == file.length()){
+                                InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
+                                listModel.addElement(newMod);
+                            }
                         }
                     }
                 }

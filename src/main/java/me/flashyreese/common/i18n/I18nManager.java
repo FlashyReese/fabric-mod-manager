@@ -44,7 +44,7 @@ public class I18nManager {
     }
 
     private ArrayList<Locale> findAvailableLocales() throws Exception {
-        ArrayList<Locale> availableLocales = new ArrayList<Locale>();
+        ArrayList<Locale> availableLocales = new ArrayList<>();
         final File jarFile = new File(I18nManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         if(jarFile.isFile()) {
             final JarFile jar = new JarFile(jarFile);
@@ -82,7 +82,7 @@ public class I18nManager {
     }
 
     private HashMap<String, String> getTranslationsForLocale(Locale locale) throws Exception {
-        HashMap<String, String> translations = new HashMap<String, String>();
+        HashMap<String, String> translations = new HashMap<>();
         final File jarFile = new File(I18nManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         if(jarFile.isFile()) {
             final JarFile jar = new JarFile(jarFile);

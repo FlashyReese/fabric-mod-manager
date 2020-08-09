@@ -25,9 +25,10 @@ public class ModUtils {
             bufferedReader.close();
             installedMod = new Moshi.Builder().build().adapter(InstalledMod.class).fromJson(fabricSchemaJson);
             JSONObject fabricSchemaJsonObject = new JSONObject(fabricSchemaJson);
-            String icon = fabricSchemaJsonObject.getString("icon");
+            String icon = fabricSchemaJsonObject.getString("icon");//Fixme: Jank
             final JarEntry iconJarEntry = jarFile.getJarEntry(icon);
             if (iconJarEntry != null){
+                assert installedMod != null;
                 File iconFile = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getId()));
                 if(!iconFile.exists()){
                     InputStream inputStream = jarFile.getInputStream(iconJarEntry);
@@ -49,7 +50,7 @@ public class ModUtils {
 
     public static List<InstalledMod> getInstalledModsFromDir(File dir) throws Exception {
         if(!dir.exists())dir.mkdirs();
-        List<InstalledMod> installedMods = new ArrayList<InstalledMod>();
+        List<InstalledMod> installedMods = new ArrayList<>();
         if(!dir.isDirectory()){
             throw new Exception("This is not a directory???");
         }
@@ -94,7 +95,7 @@ public class ModUtils {
         return new File(findDefaultInstallDir().getAbsolutePath() + File.separator + "mods");
     }
 
-    public static InstalledMod changeInstalledModState(InstalledMod installedMod){
+    public static void changeInstalledModState(InstalledMod installedMod){
         File newFile;
         if(installedMod.isEnabled()){
             newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "fabricmod");
@@ -102,7 +103,6 @@ public class ModUtils {
             newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "jar");
         }
         installedMod.setInstalledPath(newFile.getAbsolutePath());
-        return installedMod;
     }
 
 }

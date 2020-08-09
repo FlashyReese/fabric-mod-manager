@@ -7,23 +7,19 @@ import java.awt.Font;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 
 public class MessageWithLink extends JEditorPane {
 
     public MessageWithLink(String htmlBody) {
         super("text/html", "<html><body style=\"" + getStyle() + "\">" + htmlBody + "</body></html>");
-        addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                        try {
-                            desktop.browse(e.getURL().toURI());
-                        } catch (Exception e2) {
-                            e2.printStackTrace();
-                        }
+        addHyperlinkListener(e -> {
+            if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    try {
+                        desktop.browse(e.getURL().toURI());
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
                     }
                 }
             }
@@ -40,9 +36,9 @@ public class MessageWithLink extends JEditorPane {
 
         // create some css from the label's font
         StringBuffer style = new StringBuffer("font-family:" + font.getFamily() + ";");
-        style.append("font-weight:" + (font.isBold() ? "bold" : "normal") + ";");
-        style.append("font-size:" + font.getSize() + "pt;");
-        style.append("background-color: rgb("+color.getRed()+","+color.getGreen()+","+color.getBlue()+");");
+        style.append("font-weight:").append(font.isBold() ? "bold" : "normal").append(";");
+        style.append("font-size:").append(font.getSize()).append("pt;");
+        style.append("background-color: rgb(").append(color.getRed()).append(",").append(color.getGreen()).append(",").append(color.getBlue()).append(");");
         return style;
     }
 }

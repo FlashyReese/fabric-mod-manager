@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmm.ui.components;
 
-import me.flashyreese.common.i18n.ParsableTranslatableText;
-import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.common.i18n.ParsableI18nText;
+import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.api.schema.repository.MinecraftVersion;
 import me.flashyreese.fabricmm.api.schema.repository.Project;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
@@ -19,8 +19,8 @@ public class ProjectList extends JPanel {
 
     public ProjectList() {
         setLayout(null);
-        listModel = new DefaultListModel<Project>();
-        list = new JList<Project>();
+        listModel = new DefaultListModel<>();
+        list = new JList<>();
         list.setModel(listModel);
         list.setDragEnabled(true);
         list.setCellRenderer(new DefaultListCellRenderer(){
@@ -34,7 +34,7 @@ public class ProjectList extends JPanel {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    renderer.setText(new ParsableTranslatableText("fmm.mod_browser.mod_list.label", project.getName(), project.getUser().getName()).toString());
+                    renderer.setText(new ParsableI18nText("fmm.mod_browser.mod_list.label", project.getName(), project.getUser().getName()).toString());
                     renderer.setToolTipText(String.format("<html><p width=\"150\">%s</p></html>", project.getDescription()));
                 }
 
@@ -48,7 +48,7 @@ public class ProjectList extends JPanel {
     }
 
     public void searchFilter(String searchTerm, String type){//Fixme: really jank, might include descriptions in general search
-        DefaultListModel<Project> filteredItems = new DefaultListModel<Project>();
+        DefaultListModel<Project> filteredItems = new DefaultListModel<>();
         ArrayList<Project> listProjects = new ArrayList<>(listModel.getSize());
         for (int i = 0; i < listModel.getSize(); i++) {
             listProjects.add(listModel.getElementAt(i));
@@ -57,7 +57,7 @@ public class ProjectList extends JPanel {
             list.setModel(listModel);
             return;
         }
-        if(type.equals(new TranslatableText("fmm.mod_browser.filter.general").toString())){
+        if(type.equals(new I18nText("fmm.mod_browser.filter.general").toString())){
             for (Project project: listProjects){
                 if (project.getName().toLowerCase().contains(searchTerm.toLowerCase()) || project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())){
                     if(!filteredItems.contains(project)){
@@ -74,15 +74,15 @@ public class ProjectList extends JPanel {
             }
         }else{
             for (Project project: listProjects){
-                if(type.equals(new TranslatableText("fmm.mod_browser.filter.name").toString())){
+                if(type.equals(new I18nText("fmm.mod_browser.filter.name").toString())){
                     if (project.getName().toLowerCase().contains(searchTerm.toLowerCase())){
                         filteredItems.addElement(project);
                     }
-                }else if(type.equals(new TranslatableText("fmm.mod_browser.filter.author").toString())){
+                }else if(type.equals(new I18nText("fmm.mod_browser.filter.author").toString())){
                     if (project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())){
                         filteredItems.addElement(project);
                     }
-                }else if(type.equals(new TranslatableText("fmm.mod_browser.filter.minecraft_version").toString())){
+                }else if(type.equals(new I18nText("fmm.mod_browser.filter.minecraft_version").toString())){
                     for (MinecraftVersion minecraftVersion: project.getMinecraftVersions()){
                         if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
                             if(!filteredItems.contains(project)){

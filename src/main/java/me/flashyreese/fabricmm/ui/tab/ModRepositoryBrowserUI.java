@@ -1,7 +1,7 @@
 package me.flashyreese.fabricmm.ui.tab;
 
-import me.flashyreese.common.i18n.ParsableTranslatableText;
-import me.flashyreese.common.i18n.TranslatableText;
+import me.flashyreese.common.i18n.ParsableI18nText;
+import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.api.schema.repository.*;
@@ -55,7 +55,7 @@ public class ModRepositoryBrowserUI extends JPanel{
     private JLabel authorName;
     private ArrayList<JButton> authorContacts;
 
-    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager, TrayIcon trayIcon) throws Exception {
+    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager, TrayIcon trayIcon) {
         setLayout(null);
         setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
@@ -64,13 +64,13 @@ public class ModRepositoryBrowserUI extends JPanel{
         updateComponentsText();
     }
 
-    private void initComponents() throws Exception {
+    private void initComponents() {
         searchBar = new JTextField();
         projectList = new ProjectList();
-        filterType = new JComboBox<String>();
-        minecraftVersion = new JComboBox<MinecraftVersion>();
+        filterType = new JComboBox<>();
+        minecraftVersion = new JComboBox<>();
         minecraftVersionLabel = new JLabel();
-        modVersion = new JComboBox<ModVersion>();
+        modVersion = new JComboBox<>();
         modVersionLabel = new JLabel();
         download = new JButton();
         projectWebsite = new JButton();
@@ -102,9 +102,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         Dim2i modFileListDim = new Dim2i(10, 50, this.getWidth() / 2 - 20, this.getHeight() - 60);
         projectList.setLocation(modFileListDim.getOriginX(), modFileListDim.getOriginY());
         projectList.setSize(modFileListDim.getWidth(), modFileListDim.getHeight());
-        projectList.getList().addListSelectionListener(arg0 -> {
-            onProjectListSelect();
-        });
+        projectList.getList().addListSelectionListener(arg0 -> onProjectListSelect());
 
         Dim2i searchTypeDim = new Dim2i(this.getWidth() / 8 * 3, 10, this.getWidth() / 8 - 10, 30);
         filterType.setBounds(searchTypeDim.getOriginX(), searchTypeDim.getOriginY(), searchTypeDim.getWidth(), searchTypeDim.getHeight());
@@ -123,9 +121,7 @@ public class ModRepositoryBrowserUI extends JPanel{
                 return renderer;
             }
         });
-        minecraftVersion.addActionListener(e -> {
-            updateModVersions();
-        });
+        minecraftVersion.addActionListener(e -> updateModVersions());
 
         modVersionLabel.setBounds(this.getWidth() / 2, this.getHeight() - 80, this.getWidth() / 4, 30);
         modVersionLabel.setFont(labelFont);
@@ -214,12 +210,15 @@ public class ModRepositoryBrowserUI extends JPanel{
         map.put("discordUrl", "assets/icons/discord.png");
         map.put("githubUrl", "assets/icons/github.png");
         map.put("patreonUrl", "assets/icons/patreon.png");
+        map.put("twitterUrl", "assets/icons/twitter.png");
+        map.put("twitchUrl", "assets/icons/twitch.png");
+        map.put("youtubeUrl", "assets/icons/youtube.png");
         int offsetX = 0;
         User user = project.getUser();
         for (Map.Entry<String, String> entry: user.getContacts().entrySet()){
             if (map.containsKey(entry.getKey())){
                 JButton jButton = new JButton();
-                jButton.setIcon(UserInterfaceUtils.getIconFromResource(map.get(entry.getKey()), 64));
+                jButton.setIcon(UserInterfaceUtils.getIconFromResource(map.get(entry.getKey()), 50));
                 jButton.setBorderPainted(false);
                 jButton.setFocusPainted(false);
                 jButton.setContentAreaFilled(false);
@@ -233,7 +232,7 @@ public class ModRepositoryBrowserUI extends JPanel{
                     }
                 });
                 jButtonList.add(jButton);
-                offsetX += 74;
+                offsetX += 60;
             }
         }
         return jButtonList;
@@ -266,19 +265,19 @@ public class ModRepositoryBrowserUI extends JPanel{
 
     public void updateComponentsText(){
         filterType.removeAllItems();
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.general").toString());
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.name").toString());
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.author").toString());
-        filterType.addItem(new TranslatableText("fmm.mod_browser.filter.minecraft_version").toString());
-        minecraftVersionLabel.setText(new TranslatableText("fmm.mod_browser.minecraft_version").toString());
-        modVersionLabel.setText(new TranslatableText("fmm.mod_browser.mod_version").toString());
-        download.setText(new TranslatableText("fmm.mod_browser.download").toString());
-        projectWebsite.setText(new TranslatableText("fmm.mod_browser.project.website").toString());
-        projectSources.setText(new TranslatableText("fmm.mod_browser.project.sources").toString());
-        projectIdLabel.setText(new TranslatableText("fmm.mod_browser.project_info.id").toString());
-        projectNameLabel.setText(new TranslatableText("fmm.mod_browser.project_info.name").toString());
-        projectDescriptionLabel.setText(new TranslatableText("fmm.mod_browser.project_info.description").toString());
-        authorNameLabel.setText(new TranslatableText("fmm.mod_browser.author_info.name").toString());
+        filterType.addItem(new I18nText("fmm.mod_browser.filter.general").toString());
+        filterType.addItem(new I18nText("fmm.mod_browser.filter.name").toString());
+        filterType.addItem(new I18nText("fmm.mod_browser.filter.author").toString());
+        filterType.addItem(new I18nText("fmm.mod_browser.filter.minecraft_version").toString());
+        minecraftVersionLabel.setText(new I18nText("fmm.mod_browser.minecraft_version").toString());
+        modVersionLabel.setText(new I18nText("fmm.mod_browser.mod_version").toString());
+        download.setText(new I18nText("fmm.mod_browser.download").toString());
+        projectWebsite.setText(new I18nText("fmm.mod_browser.project.website").toString());
+        projectSources.setText(new I18nText("fmm.mod_browser.project.sources").toString());
+        projectIdLabel.setText(new I18nText("fmm.mod_browser.project_info.id").toString());
+        projectNameLabel.setText(new I18nText("fmm.mod_browser.project_info.name").toString());
+        projectDescriptionLabel.setText(new I18nText("fmm.mod_browser.project_info.description").toString());
+        authorNameLabel.setText(new I18nText("fmm.mod_browser.author_info.name").toString());
         onProjectListSelect();
     }
 
@@ -326,10 +325,18 @@ public class ModRepositoryBrowserUI extends JPanel{
             download.setEnabled(false);
             projectWebsite.setEnabled(false);
             projectSources.setEnabled(false);
-            projectId.setText(new TranslatableText("fmm.library.none_selected").toString());
-            projectName.setText(new TranslatableText("fmm.library.none_selected").toString());
-            projectDescription.setText(new TranslatableText("fmm.library.none_selected").toString());
-            authorName.setText(new TranslatableText("fmm.library.none_selected").toString());
+            projectId.setText(new I18nText("fmm.library.none_selected").toString());
+            projectName.setText(new I18nText("fmm.library.none_selected").toString());
+            projectDescription.setText(new I18nText("fmm.library.none_selected").toString());
+            authorName.setText(new I18nText("fmm.library.none_selected").toString());
+            if (authorContacts != null){
+                for (JButton button: authorContacts){
+                    authorInfoPanel.remove(button);
+                }
+            }
+            authorInfoPanel.updateUI();
+            minecraftVersion.removeAllItems();
+            modVersion.removeAllItems();
         }
     }
 
@@ -369,9 +376,9 @@ public class ModRepositoryBrowserUI extends JPanel{
                 }
 
                 public void onComplete() {
-                    trayIcon.displayMessage(new ParsableTranslatableText("fmm.mod_browser.tray_icon.download_complete.caption",
+                    trayIcon.displayMessage(new ParsableI18nText("fmm.mod_browser.tray_icon.download_complete.caption",
                             project.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()).toString(),
-                            new TranslatableText("fmm.mod_browser.tray_icon.download_complete.text").toString(), TrayIcon.MessageType.INFO);
+                            new I18nText("fmm.mod_browser.tray_icon.download_complete.text").toString(), TrayIcon.MessageType.INFO);
                 }
 
                 public void onCancel() {
