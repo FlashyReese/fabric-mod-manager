@@ -1,5 +1,6 @@
 package me.flashyreese.fabricmm.ui.tab;
 
+import com.thebrokenrail.modupdater.strategy.util.UpdateStrategyRunner;
 import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.ui.components.InstalledModFileDropList;
@@ -119,7 +120,14 @@ public class LibraryManagerUI extends JPanel {
 
         Dim2i checkForModUpdateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 70, this.getWidth() / 2 - 30, 30);
         checkForModUpdate.setBounds(checkForModUpdateDim.getOriginX(), checkForModUpdateDim.getOriginY(), checkForModUpdateDim.getWidth(), checkForModUpdateDim.getHeight());
-        checkForModUpdate.addActionListener(e -> JOptionPane.showMessageDialog(null, "This does nothing at the moment"));
+        checkForModUpdate.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "This does nothing at the moment");
+            try{
+                System.out.println(UpdateStrategyRunner.checkModForUpdate(installedModFileDropList.getSelectedValue().getModMetadata()).downloadURL);
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        });
 
         Dim2i modWebsiteDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 100, (this.getWidth() / 2 - 30) / 2, 30);
         modWebsite.setBounds(modWebsiteDim.getOriginX(), modWebsiteDim.getOriginY(), modWebsiteDim.getWidth(), modWebsiteDim.getHeight());

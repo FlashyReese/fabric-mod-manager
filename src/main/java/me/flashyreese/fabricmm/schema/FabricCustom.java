@@ -1,9 +1,9 @@
 package me.flashyreese.fabricmm.schema;
 
 public class FabricCustom {
-    private ModUpdater modupdater;
+    private ModUpdaterConfig modupdater;
 
-    public ModUpdater getModUpdater() {
+    public ModUpdaterConfig getModUpdater() {
         return modupdater;
     }
 }

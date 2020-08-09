@@ -74,4 +74,8 @@ public class FileUtil {
         }
         return fileNameWithExtension;
     }
+
+    public static String sanitizeFileName(String name){
+        return name.replaceAll("[\\\\/:*?\"<>|]", "");
+    }
 }
