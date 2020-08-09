@@ -25,7 +25,7 @@ public class ModUtils {
             bufferedReader.close();
             FabricModMetadata fabricModMetadata = new Moshi.Builder().build().adapter(FabricModMetadata.class).fromJson(fabricSchemaJson);
             installedMod.setModMetadata(fabricModMetadata);
-            final JarEntry iconJarEntry = jarFile.getJarEntry(installedMod.getModMetadata().getIcon());
+            final JarEntry iconJarEntry = jarFile.getJarEntry(fabricModMetadata.getIcon() != null ? fabricModMetadata.getIcon() : "");
             if (iconJarEntry != null){
                 File iconFile = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getModMetadata().getId()));
                 if(!iconFile.exists()){
@@ -38,9 +38,9 @@ public class ModUtils {
                     inputStream.close();
                 }
                 installedMod.setIconPath(iconFile.getAbsolutePath());
-                installedMod.setInstalledPath(file.getAbsolutePath());
-                installedMod.assignMinecraftVersion();
             }
+            installedMod.setInstalledPath(file.getAbsolutePath());
+            installedMod.assignMinecraftVersion();
         }
         jarFile.close();
         return installedMod;

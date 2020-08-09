@@ -51,9 +51,9 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
                     File file = new File(mod.getInstalledPath());
                     try {
                         if(mod.isEnabled()){
-                            renderer.setIcon(UserInterfaceUtils.getIconFromFile(new File(mod.getIconPath())));
+                            renderer.setIcon(mod.getIconPath() != null ? UserInterfaceUtils.getIconFromFile(new File(mod.getIconPath())) : UserInterfaceUtils.getGrayScaledIconFromResource("icon.png", 64));
                         }else{
-                            renderer.setIcon(UserInterfaceUtils.getGrayScaledIconFromFile(new File(mod.getIconPath())));
+                            renderer.setIcon(mod.getIconPath() != null ? UserInterfaceUtils.getGrayScaledIconFromFile(new File(mod.getIconPath())) : UserInterfaceUtils.getGrayScaledIconFromResource("icon.png", 64));
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
