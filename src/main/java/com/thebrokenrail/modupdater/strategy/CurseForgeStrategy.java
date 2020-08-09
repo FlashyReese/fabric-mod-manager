@@ -54,7 +54,7 @@ public class CurseForgeStrategy implements UpdateStrategy {
             return null;
         }
 
-        String versionStr = "1.16.1";//Fixme: Game Version detection;
+        String versionStr = "1.16";//Fixme: Game Version detection;
         /*GameVersion version = Util.getMinecraftVersion();
         if (version.isStable()) {
             versionStr = version.getName();

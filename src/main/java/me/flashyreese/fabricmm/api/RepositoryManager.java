@@ -7,6 +7,7 @@ import me.flashyreese.common.util.FileUtil;
 import me.flashyreese.fabricmm.api.schema.curse.CurseAddon;
 import me.flashyreese.fabricmm.api.schema.curse.CurseFile;
 import me.flashyreese.fabricmm.api.schema.repository.*;
+import me.flashyreese.fabricmm.minecraft.SighHandler;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -25,6 +26,8 @@ public class RepositoryManager {
     private final List<User> users;
     private final File repositoryCache;
     private final String repositoryUrl;
+
+    private final SighHandler sighHandler = new SighHandler();
 
     public RepositoryManager(File repositoryCache, String repositoryUrl) throws Exception {
         if(!repositoryCache.exists()){
@@ -183,7 +186,11 @@ public class RepositoryManager {
                     }
                 }else{
                     MinecraftVersion mcVer = new MinecraftVersion();
-                    mcVer.setReleasedDate(curseFile.getFileDate());
+                    if (sighHandler.getDateTable().containsKey(minecraftVersion)){
+                        mcVer.setReleasedDate(sighHandler.getDateTable().get(minecraftVersion));
+                    }else{
+                        mcVer.setReleasedDate(curseFile.getFileDate());
+                    }
                     //mcVer.setReleasedDate(curseFile.getGameVersionDateReleased()); CurseForge is broken
                     mcVer.setMinecraftVersion(minecraftVersion);
                     mcVer.setModVersions(new ArrayList<>());
