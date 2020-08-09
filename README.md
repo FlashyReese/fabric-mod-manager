@@ -1,16 +1,29 @@
-![Icon](src/main/resources/icon.png)
+![Icon](src/main/resources/icon_128.png)
 # Fabric Mod Manager
-Fabric Mod Manager is a do-all mod manager written in Java for Fabric. It is currently being developed, and it is at its early stages of development.
+![GitHub license](https://img.shields.io/github/license/FlashyReese/fabric-mod-manager.svg)
+![GitHub issues](https://img.shields.io/github/issues/FlashyReese/fabric-mod-manager.svg)
+![GitHub tag](https://img.shields.io/github/tag/FlashyReese/fabric-mod-manager.svg)
+
+Fabric Mod Manager is a do-all mod manager written in Java for the [Fabric Mod Loader's](https://fabricmc.net/use) mods.
+It is currently being developed, and it is at its early stages of development.
 
 __NOTE__: This is will only be able update mods that have opted-in for the [Fabric Mod Repository](https://github.com/FlashyReese/fabric-mod-repository)!
 
-## Getting Started
-Use `gradlew shadowJar` to build project.
+## Building from source
 
+#### Prerequisites
 
+- Java 8 or above
 
+#### Compiling
 
-Now I'm convinced that I should have written this with C++.
+Navigate to the directory you've cloned this repository and launch a build with Gradle using `gradlew shadowJar` (Windows)
+or `./gradlew shadowJar` (macOS/Linux). If you are not using the Gradle wrapper, simply replace `gradlew` with `gradle`
+or the path to it.
+
+The initial setup may take a few minutes. After Gradle has finished building everything, you can find the resulting
+artifacts in `build/libs`.
+
 
 # License
 

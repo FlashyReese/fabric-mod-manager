@@ -3,6 +3,10 @@ Should probably use a project board. Don't actually have a roadmap here.
 
 #### UI
 - [x] Menu Bar (??%)
+    - [x] Quick Tools()
+        - [x] Open Minecraft Launcher(66%)
+        - [ ] Open MultiMC Launcher(0%)
+    - [x] Language Selection
     - [x] Check for Updates (100%)
 - [x] Mod Library Manager (50%)
     - [x] Drag and Drop Fabric Mods (100%)
@@ -13,7 +17,9 @@ Should probably use a project board. Don't actually have a roadmap here.
     - [x] Open Mods Folder (100%)
     - [x] Refresh Directory Mods (100%)
     - [ ] Mod Info redirect to `Mod Repository Browser` via specific title/author or minecraft version
-    - [ ] Single Mod Updater `requires Mod Repository API` (0%)
+    - [ ] Single Mod Updater (0%)
+        - [ ] Use ModUpdater(0%)
+        - [ ] Use Existing Repository(0%)
     - [ ] Mod Pack Manager (0%)
         - [ ] Custom Modpacks Profiles (0%)
         - [ ] Mod Pack Updater `requires Mod Repository API` (0%)
@@ -48,4 +54,4 @@ Should probably use a project board. Don't actually have a roadmap here.
 #### Database
 ~~This will be most likely split into 2. Using `GitHub` as repository which will make the application memory intensive. Using `MongoDB` as an actual database and query using the API. How do I plan to populate these? Well no idea.~~
 - [ ] ~~Mod Repository using [Fabric Mod Repository](https://github.com/FlashyReese/fabric-mod-repository).~~ I will be keeping this for testing might keep it as an update strategy.
-- [x] Curse Forge API. **NOTE**: this will only allow projects that are opted in.
+- [x] Curse Forge API. **NOTE**: This will only allow projects that are opted in.
