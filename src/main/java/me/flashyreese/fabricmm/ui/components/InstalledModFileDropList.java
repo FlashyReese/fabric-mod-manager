@@ -15,6 +15,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,10 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
 
     public InstalledMod getSelectedValue() {
         return list.getSelectedValue();
+    }
+
+    public ArrayList<InstalledMod> getSelectedValues(){
+        return (ArrayList<InstalledMod>) list.getSelectedValuesList();//Fixme: add multi disable and enable
     }
 
     public void removeAllItems(){

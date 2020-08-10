@@ -133,7 +133,7 @@ public class LibraryManagerUI extends JPanel {
         modWebsite.setBounds(modWebsiteDim.getOriginX(), modWebsiteDim.getOriginY(), modWebsiteDim.getWidth(), modWebsiteDim.getHeight());
         modWebsite.addActionListener(e -> {
             try {
-                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getModMetadata().getContact().get("homepage")));
+                Desktop.getDesktop().browse(new URI((String) installedModFileDropList.getSelectedValue().getModMetadata().getContact().get("homepage")));
             } catch (IOException | URISyntaxException ioException) {
                 ioException.printStackTrace();
             }
@@ -143,7 +143,7 @@ public class LibraryManagerUI extends JPanel {
         modIssues.setBounds(modIssuesDim.getOriginX(), modIssuesDim.getOriginY(), modIssuesDim.getWidth(), modIssuesDim.getHeight());
         modIssues.addActionListener(e -> {
             try {
-                Desktop.getDesktop().browse(new URI(installedModFileDropList.getSelectedValue().getModMetadata().getContact().get("sources")));
+                Desktop.getDesktop().browse(new URI((String) installedModFileDropList.getSelectedValue().getModMetadata().getContact().get("sources")));
             } catch (IOException | URISyntaxException ioException) {
                 ioException.printStackTrace();
             }
@@ -242,7 +242,7 @@ public class LibraryManagerUI extends JPanel {
             this.modMinecraftVersion.setText(selectedMod.getMinecraftVersion());
             this.modVersion.setText(selectedMod.getModMetadata().getVersion());
             this.modId.setText(selectedMod.getModMetadata().getId());
-            this.modAuthors.setText(UserInterfaceUtils.getEnglishStringList((ArrayList<String>) selectedMod.getModMetadata().getAuthors()));
+            this.modAuthors.setText(UserInterfaceUtils.getEnglishStringList((ArrayList<Object>) selectedMod.getModMetadata().getAuthors()));
             this.modEnvironment.setText(UserInterfaceUtils.filterEnvironment(selectedMod.getModMetadata().getEnvironment()));
         }else{
             this.toggleInstalledModState.setText(new I18nText("fmm.library.enable").toString());

@@ -13,14 +13,14 @@ public class FabricModMetadata {
     private String environment;
     private String license;
     private String icon;
-    private Map<String, String> contact;
-    private List<String> authors;
-    private List<String> contributors;
-    private Map<String, String> depends;
-    private Map<String, String> recommends;
-    private Map<String, String> suggests;
-    private Map<String, String> conflicts;
-    private Map<String, String> breaks;
+    private Map<String, Object> contact;
+    private List<Object> authors;
+    private List<Object> contributors;
+    private Map<String, Object> depends;
+    private Map<String, Object> recommends;
+    private Map<String, Object> suggests;
+    private Map<String, Object> conflicts;
+    private Map<String, Object> breaks;
     private FabricCustom custom;
 
     public int getSchemaVersion() {
@@ -55,35 +55,35 @@ public class FabricModMetadata {
         return icon;
     }
 
-    public Map<String, String> getContact() {
+    public Map<String, Object> getContact() {
         return contact;
     }
 
-    public List<String> getAuthors() {
+    public List<Object> getAuthors() {
         return authors;
     }
 
-    public List<String> getContributors() {
+    public List<Object> getContributors() {
         return contributors;
     }
 
-    public Map<String, String> getDepends() {
+    public Map<String, Object> getDepends() {
         return depends;
     }
 
-    public Map<String, String> getRecommends() {
+    public Map<String, Object> getRecommends() {
         return recommends;
     }
 
-    public Map<String, String> getSuggests() {
+    public Map<String, Object> getSuggests() {
         return suggests;
     }
 
-    public Map<String, String> getConflicts() {
+    public Map<String, Object> getConflicts() {
         return conflicts;
     }
 
-    public Map<String, String> getBreaks() {
+    public Map<String, Object> getBreaks() {
         return breaks;
     }
 

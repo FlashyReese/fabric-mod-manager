@@ -76,19 +76,21 @@ public class UserInterfaceUtils {
         return new ImageIcon(mage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
     }
 
-    public static String getEnglishStringList(ArrayList<String> list){//Fixme: This will need a patch
+    public static String getEnglishStringList(ArrayList<Object> list){//Fixme: This will need a patch
         StringBuilder line = new StringBuilder();
         if(list == null){
             line.append("None listed");
         }else{
             for(int i = 0; i < list.size(); i++) {
-                String currElement = list.get(i);
-                if(i == 0) {
-                    line = new StringBuilder(currElement);
-                }else if(i == list.size() - 1) {
-                    line.append(" and ").append(currElement);
-                }else{
-                    line.append(", ").append(currElement);
+                if (list.get(i) instanceof String){
+                    String currElement = (String)list.get(i);
+                    if(i == 0) {
+                        line = new StringBuilder(currElement);
+                    }else if(i == list.size() - 1) {
+                        line.append(" and ").append(currElement);
+                    }else{
+                        line.append(", ").append(currElement);
+                    }
                 }
             }
         }

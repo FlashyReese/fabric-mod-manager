@@ -54,7 +54,7 @@ public class InstalledMod {
 
     public void assignMinecraftVersion() {
         if (modMetadata.getDepends() != null && modMetadata.getDepends().containsKey("minecraft")){
-            setMinecraftVersion(modMetadata.getDepends().get("minecraft"));
+            setMinecraftVersion((String) modMetadata.getDepends().get("minecraft"));
         }else if(isInstalledViaFMM()){
             File installedMod = new File(this.getInstalledPath());
             String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
