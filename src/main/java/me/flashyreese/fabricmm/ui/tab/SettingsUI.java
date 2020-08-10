@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URISyntaxException;
 
@@ -50,10 +49,10 @@ public class SettingsUI extends JPanel {
                     if (file.exists()){
                         ConfigurationManager.getInstance().getSettings().setMmcPath(mmcPath.getText());
                         ConfigurationManager.getInstance().saveSettings();
+                        requestFocusInWindow();
                     }
                 }
             }
-
         });
 
         Dim2i mmcPathChooserDim = new Dim2i(this.getWidth() - 50, 10, 40, 30);
