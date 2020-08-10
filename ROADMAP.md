@@ -2,11 +2,11 @@
 Should probably use a project board. Don't actually have a roadmap here.
 
 #### UI
-- [x] Menu Bar (??%)
-    - [x] Quick Tools()
+- [x] Menu Bar (94%)
+    - [x] Quick Tools(83%)
         - [x] Open Minecraft Launcher(66%)
-        - [ ] Open MultiMC Launcher(0%)
-    - [x] Language Selection
+        - [x] Open MultiMC Launcher(100%)
+    - [x] Language Selection (100%)
     - [x] Check for Updates (100%)
 - [x] Mod Library Manager (50%)
     - [x] Drag and Drop Fabric Mods (100%)
@@ -17,12 +17,12 @@ Should probably use a project board. Don't actually have a roadmap here.
     - [x] Open Mods Folder (100%)
     - [x] Refresh Directory Mods (100%)
     - [ ] Mod Info redirect to `Mod Repository Browser` via specific title/author or minecraft version
-    - [ ] Single Mod Updater (0%)
-        - [ ] Use ModUpdater(0%)
+    - [ ] Single Mod Updater (5%)
+        - [x] Use ModUpdater(10%)
         - [ ] Use Existing Repository(0%)
     - [ ] Mod Pack Manager (0%)
-        - [ ] Custom Modpacks Profiles (0%)
-        - [ ] Mod Pack Updater `requires Mod Repository API` (0%)
+        - [ ] ~~Custom Modpacks Profiles (0%)~~
+        - [ ] Mod Pack Updater (0%)
     - [ ] Search Bar (0%)
     
 - [x] Mod Repository Browser (60%)
@@ -36,10 +36,11 @@ Should probably use a project board. Don't actually have a roadmap here.
     - [x] Asynchronous downloader (100%) using [jddl](https://github.com/kamranzafar/jddl)
     
 - [ ] Settings (0%)
-    - [ ] Change Custom Minecraft Directory (0%)
-    - [ ] Add/Remove Custom Repositories (0%)
+    - [ ] ~~Change Custom Minecraft Directory (0%)~~
+    - [ ] Change MultiMC Directory(100%)
+    - [ ] ~~Add/Remove Custom Repositories (0%)~~
         - [ ] ~~Direct JSON DB (5%)~~
-        - [x] API (0%) using `CurseForge API`
+        - [x] API (75%) using `CurseForge API`
 
 
 #### ~~API (Future, missing resources to provide this. This is necessary for huge repositories)~~
