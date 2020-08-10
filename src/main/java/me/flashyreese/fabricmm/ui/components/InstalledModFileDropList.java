@@ -165,7 +165,7 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
                 @SuppressWarnings("unchecked")
                 List<File> files = (List<File>) data.getTransferData(DataFlavor.javaFileListFlavor);
                 for (File file : files) {
-                    if(file.getName().endsWith(".jar") || file.getName().endsWith(".fabricmod")){
+                    if(file.getName().endsWith(".jar") || file.getName().endsWith(".fabricmod") || file.getName().endsWith(".disabled")){
                         InstalledMod mod = ModUtils.getInstalledModFromJar(file);
                         File newFile = new File(ModUtils.getModsDirectory(), file.getName());
                         Files.copy(file.toPath(), newFile.toPath());

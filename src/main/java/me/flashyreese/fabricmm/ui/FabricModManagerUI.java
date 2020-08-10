@@ -7,10 +7,10 @@ import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.components.FabricModManagerMenuBar;
 import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
+import me.flashyreese.fabricmm.ui.tab.SettingsUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Locale;
 
 public class FabricModManagerUI extends JFrame {
 
@@ -24,6 +24,7 @@ public class FabricModManagerUI extends JFrame {
     private SystemTray tray;
     private TrayIcon trayIcon;
     //private DownloadManagerUI downloadManager;
+    private SettingsUI settings;
 
     private FabricModManagerMenuBar menuBar;
 
@@ -42,7 +43,7 @@ public class FabricModManagerUI extends JFrame {
 
     private void initComponents() throws Exception {
         i18nManager = new I18nManager("assets/lang");
-        i18nManager.setLocale(Locale.US);//Todo: addLoadFromConfig
+        i18nManager.setLocale(i18nManager.getLocale(ConfigurationManager.getInstance().getSettings().getLocale()));
 
         tray = SystemTray.getSystemTray();
         trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(ClassLoader.getSystemClassLoader().getResource("icon.png")), new I18nText("fmm.title").toString());
@@ -56,6 +57,7 @@ public class FabricModManagerUI extends JFrame {
         library = new LibraryManagerUI(contentPane);
         modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, trayIcon);
         //downloadManager = new DownloadManagerUI(contentPane);
+        settings = new SettingsUI(contentPane);
 
         menuBar = new FabricModManagerMenuBar(this, repositoryManager, modBrowser, i18nManager);
     }
@@ -79,10 +81,12 @@ public class FabricModManagerUI extends JFrame {
         contentPane.removeAll();
         contentPane.addTab(new I18nText("fmm.library").toString(), library); //Fixme: Panel Scaling macOS looks cropped off
         contentPane.addTab(new I18nText("fmm.mod_browser").toString(), modBrowser);
+        contentPane.addTab(new I18nText("fmm.settings").toString(), settings);
         setTitle(new I18nText("fmm.title").toString());
         library.updateComponentsText();
         modBrowser.updateComponentsText();
         menuBar.updateComponentsText();
+        settings.updateComponentsText();
         contentPane.setSelectedIndex(index == -1 ? 0 : index);
     }
 

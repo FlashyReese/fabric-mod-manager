@@ -89,6 +89,8 @@ public class ModUtils {
         return file;
     }
 
+    ///Applications/MultiMC.app/Contents/MacOS/
+
     public static File getModsDirectory(){
         return new File(findDefaultInstallDir().getAbsolutePath() + File.separator + "mods");
     }
@@ -96,7 +98,7 @@ public class ModUtils {
     public static void changeInstalledModState(InstalledMod installedMod){
         File newFile;
         if(installedMod.isEnabled()){
-            newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "fabricmod");
+            newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "disabled");
         }else{
             newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "jar");
         }

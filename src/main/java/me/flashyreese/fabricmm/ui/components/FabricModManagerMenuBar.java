@@ -5,9 +5,11 @@ import me.flashyreese.common.i18n.I18nManager;
 import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmm.api.RepositoryManager;
+import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 import me.flashyreese.fabricmm.util.ModUtils;
+import me.flashyreese.fabricmm.util.Util;
 import org.json.JSONArray;
 
 import javax.swing.*;
@@ -29,6 +31,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
     private JMenu languageMenu;
     private JMenu helpMenu;
     private JMenuItem openMinecraftLauncher;
+    private JMenuItem openMMCLauncher;
     private JMenuItem updateLocalRepository;
     private JMenuItem checkForUpdates;
     private JMenuItem about;
@@ -46,6 +49,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
         languageMenu = new JMenu();
         helpMenu = new JMenu();
         openMinecraftLauncher = new JMenuItem();
+        openMMCLauncher = new JMenuItem();
         updateLocalRepository = new JMenuItem();
         checkForUpdates = new JMenuItem();
         about = new JMenuItem();
@@ -60,6 +64,23 @@ public class FabricModManagerMenuBar extends JMenuBar {
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
+            }
+        });
+
+        openMMCLauncher.addActionListener(e -> {
+            File launcher = Util.getMMCLauncher();
+            if(launcher != null){
+                if (launcher.exists()){
+                    try {
+                        Desktop.getDesktop().open(launcher);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, new I18nText("fmm.menubar.quick_tools.open_mmc_launcher.not_available").toString());
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, new I18nText("fmm.menubar.quick_tools.open_mmc_launcher.not_available").toString());
             }
         });
 
@@ -102,6 +123,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
 
     private void loadComponents(){
         quickToolsMenu.add(openMinecraftLauncher);
+        quickToolsMenu.add(openMMCLauncher);
         repositoryMenu.add(updateLocalRepository);
         helpMenu.add(checkForUpdates);
         helpMenu.add(about);
@@ -114,6 +136,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
     public void updateComponentsText(){
         quickToolsMenu.setText(new I18nText("fmm.menubar.quick_tools").toString());
         openMinecraftLauncher.setText(new I18nText("fmm.menubar.quick_tools.open_minecraft_launcher").toString());
+        openMMCLauncher.setText(new I18nText("fmm.menubar.quick_tools.open_mmc_launcher").toString());
         repositoryMenu.setText(new I18nText("fmm.menubar.repository").toString());
         updateLocalRepository.setText(new I18nText("fmm.menubar.repository.update_local_repository").toString());
         languageMenu.setText(new I18nText("fmm.menubar.language").toString());
@@ -128,12 +151,13 @@ public class FabricModManagerMenuBar extends JMenuBar {
             JMenuItem menuItem = new JMenuItem();
             menuItem.setText(locale.getDisplayName());
             menuItem.addActionListener(e -> {
-
                 try {
                     i18nManager.setLocale(locale);
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
+                ConfigurationManager.getInstance().getSettings().setLocale(locale.toString().toLowerCase());
+                ConfigurationManager.getInstance().saveSettings();
                 fabricModManagerUI.updateComponentsText();
             });
             languageMenu.add(menuItem);
