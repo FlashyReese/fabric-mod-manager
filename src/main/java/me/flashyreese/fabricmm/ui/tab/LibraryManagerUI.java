@@ -254,12 +254,16 @@ public class LibraryManagerUI extends JPanel {
         modVersionLabel.setText(new I18nText("fmm.library.mod_info.version").toString());
         modIdLabel.setText(new I18nText("fmm.library.mod_info.id").toString());
         modAuthorsLabel.setText(new I18nText("fmm.library.mod_info.authors").toString());
+        updateInstances();
+        onModFileDropListSelect();
+        onInstanceChange();
+    }
+
+    public void updateInstances(){
         instance.removeAllItems();
         for(MinecraftInstance minecraftInstance: Util.getMinecraftInstances()){
             instance.addItem(minecraftInstance);
         }
-        onModFileDropListSelect();
-        onInstanceChange();
     }
 
     private void onInstanceChange(){

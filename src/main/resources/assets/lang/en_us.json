@@ -8,6 +8,7 @@
 	"fmm.menubar.repository.update_local_repository":"Update Local Repository",
 	"fmm.menubar.language":"Language",
 	"fmm.menubar.help":"Help",
+	"fmm.menubar.help.refresh_minecraft_instances":"Refresh Minecraft Instances",
 	"fmm.menubar.help.check_for_updates":"Check for Updates...",
 	"fmm.menubar.help.check_for_updates.up_to_date":"Up to date!",
 	"fmm.menubar.help.about":"About",

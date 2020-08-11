@@ -125,7 +125,7 @@ public class Util {
                 MinecraftInstance instance = new MinecraftInstance();
                 instance.setDirectory(new File(entry.getKey() + File.separator + ".minecraft" + File.separator + "mods"));
                 instance.setMinecraftVersion(entry.getValue());
-                instance.setName(entry.getKey().getName());
+                instance.setName(entry.getKey().getName());//Name Detection is wank use instance.cfg
                 minecraftInstances.add(instance);
             }
         }

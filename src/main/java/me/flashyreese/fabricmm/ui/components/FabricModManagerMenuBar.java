@@ -7,6 +7,7 @@ import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
+import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 import me.flashyreese.fabricmm.util.ModUtils;
 import me.flashyreese.fabricmm.util.Util;
@@ -33,12 +34,13 @@ public class FabricModManagerMenuBar extends JMenuBar {
     private JMenuItem openMinecraftLauncher;
     private JMenuItem openMMCLauncher;
     private JMenuItem updateLocalRepository;
+    private JMenuItem refreshMinecraftInstances;
     private JMenuItem checkForUpdates;
     private JMenuItem about;
 
-    public FabricModManagerMenuBar(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI, I18nManager i18nManager){
+    public FabricModManagerMenuBar(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, I18nManager i18nManager){
         initComponents();
-        setupComponents(fabricModManagerUI, repositoryManager, modRepositoryBrowserUI, i18nManager);
+        setupComponents(fabricModManagerUI, repositoryManager, library, modRepositoryBrowserUI, i18nManager);
         loadComponents();
         updateComponentsText();
     }
@@ -51,11 +53,12 @@ public class FabricModManagerMenuBar extends JMenuBar {
         openMinecraftLauncher = new JMenuItem();
         openMMCLauncher = new JMenuItem();
         updateLocalRepository = new JMenuItem();
+        refreshMinecraftInstances = new JMenuItem();
         checkForUpdates = new JMenuItem();
         about = new JMenuItem();
     }
 
-    private void setupComponents(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI, I18nManager i18nManager){
+    private void setupComponents(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, I18nManager i18nManager){
         openMinecraftLauncher.addActionListener(e -> {
             File launcher = Util.findDefaultLauncherPath();
             if(launcher.exists()){
@@ -93,6 +96,16 @@ public class FabricModManagerMenuBar extends JMenuBar {
             modRepositoryBrowserUI.updateModList(repositoryManager);
         }).start());
 
+        refreshMinecraftInstances.addActionListener(e -> {
+            Util.getMinecraftInstances().clear();
+            try {
+                Util.findMinecraftInstances();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            library.updateInstances();
+        });
+
         checkForUpdates.addActionListener(e -> new Thread(() -> {
             try{
                 URL url = new URL("https://api.github.com/repos/FlashyReese/fabric-mod-manager/releases");
@@ -125,6 +138,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
         quickToolsMenu.add(openMinecraftLauncher);
         quickToolsMenu.add(openMMCLauncher);
         repositoryMenu.add(updateLocalRepository);
+        helpMenu.add(refreshMinecraftInstances);
         helpMenu.add(checkForUpdates);
         helpMenu.add(about);
         this.add(quickToolsMenu);
@@ -141,6 +155,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
         updateLocalRepository.setText(new I18nText("fmm.menubar.repository.update_local_repository").toString());
         languageMenu.setText(new I18nText("fmm.menubar.language").toString());
         helpMenu.setText(new I18nText("fmm.menubar.help").toString());
+        refreshMinecraftInstances.setText(new I18nText("fmm.menubar.help.refresh_minecraft_instances").toString());
         checkForUpdates.setText(new I18nText("fmm.menubar.help.check_for_updates").toString());
         about.setText(new I18nText("fmm.menubar.help.about").toString());
     }
