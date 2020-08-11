@@ -236,8 +236,8 @@ public class LibraryManagerUI extends JPanel {
             this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new I18nText("fmm.library.disable").toString() : new I18nText("fmm.library.enable").toString());
             this.toggleInstalledModState.setEnabled(true);
             this.checkForModUpdate.setEnabled(true);
-            this.modWebsite.setEnabled(selectedMod.getModMetadata().getContact().containsKey("homepage"));
-            this.modIssues.setEnabled(selectedMod.getModMetadata().getContact().containsKey("sources"));
+            this.modWebsite.setEnabled(selectedMod.getModMetadata().getContact() != null && selectedMod.getModMetadata().getContact().containsKey("homepage"));
+            this.modIssues.setEnabled(selectedMod.getModMetadata().getContact() != null && selectedMod.getModMetadata().getContact().containsKey("sources"));
             this.modName.setText(selectedMod.getModMetadata().getName());
             selectedMod.assignMinecraftVersion();
             this.modMinecraftVersion.setText(selectedMod.getMinecraftVersion());
