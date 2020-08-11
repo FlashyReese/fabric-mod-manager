@@ -3,6 +3,7 @@ package me.flashyreese.fabricmm;
 import com.vdurmont.semver4j.Semver;
 import me.flashyreese.common.util.JarUtil;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
+import me.flashyreese.fabricmm.util.Util;
 import org.json.JSONObject;
 import org.kamranzafar.jddl.DirectDownloader;
 
@@ -15,7 +16,6 @@ public class Application {
 
     public static void main(String[] args) throws Exception {
         VERSION = new Semver(new JSONObject(JarUtil.readTextFile("fabric.mod.manager.json")).getString("version"), Semver.SemverType.STRICT);
-
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -32,7 +32,7 @@ public class Application {
             FabricModManagerUI finalFabricModManagerUI = fabricModManagerUI;
             new Thread(() -> {
                 try {
-                    finalFabricModManagerUI.getRepositoryManager().updateLocalRepository();
+                    finalFabricModManagerUI.getRepositoryManager().updateLocalRepository(false);
                     finalFabricModManagerUI.getModBrowser().updateModList(finalFabricModManagerUI.getRepositoryManager());
                 } catch (Exception e) {
                     e.printStackTrace();

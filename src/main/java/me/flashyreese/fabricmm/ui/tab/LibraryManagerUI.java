@@ -3,8 +3,9 @@ package me.flashyreese.fabricmm.ui.tab;
 import com.thebrokenrail.modupdater.strategy.util.UpdateStrategyRunner;
 import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.fabricmm.schema.InstalledMod;
-import me.flashyreese.fabricmm.ui.components.InstalledModFileDropList;
-import me.flashyreese.fabricmm.ui.components.InstalledModPopClickListener;
+import me.flashyreese.fabricmm.schema.MinecraftInstance;
+import me.flashyreese.fabricmm.ui.components.ModFileDropList;
+import me.flashyreese.fabricmm.ui.components.ModPopClickListener;
 import me.flashyreese.fabricmm.util.Dim2i;
 import me.flashyreese.fabricmm.util.ModUtils;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
@@ -21,7 +22,9 @@ import java.util.Objects;
 
 public class LibraryManagerUI extends JPanel {
 
-    private InstalledModFileDropList installedModFileDropList;
+    private JLabel instanceLabel;
+    private JComboBox<MinecraftInstance> instance;
+    private ModFileDropList installedModFileDropList;
     private JButton toggleInstalledModState;
     private JButton checkForModUpdate;
     private JButton openModsFolder;
@@ -47,6 +50,7 @@ public class LibraryManagerUI extends JPanel {
         setLayout(null);
         setLocation(0, 0);
         setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
+        Util.findMinecraftInstances();
         initComponents();
         setupComponents();
         loadComponents();
@@ -54,7 +58,9 @@ public class LibraryManagerUI extends JPanel {
     }
 
     private void initComponents(){
-        installedModFileDropList = new InstalledModFileDropList();
+        instanceLabel = new JLabel();
+        instance = new JComboBox<>();
+        installedModFileDropList = new ModFileDropList();
         toggleInstalledModState = new JButton();
         checkForModUpdate = new JButton();
         openModsFolder = new JButton();
@@ -78,21 +84,43 @@ public class LibraryManagerUI extends JPanel {
     }
 
     private void setupComponents() throws Exception {
-        Dim2i installedModFileDropListDim = new Dim2i(10, 10, this.getWidth() / 2, this.getHeight() - 60);
+        Font labelFont = new Font("Arial", Font.BOLD, 14);
+        Font modLabelFont = new Font("Arial", Font.PLAIN, 14);
+
+        Dim2i instanceLabelDim = new Dim2i(10, 10, this.getWidth() / 6, 30);
+        instanceLabel.setBounds(instanceLabelDim.getOriginX(), instanceLabelDim.getOriginY(), instanceLabelDim.getWidth(), instanceLabelDim.getHeight());
+        instanceLabel.setFont(labelFont);
+
+        Dim2i instanceDim = new Dim2i(this.getWidth() / 6 + 10, 10, this.getWidth() / 2 - this.getWidth() / 6, 30);
+        instance.setBounds(instanceDim.getOriginX(), instanceDim.getOriginY(), instanceDim.getWidth(), instanceDim.getHeight());
+        instance.setRenderer(new DefaultListCellRenderer(){
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if(value instanceof MinecraftInstance) {
+                    renderer.setText(((MinecraftInstance) value).getName());
+                }
+                return renderer;
+            }
+        });
+        instance.addActionListener(e -> {
+            onInstanceChange();
+        });
+
+        Dim2i installedModFileDropListDim = new Dim2i(10, 50, this.getWidth() / 2, this.getHeight() - 100);
         installedModFileDropList.setLocation(installedModFileDropListDim.getOriginX(), installedModFileDropListDim.getOriginY());
         installedModFileDropList.setSize(installedModFileDropListDim.getWidth(), installedModFileDropListDim.getHeight());
 
-        installedModFileDropList.setDirectory(Util.getModsDirectory());
-        installedModFileDropList.addMods();
-
         installedModFileDropList.getList().addListSelectionListener(arg0 -> onModFileDropListSelect());
-        installedModFileDropList.getList().addMouseListener(new InstalledModPopClickListener(installedModFileDropList));
+        installedModFileDropList.getList().addMouseListener(new ModPopClickListener(installedModFileDropList));
 
         Dim2i openModsFolderDim = new Dim2i(10, this.getHeight() - 40, this.getWidth() / 2 / 2, 30);
         openModsFolder.setBounds(openModsFolderDim.getOriginX(), openModsFolderDim.getOriginY(), openModsFolderDim.getWidth(), openModsFolderDim.getHeight());
         openModsFolder.addActionListener(e -> {
             try {
-                Desktop.getDesktop().open(Util.getModsDirectory());
+                if (instance.getSelectedItem() instanceof MinecraftInstance){
+                    MinecraftInstance minecraftInstance = (MinecraftInstance) instance.getSelectedItem();
+                    Desktop.getDesktop().open(minecraftInstance.getDirectory());
+                }
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -101,9 +129,8 @@ public class LibraryManagerUI extends JPanel {
         Dim2i refreshModsDim = new Dim2i(this.getWidth() / 2 / 2 + 10, this.getHeight() - 40, this.getWidth() / 2 / 2, 30);
         refreshMods.setBounds(refreshModsDim.getOriginX(), refreshModsDim.getOriginY(), refreshModsDim.getWidth(), refreshModsDim.getHeight());
         refreshMods.addActionListener(e -> {
-            installedModFileDropList.removeAllItems();
             try {
-                installedModFileDropList.addMods();
+                installedModFileDropList.reloadMods();
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -154,8 +181,6 @@ public class LibraryManagerUI extends JPanel {
         modInfoPanel.setBounds(modInfoPanelDim.getOriginX(), modInfoPanelDim.getOriginY(), modInfoPanelDim.getWidth(), modInfoPanelDim.getHeight());
         modInfoPanel.setBorder(new LineBorder(Color.DARK_GRAY));
         modInfoPanel.setLayout(null);
-        Font labelFont = new Font("Arial", Font.BOLD, 14);
-        Font modLabelFont = new Font("Arial", Font.PLAIN, 14);
         int labelWidth = modInfoPanel.getWidth() - 20;
         int labelFontHeight = labelFont.getSize() + 2;
         int modLabelFontHeight = modLabelFont.getSize() + 2;
@@ -204,6 +229,8 @@ public class LibraryManagerUI extends JPanel {
         modInfoPanel.add(modEnvironment);
 
         this.add(modInfoPanel);
+        this.add(instanceLabel);
+        this.add(instance);
         this.add(installedModFileDropList);
         this.add(toggleInstalledModState);
         this.add(checkForModUpdate);
@@ -211,11 +238,11 @@ public class LibraryManagerUI extends JPanel {
         this.add(refreshMods);
         this.add(modWebsite);
         this.add(modIssues);
-
         installedModFileDropList.updateUI();
     }
 
     public void updateComponentsText(){
+        instanceLabel.setText(new I18nText("fmm.library.instance").toString());
         openModsFolder.setText(new I18nText("fmm.library.open_mods_folder").toString());
         refreshMods.setText(new I18nText("fmm.library.refresh_mods").toString());
         checkForModUpdate.setText(new I18nText("fmm.library.check_for_update").toString());
@@ -227,7 +254,25 @@ public class LibraryManagerUI extends JPanel {
         modVersionLabel.setText(new I18nText("fmm.library.mod_info.version").toString());
         modIdLabel.setText(new I18nText("fmm.library.mod_info.id").toString());
         modAuthorsLabel.setText(new I18nText("fmm.library.mod_info.authors").toString());
+        instance.removeAllItems();
+        for(MinecraftInstance minecraftInstance: Util.getMinecraftInstances()){
+            instance.addItem(minecraftInstance);
+        }
         onModFileDropListSelect();
+        onInstanceChange();
+    }
+
+    private void onInstanceChange(){
+        if (instance.getSelectedItem() instanceof MinecraftInstance){
+            MinecraftInstance minecraftInstance = (MinecraftInstance) instance.getSelectedItem();
+            installedModFileDropList.setDirectory(minecraftInstance.getDirectory());
+            try {
+                installedModFileDropList.reloadMods();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            installedModFileDropList.updateUI();
+        }
     }
 
     private void onModFileDropListSelect(){

@@ -1,6 +1,5 @@
 package me.flashyreese.fabricmm.core;
 
-import com.squareup.moshi.Types;
 import me.flashyreese.common.util.FileUtil;
 
 import java.io.*;

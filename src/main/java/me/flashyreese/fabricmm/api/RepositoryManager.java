@@ -49,8 +49,8 @@ public class RepositoryManager {
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String repository = in.lines().collect(Collectors.joining());
         List<User> usersRepository = adapter.fromJson(repository);
-        final ExecutorService executor = Executors.newFixedThreadPool(8);
-        final List<Future<?>> futures = new ArrayList<>();
+        /*final ExecutorService executor = Executors.newFixedThreadPool(4);
+        final List<Future<?>> futures = new ArrayList<>();*/
         assert usersRepository != null;
         for (User user: usersRepository){
             for (Project project: user.getProjects()){
@@ -68,14 +68,15 @@ public class RepositoryManager {
                         project.setMinecraftVersions(minecraftVersions);
                         loadProjectInfo(project);
                     }else{
-                        Future<?> future = executor.submit(() -> {
+                        /*Future<?> future = executor.submit(() -> {
                             try {
                                 downloadProjectFile(project);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         });
-                        futures.add(future);
+                        futures.add(future);*/
+                        downloadProjectFile(project);
                     }
                 }else{
                     List<MinecraftVersion> minecraftVersions = new ArrayList<>();
@@ -83,13 +84,13 @@ public class RepositoryManager {
                 }
             }
         }
-        try {
+        /*try {
             for (Future<?> future : futures) {
                 future.get();
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        }
+        }*/
         users.addAll(usersRepository);
     }
 
@@ -211,8 +212,8 @@ public class RepositoryManager {
     }
 
 
-    public void updateLocalRepository() throws Exception {
-        loadLocalRepositories(true);
+    public void updateLocalRepository(boolean force) throws Exception {
+        loadLocalRepositories(force);
     }
 
     public List<User> getUsers() {

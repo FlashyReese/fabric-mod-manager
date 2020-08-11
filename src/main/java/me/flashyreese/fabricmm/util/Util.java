@@ -1,9 +1,12 @@
 package me.flashyreese.fabricmm.util;
 
 import com.squareup.moshi.Moshi;
+import me.flashyreese.common.i18n.I18nText;
+import me.flashyreese.common.util.FileUtil;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.mmc.Component;
 import me.flashyreese.fabricmm.mmc.Package;
+import me.flashyreese.fabricmm.schema.MinecraftInstance;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +16,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Util {
+
+    private static List<MinecraftInstance> minecraftInstances = new ArrayList<>();
 
     public static List<File> getValidMinecraftInstanceDir(File mmcDir){
         List<File> files = new ArrayList<>();
@@ -95,10 +100,39 @@ public class Util {
         return file;
     }
 
-    ///Applications/MultiMC.app/Contents/MacOS/
-
     public static File getModsDirectory(){
         return new File(findDefaultInstallDir().getAbsolutePath() + File.separator + "mods");
+    }
+
+    public static Map<File, String> getMMCInstances() throws IOException {
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win") && !ConfigurationManager.getInstance().getSettings().getMmcPath().isEmpty()){
+            return getFabricMinecraftInstanceDir(new File(ConfigurationManager.getInstance().getSettings().getMmcPath()));
+        }else if(os.contains("mac") && new File(File.separator + "Applications" + File.separator + "MultiMC.app").exists()){
+            return getFabricMinecraftInstanceDir(new File(File.separator + "Applications" + File.separator + "MultiMC.app" + File.separator + "Contents" + File.separator + "MacOS"));
+        }
+        return null;
+    }
+
+    public static void findMinecraftInstances() throws Exception {
+        MinecraftInstance defaultMinecraftInstance = new MinecraftInstance();
+        defaultMinecraftInstance.setDirectory(getModsDirectory());
+        defaultMinecraftInstance.setMinecraftVersion("");
+        defaultMinecraftInstance.setName(new I18nText("fmm.default_minecraft").toString());
+        minecraftInstances.add(defaultMinecraftInstance);
+        if (getMMCInstances() != null){
+            for (Map.Entry<File, String> entry: getMMCInstances().entrySet()){
+                MinecraftInstance instance = new MinecraftInstance();
+                instance.setDirectory(new File(entry.getKey() + File.separator + ".minecraft" + File.separator + "mods"));
+                instance.setMinecraftVersion(entry.getValue());
+                instance.setName(entry.getKey().getName());
+                minecraftInstances.add(instance);
+            }
+        }
+    }
+
+    public static List<MinecraftInstance> getMinecraftInstances(){
+        return minecraftInstances;
     }
 
 }

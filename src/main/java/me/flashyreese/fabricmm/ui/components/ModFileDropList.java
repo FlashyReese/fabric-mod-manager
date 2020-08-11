@@ -20,14 +20,14 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileSystemView;
 
-public class InstalledModFileDropList extends JPanel implements DropTargetListener {
+public class ModFileDropList extends JPanel implements DropTargetListener {
 
     private final DefaultListModel<InstalledMod> listModel;
     private final JScrollPane jScrollPane1;
     private final JList<InstalledMod> list;
     private File currentDirectory;
 
-    public InstalledModFileDropList() {
+    public ModFileDropList() {
         setLayout(null);
         listModel = new DefaultListModel<>();
         list = new JList<>();
@@ -172,7 +172,8 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
         this.currentDirectory = modsDirectory;
     }
 
-    public void addMods() throws Exception {
+    public void reloadMods() throws Exception {
+        listModel.removeAllElements();
         for (InstalledMod installedMod: ModUtils.getInstalledModsFromDir(this.currentDirectory)){
             listModel.addElement(installedMod);
         }

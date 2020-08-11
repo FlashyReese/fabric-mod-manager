@@ -7,17 +7,17 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class InstalledModPopClickListener extends MouseAdapter {
+public class ModPopClickListener extends MouseAdapter {
 
-    private final InstalledModFileDropList installedModFileDropList;
+    private final ModFileDropList modFileDropList;
 
-    public InstalledModPopClickListener(InstalledModFileDropList installedModFileDropList) {
-        this.installedModFileDropList = installedModFileDropList;
+    public ModPopClickListener(ModFileDropList modFileDropList) {
+        this.modFileDropList = modFileDropList;
     }
 
     public void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger()){
-            JList<InstalledMod> list = installedModFileDropList.getList();
+            JList<InstalledMod> list = modFileDropList.getList();
             int row = list.locationToIndex(e.getPoint());
             list.setSelectedIndex(row);
             doPop(e);
@@ -26,7 +26,7 @@ public class InstalledModPopClickListener extends MouseAdapter {
 
     public void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger()){
-            JList<InstalledMod> list = installedModFileDropList.getList();
+            JList<InstalledMod> list = modFileDropList.getList();
             int row = list.locationToIndex(e.getPoint());
             list.setSelectedIndex(row);
             doPop(e);
@@ -34,7 +34,7 @@ public class InstalledModPopClickListener extends MouseAdapter {
     }
 
     private void doPop(MouseEvent e) {
-        InstalledModPopUpMenu menu = new InstalledModPopUpMenu(installedModFileDropList);
+        InstalledModPopUpMenu menu = new InstalledModPopUpMenu(modFileDropList);
         menu.show(e.getComponent(), e.getX(), e.getY());
     }
 }

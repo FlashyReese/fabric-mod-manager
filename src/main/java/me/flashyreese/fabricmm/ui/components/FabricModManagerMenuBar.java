@@ -86,7 +86,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
 
         updateLocalRepository.addActionListener(e -> new Thread(() -> {
             try {
-                repositoryManager.updateLocalRepository();
+                repositoryManager.updateLocalRepository(true);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
