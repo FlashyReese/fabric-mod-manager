@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class UserInterfaceUtils {
 
-    public static ImageIcon getImageIconFromCache(Project project) throws Exception {//Fixme: baddddddddd
+    public static ImageIcon getImageIconFromCache(Project project) throws Exception {
         File file = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR, String.format("%s.png", project.getId()));
         if(file.exists()){
             return getIconFromFile(file);

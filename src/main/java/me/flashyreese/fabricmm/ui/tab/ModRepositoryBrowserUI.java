@@ -2,14 +2,14 @@ package me.flashyreese.fabricmm.ui.tab;
 
 import me.flashyreese.common.i18n.ParsableI18nText;
 import me.flashyreese.common.i18n.I18nText;
-import me.flashyreese.common.util.FileUtil;
+import me.flashyreese.common.util.URLUtil;
 import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.api.schema.repository.*;
 import me.flashyreese.fabricmm.ui.components.ProjectList;
 import me.flashyreese.fabricmm.util.Dim2i;
-import me.flashyreese.fabricmm.util.ModUtils;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
+import me.flashyreese.fabricmm.util.Util;
 import org.kamranzafar.jddl.DownloadListener;
 import org.kamranzafar.jddl.DownloadTask;
 
@@ -368,7 +368,7 @@ public class ModRepositoryBrowserUI extends JPanel{
             Project project = projectList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
             ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies and refresh library listmodel
-            File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ ModUtils.getModsDirectory(), FileUtil.sanitizeFileName(String.format("%s__%s__%s.jar", project.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion())));
+            File fileName = new File(/*ConfigurationManager.getInstance().MOD_CACHE_DIR*/ Util.getModsDirectory(), /*FileUtil.sanitizeFileName(String.format("%s__%s__%s.jar", project.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()))*/ URLUtil.getFileNameWithExtension(modVer.getModUrl()));
             DownloadTask task = new DownloadTask(new URL(modVer.getModUrl()), new FileOutputStream(fileName), new DownloadListener() {
                 public void onUpdate(int bytes, int totalDownloaded) {
                 }

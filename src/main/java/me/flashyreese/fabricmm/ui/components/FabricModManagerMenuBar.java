@@ -57,7 +57,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
 
     private void setupComponents(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, ModRepositoryBrowserUI modRepositoryBrowserUI, I18nManager i18nManager){
         openMinecraftLauncher.addActionListener(e -> {
-            File launcher = ModUtils.findDefaultLauncherPath();
+            File launcher = Util.findDefaultLauncherPath();
             if(launcher.exists()){
                 try {
                     Desktop.getDesktop().open(launcher);

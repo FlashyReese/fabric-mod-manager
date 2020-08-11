@@ -8,6 +8,7 @@ import me.flashyreese.fabricmm.ui.components.InstalledModPopClickListener;
 import me.flashyreese.fabricmm.util.Dim2i;
 import me.flashyreese.fabricmm.util.ModUtils;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
+import me.flashyreese.fabricmm.util.Util;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LibraryManagerUI extends JPanel {
 
@@ -76,12 +78,13 @@ public class LibraryManagerUI extends JPanel {
     }
 
     private void setupComponents() throws Exception {
-        Dim2i modFileDropListDim = new Dim2i(10, 10, this.getWidth() / 2, this.getHeight() - 60);
-        installedModFileDropList.setLocation(modFileDropListDim.getOriginX(), modFileDropListDim.getOriginY());
-        installedModFileDropList.setSize(modFileDropListDim.getWidth(), modFileDropListDim.getHeight());
-        for(InstalledMod installedMod: ModUtils.getInstalledModsFromDir(ModUtils.getModsDirectory())){
-            installedModFileDropList.addItem(installedMod);
-        }
+        Dim2i installedModFileDropListDim = new Dim2i(10, 10, this.getWidth() / 2, this.getHeight() - 60);
+        installedModFileDropList.setLocation(installedModFileDropListDim.getOriginX(), installedModFileDropListDim.getOriginY());
+        installedModFileDropList.setSize(installedModFileDropListDim.getWidth(), installedModFileDropListDim.getHeight());
+
+        installedModFileDropList.setDirectory(Util.getModsDirectory());
+        installedModFileDropList.addMods();
+
         installedModFileDropList.getList().addListSelectionListener(arg0 -> onModFileDropListSelect());
         installedModFileDropList.getList().addMouseListener(new InstalledModPopClickListener(installedModFileDropList));
 
@@ -89,7 +92,7 @@ public class LibraryManagerUI extends JPanel {
         openModsFolder.setBounds(openModsFolderDim.getOriginX(), openModsFolderDim.getOriginY(), openModsFolderDim.getWidth(), openModsFolderDim.getHeight());
         openModsFolder.addActionListener(e -> {
             try {
-                Desktop.getDesktop().open(ModUtils.getModsDirectory());
+                Desktop.getDesktop().open(Util.getModsDirectory());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -100,9 +103,7 @@ public class LibraryManagerUI extends JPanel {
         refreshMods.addActionListener(e -> {
             installedModFileDropList.removeAllItems();
             try {
-                for(InstalledMod installedMod: ModUtils.getInstalledModsFromDir(ModUtils.getModsDirectory())){
-                    installedModFileDropList.addItem(installedMod);
-                }
+                installedModFileDropList.addMods();
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -123,7 +124,7 @@ public class LibraryManagerUI extends JPanel {
         checkForModUpdate.addActionListener(e -> {
             JOptionPane.showMessageDialog(null, "This does nothing at the moment");
             try{
-                System.out.println(UpdateStrategyRunner.checkModForUpdate(installedModFileDropList.getSelectedValue().getModMetadata()).downloadURL);
+                System.out.println(Objects.requireNonNull(UpdateStrategyRunner.checkModForUpdate(installedModFileDropList.getSelectedValue().getModMetadata())).downloadURL);
             }catch (Exception ex){
                 ex.printStackTrace();
             }

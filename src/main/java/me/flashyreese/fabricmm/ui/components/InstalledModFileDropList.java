@@ -3,19 +3,15 @@ package me.flashyreese.fabricmm.ui.components;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.util.ModUtils;
 import me.flashyreese.fabricmm.util.UserInterfaceUtils;
+import me.flashyreese.fabricmm.util.Util;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +22,11 @@ import javax.swing.filechooser.FileSystemView;
 
 public class InstalledModFileDropList extends JPanel implements DropTargetListener {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
     private final DefaultListModel<InstalledMod> listModel;
     private final JScrollPane jScrollPane1;
     private final JList<InstalledMod> list;
-    /**
-     * Create the panel.
-     */
+    private File currentDirectory;
+
     public InstalledModFileDropList() {
         setLayout(null);
         listModel = new DefaultListModel<>();
@@ -137,22 +128,15 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
     }
 
     public void dragEnter(DropTargetDragEvent arg0) {
-        // nothing
     }
 
     public void dragOver(DropTargetDragEvent evt) {
-        /*int action = evt.getDropAction();
-        evt.rejectDrag();*/
-
-        // nothing
     }
 
     public void dropActionChanged(DropTargetDragEvent arg0) {
-        // nothing
     }
 
     public void dragExit(DropTargetEvent arg0) {
-        // nothing
     }
 
 
@@ -167,7 +151,7 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
                 for (File file : files) {
                     if(file.getName().endsWith(".jar") || file.getName().endsWith(".fabricmod") || file.getName().endsWith(".disabled")){
                         InstalledMod mod = ModUtils.getInstalledModFromJar(file);
-                        File newFile = new File(ModUtils.getModsDirectory(), file.getName());
+                        File newFile = new File(currentDirectory, file.getName());
                         Files.copy(file.toPath(), newFile.toPath());
                         if (newFile.length() == file.length()){
                             InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
@@ -181,6 +165,16 @@ public class InstalledModFileDropList extends JPanel implements DropTargetListen
         } finally {
             evt.dropComplete(true);
             updateUI();
+        }
+    }
+
+    public void setDirectory(File modsDirectory) {
+        this.currentDirectory = modsDirectory;
+    }
+
+    public void addMods() throws Exception {
+        for (InstalledMod installedMod: ModUtils.getInstalledModsFromDir(this.currentDirectory)){
+            listModel.addElement(installedMod);
         }
     }
 }

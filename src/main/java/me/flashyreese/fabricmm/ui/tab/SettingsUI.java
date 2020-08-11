@@ -38,7 +38,7 @@ public class SettingsUI extends JPanel {
         mmcPathLabel.setBounds(mmcPathLabelDim.getOriginX(), mmcPathLabelDim.getOriginY(), mmcPathLabelDim.getWidth(), mmcPathLabelDim.getHeight());
         mmcPathLabel.setFont(labelFont);
 
-        Dim2i mmcPathDim = new Dim2i(this.getWidth() / 4 + 10,  10, this.getWidth() - (this.getWidth() / 4 + 10) - 60, 30);
+        Dim2i mmcPathDim = new Dim2i(this.getWidth() / 4 + 10,  10, this.getWidth() - (this.getWidth() / 4 + 10) - 50, 30);
         mmcPath.setBounds(mmcPathDim.getOriginX(), mmcPathDim.getOriginY(), mmcPathDim.getWidth(), mmcPathDim.getHeight());
         mmcPath.setText(ConfigurationManager.getInstance().getSettings().getMmcPath());
         mmcPath.addKeyListener(new KeyAdapter() {
@@ -55,7 +55,7 @@ public class SettingsUI extends JPanel {
             }
         });
 
-        Dim2i mmcPathChooserDim = new Dim2i(this.getWidth() - 50, 10, 40, 30);
+        Dim2i mmcPathChooserDim = new Dim2i(this.getWidth() - 40, 10, 30, 30);
         mmcPathChooser.setBounds(mmcPathChooserDim.getOriginX(), mmcPathChooserDim.getOriginY(), mmcPathChooserDim.getWidth(), mmcPathChooserDim.getHeight());
         mmcPathChooser.setText("...");
         mmcPathChooser.addActionListener(e -> {

@@ -65,4 +65,40 @@ public class Util {
         }
         return file;
     }
+
+
+    public static File findDefaultInstallDir() {
+        File dir;
+        String home = System.getProperty("user.home", ".");
+        String os = System.getProperty("os.name").toLowerCase();
+        File homeDir = new File(home);
+        if (os.contains("win") && System.getenv("APPDATA") != null) {
+            dir = new File(System.getenv("APPDATA"), ".minecraft");
+        } else if (os.contains("mac")) {
+            dir = new File(homeDir, "Library" + File.separator + "Application Support" + File.separator + "minecraft");
+        } else {
+            dir = new File(homeDir, ".minecraft");
+        }
+        return dir;
+    }
+
+    public static File findDefaultLauncherPath(){
+        File file;
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win") && System.getenv("ProgramFiles(X86)") != null){
+            file = new File(System.getenv("ProgramFiles(X86)"), "/Minecraft Launcher/MinecraftLauncher.exe");
+        }else if(os.contains("mac")){
+            file = new File(File.separator + "Applications" + File.separator + "Minecraft.app");
+        }else{
+            file = new File("/opt/minecraft-launcher/minecraft-launcher");//Fixme: currently broken
+        }
+        return file;
+    }
+
+    ///Applications/MultiMC.app/Contents/MacOS/
+
+    public static File getModsDirectory(){
+        return new File(findDefaultInstallDir().getAbsolutePath() + File.separator + "mods");
+    }
+
 }

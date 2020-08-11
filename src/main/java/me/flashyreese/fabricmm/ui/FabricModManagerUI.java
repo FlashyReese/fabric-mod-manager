@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class FabricModManagerUI extends JFrame {
 
-    private final int SCALE = 65;
+    private final int SCALE = 70;
 
     private I18nManager i18nManager;
     private RepositoryManager repositoryManager;
