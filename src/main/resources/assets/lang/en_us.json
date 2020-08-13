@@ -50,6 +50,8 @@
 	"fmm.mod_browser.tray_icon.download_complete.caption":"{1} {2} for Minecraft {3}",
 	"fmm.download_manager":"Download Manager",
 	"fmm.download_manager.install":"Install",
+	"fmm.download_manager.tray_icon.install_complete.caption":"Installation Complete!",
+	"fmm.download_manager.tray_icon.install_complete.text":"{1} has been installed to {2}",
 	"fmm.settings":"Settings",
 	"fmm.settings.mmc_path":"MultiMC Directory:",
 	"fmm.installed_mod.minecraft_version.not_available":"Not Available!",

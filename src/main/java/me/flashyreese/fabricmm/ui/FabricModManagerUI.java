@@ -56,8 +56,8 @@ public class FabricModManagerUI extends JFrame {
         contentPane.setPreferredSize(new Dimension(16* SCALE, 9* SCALE));
 
         library = new LibraryManagerUI(contentPane);
-        modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, trayIcon);
-        downloadManager = new DownloadManagerUI(contentPane);
+        downloadManager = new DownloadManagerUI(contentPane, trayIcon);
+        modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, downloadManager, trayIcon);
         settings = new SettingsUI(contentPane);
 
         menuBar = new FabricModManagerMenuBar(this, repositoryManager, library, modBrowser, i18nManager);

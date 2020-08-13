@@ -56,11 +56,11 @@ public class ModRepositoryBrowserUI extends JPanel{
     private JLabel authorName;
     private ArrayList<JButton> authorContacts;
 
-    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager, TrayIcon trayIcon) {
+    public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager, DownloadManagerUI downloadManager, TrayIcon trayIcon) {
         setLayout(null);
         setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
-        setupComponents(repositoryManager, trayIcon);
+        setupComponents(repositoryManager, downloadManager, trayIcon);
         loadComponents();
         updateComponentsText();
     }
@@ -90,7 +90,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         authorName = new JLabel();
     }
 
-    private void setupComponents(RepositoryManager repositoryManager, TrayIcon trayIcon){
+    private void setupComponents(RepositoryManager repositoryManager, DownloadManagerUI downloadManager, TrayIcon trayIcon){
         Dim2i searchBarDim = new Dim2i(10, 10, this.getWidth() / 8 * 3 - 20, 30);
         searchBar.setBounds(searchBarDim.getOriginX(), searchBarDim.getOriginY(), searchBarDim.getWidth(), searchBarDim.getHeight());
         updateModList(repositoryManager);
@@ -142,7 +142,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         download.setBounds(downloadDim.getOriginX(), downloadDim.getOriginY(), downloadDim.getWidth(), downloadDim.getHeight());
         download.addActionListener(e -> {
             try {
-                downloadMod(trayIcon);
+                downloadMod(downloadManager, trayIcon);
             } catch (MalformedURLException | FileNotFoundException malformedURLException) {
                 malformedURLException.printStackTrace();
             }
@@ -363,7 +363,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         }
     }
 
-    private void downloadMod(TrayIcon trayIcon) throws MalformedURLException, FileNotFoundException {//Fixme: literally
+    private void downloadMod(DownloadManagerUI downloadManager, TrayIcon trayIcon) throws MalformedURLException, FileNotFoundException {//Fixme: literally
         if(projectList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
             Project project = projectList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
@@ -380,6 +380,11 @@ public class ModRepositoryBrowserUI extends JPanel{
                     trayIcon.displayMessage(new ParsableI18nText("fmm.mod_browser.tray_icon.download_complete.caption",
                             project.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()).toString(),
                             new I18nText("fmm.mod_browser.tray_icon.download_complete.text").toString(), TrayIcon.MessageType.INFO);
+                    try {
+                        downloadManager.refreshMods();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 public void onCancel() {

@@ -60,14 +60,11 @@ public class FileUtil {
         return newFile;
     }
 
-    public static String getFileNameWithExtension(File file) throws Exception {
-        if (file.isDirectory()){
-            throw new Exception("Not a valid file");
-        }
+    public static String getFileNameWithExtension(File file) {
         return file.getName();
     }
 
-    public static String getFileName(File file) throws Exception {
+    public static String getFileName(File file)  {
         String fileNameWithExtension = getFileNameWithExtension(file);
         if(fileNameWithExtension.contains(".")){
             return fileNameWithExtension.substring(0, fileNameWithExtension.lastIndexOf('.'));

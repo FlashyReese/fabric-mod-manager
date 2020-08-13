@@ -40,7 +40,7 @@ public class RepositoryManager {
         this.users = new ArrayList<>();
     }
 
-    private void loadLocalRepositories(boolean force) throws Exception {
+    private void loadLocalRepositories(boolean force) throws IOException {
         users.clear();
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, User.class);
@@ -49,8 +49,8 @@ public class RepositoryManager {
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String repository = in.lines().collect(Collectors.joining());
         List<User> usersRepository = adapter.fromJson(repository);
-        /*final ExecutorService executor = Executors.newFixedThreadPool(4);
-        final List<Future<?>> futures = new ArrayList<>();*/
+        final ExecutorService executor = Executors.newFixedThreadPool(4);
+        final List<Future<?>> futures = new ArrayList<>();
         assert usersRepository != null;
         for (User user: usersRepository){
             for (Project project: user.getProjects()){
@@ -66,17 +66,16 @@ public class RepositoryManager {
                         fileReader.close();
                         List<MinecraftVersion> minecraftVersions = jsonAdapter.fromJson(projectJson);
                         project.setMinecraftVersions(minecraftVersions);
-                        loadProjectInfo(project);
+                        loadProjectInfo(project);//Fixme: Saved Locally CurseForge doesn't like many request
                     }else{
-                        /*Future<?> future = executor.submit(() -> {
+                        Future<?> future = executor.submit(() -> {
                             try {
                                 downloadProjectFile(project);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         });
-                        futures.add(future);*/
-                        downloadProjectFile(project);
+                        futures.add(future);
                     }
                 }else{
                     List<MinecraftVersion> minecraftVersions = new ArrayList<>();
@@ -84,17 +83,17 @@ public class RepositoryManager {
                 }
             }
         }
-        /*try {
+        try {
             for (Future<?> future : futures) {
                 future.get();
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        }*/
+        }
         users.addAll(usersRepository);
     }
 
-    private File getProjectFile(int curseForgeId) throws Exception {
+    private File getProjectFile(int curseForgeId) {
         for (File file: Objects.requireNonNull(this.repositoryCache.listFiles())){
             if (file.isFile() && file.getName().endsWith(".json") && FileUtil.getFileName(file).equals(String.valueOf(curseForgeId))){
                 return file;
@@ -103,7 +102,7 @@ public class RepositoryManager {
         return null;
     }
 
-    private void downloadProjectFile(Project project) throws Exception {
+    private void downloadProjectFile(Project project) throws IOException {
         CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), true);
         if (curseAddon.getDefaultCurseAttachment() != null && curseAddon.getDefaultCurseAttachment().getThumbnailUrl() != null){
             project.setIconUrl(curseAddon.getDefaultCurseAttachment().getThumbnailUrl());
@@ -120,7 +119,7 @@ public class RepositoryManager {
         project.setMinecraftVersions(minecraftVersions);
     }
 
-    private void loadProjectInfo(Project project) throws Exception {
+    private void loadProjectInfo(Project project) throws IOException {
         CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), false);
         project.setProjectUrl(curseAddon.getWebsiteUrl());
     }
@@ -129,7 +128,7 @@ public class RepositoryManager {
         return convertCurseFilesToMinecraftVersions(curseAddon.getFiles());
     }
 
-    private CurseAddon getCurseAddon(String json, boolean includesFiles) throws Exception {
+    private CurseAddon getCurseAddon(String json, boolean includesFiles) throws IOException {
         Moshi moshi = new Moshi.Builder().build();
         CurseAddon curseAddon = moshi.adapter(CurseAddon.class).fromJson(json);
         assert curseAddon != null;
@@ -139,7 +138,7 @@ public class RepositoryManager {
         return curseAddon;
     }
 
-    private void processCurseFiles(CurseAddon curseAddon) throws Exception {
+    private void processCurseFiles(CurseAddon curseAddon) throws IOException {
         URL url = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s/files", curseAddon.getId()));
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String filesJson = in.lines().collect(Collectors.joining());
@@ -161,7 +160,7 @@ public class RepositoryManager {
         }
     }
 
-    private CurseAddon getCurseAddonFromProjectID(long id, boolean includeFiles) throws Exception {
+    private CurseAddon getCurseAddonFromProjectID(long id, boolean includeFiles) throws IOException {
         URL url = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s", id));
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String addonJson = in.lines().collect(Collectors.joining());
