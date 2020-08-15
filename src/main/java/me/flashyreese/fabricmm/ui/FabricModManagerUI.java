@@ -60,7 +60,7 @@ public class FabricModManagerUI extends JFrame {
         modBrowser = new ModRepositoryBrowserUI(contentPane, repositoryManager, downloadManager, trayIcon);
         settings = new SettingsUI(contentPane);
 
-        menuBar = new FabricModManagerMenuBar(this, repositoryManager, library, modBrowser, i18nManager);
+        menuBar = new FabricModManagerMenuBar(this, repositoryManager, library, modBrowser, downloadManager, i18nManager);
     }
 
     private void setupComponents() {

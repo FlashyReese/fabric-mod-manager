@@ -7,6 +7,7 @@ import me.flashyreese.fabricmm.Application;
 import me.flashyreese.fabricmm.api.RepositoryManager;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
+import me.flashyreese.fabricmm.ui.tab.DownloadManagerUI;
 import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
 import me.flashyreese.fabricmm.util.Util;
@@ -37,9 +38,9 @@ public class FabricModManagerMenuBar extends JMenuBar {
     private JMenuItem checkForUpdates;
     private JMenuItem about;
 
-    public FabricModManagerMenuBar(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, I18nManager i18nManager){
+    public FabricModManagerMenuBar(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, DownloadManagerUI downloadManagerUI, I18nManager i18nManager){
         initComponents();
-        setupComponents(fabricModManagerUI, repositoryManager, library, modRepositoryBrowserUI, i18nManager);
+        setupComponents(fabricModManagerUI, repositoryManager, library, modRepositoryBrowserUI, downloadManagerUI, i18nManager);
         loadComponents();
         updateComponentsText();
     }
@@ -57,7 +58,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
         about = new JMenuItem();
     }
 
-    private void setupComponents(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, I18nManager i18nManager){
+    private void setupComponents(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, DownloadManagerUI downloadManagerUI, I18nManager i18nManager){
         openMinecraftLauncher.addActionListener(e -> {
             File launcher = Util.findDefaultLauncherPath();
             if(launcher.exists()){
@@ -103,6 +104,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
                 exception.printStackTrace();
             }
             library.updateInstances();
+            downloadManagerUI.updateInstances();
         });
 
         checkForUpdates.addActionListener(e -> new Thread(() -> {

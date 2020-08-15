@@ -46,9 +46,6 @@ public class DownloadManagerUI extends JPanel {
 
         Dim2i minecraftInstancesDim = new Dim2i(10, this.getHeight() - 40, this.getWidth() / 4 * 3 - 30, 30);
         minecraftInstances.setBounds(minecraftInstancesDim.getOriginX(), minecraftInstancesDim.getOriginY(), minecraftInstancesDim.getWidth(), minecraftInstancesDim.getHeight());
-        for(MinecraftInstance minecraftInstance: Util.getMinecraftInstances()){
-            minecraftInstances.addItem(minecraftInstance);
-        }
         minecraftInstances.setRenderer(new DefaultListCellRenderer(){
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -78,6 +75,14 @@ public class DownloadManagerUI extends JPanel {
     public void updateComponentsText(){
         install.setText(new I18nText("fmm.download_manager.install").toString());
         onModFileDropListSelect();
+        updateInstances();
+    }
+
+    public void updateInstances(){
+        minecraftInstances.removeAllItems();
+        for(MinecraftInstance minecraftInstance: Util.getMinecraftInstances()){
+            minecraftInstances.addItem(minecraftInstance);
+        }
     }
 
     private void onModFileDropListSelect(){

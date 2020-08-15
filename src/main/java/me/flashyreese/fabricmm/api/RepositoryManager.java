@@ -119,8 +119,14 @@ public class RepositoryManager {
         project.setMinecraftVersions(minecraftVersions);
     }
 
-    private void loadProjectInfo(Project project) throws IOException {
-        CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), false);
+    private void loadProjectInfo(Project project) {
+        CurseAddon curseAddon = null;
+        try{
+            curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        assert curseAddon != null;
         project.setProjectUrl(curseAddon.getWebsiteUrl());
     }
 
@@ -133,7 +139,11 @@ public class RepositoryManager {
         CurseAddon curseAddon = moshi.adapter(CurseAddon.class).fromJson(json);
         assert curseAddon != null;
         if(includesFiles){
-            processCurseFiles(curseAddon);
+            try{
+                processCurseFiles(curseAddon);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return curseAddon;
     }
@@ -160,12 +170,19 @@ public class RepositoryManager {
         }
     }
 
-    private CurseAddon getCurseAddonFromProjectID(long id, boolean includeFiles) throws IOException {
-        URL url = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s", id));
-        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-        String addonJson = in.lines().collect(Collectors.joining());
-        in.close();
-        return getCurseAddon(addonJson, includeFiles);
+    private CurseAddon getCurseAddonFromProjectID(long id, boolean includeFiles) {
+        URL url;
+        BufferedReader in;
+        try {
+            url = new URL(String.format("https://addons-ecs.forgesvc.net/api/v2/addon/%s", id));
+            in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String addonJson = in.lines().collect(Collectors.joining());
+            in.close();
+            return getCurseAddon(addonJson, includeFiles);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(List<CurseFile> curseFiles) {
