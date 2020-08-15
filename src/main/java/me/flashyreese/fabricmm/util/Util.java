@@ -4,8 +4,8 @@ import com.squareup.moshi.Moshi;
 import me.flashyreese.common.i18n.I18nText;
 import me.flashyreese.common.util.FileUtil;
 import me.flashyreese.fabricmm.core.ConfigurationManager;
-import me.flashyreese.fabricmm.mmc.Component;
-import me.flashyreese.fabricmm.mmc.Package;
+import me.flashyreese.fabricmm.schema.mmc.Component;
+import me.flashyreese.fabricmm.schema.mmc.Package;
 import me.flashyreese.fabricmm.schema.MinecraftInstance;
 
 import java.io.BufferedReader;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class Util {
 
-    private static List<MinecraftInstance> minecraftInstances = new ArrayList<>();
+    private static final List<MinecraftInstance> minecraftInstances = new ArrayList<>();
 
     public static List<File> getValidMinecraftInstanceDir(File mmcDir){
         List<File> files = new ArrayList<>();
@@ -35,16 +35,29 @@ public class Util {
         return files;
     }
 
-    public static Map<File, String> getFabricMinecraftInstanceDir(File mmcDir) throws IOException {
-        Map<File, String> files = new HashMap<>();
+    public static List<MinecraftInstance> getFabricMinecraftInstanceDir(File mmcDir) throws IOException {
+        List<MinecraftInstance> minecraftInstances = new ArrayList<>();
         for (File instance: getValidMinecraftInstanceDir(mmcDir)){
             File mmcPackJsonFile = new File(instance, "mmc-pack.json");
+            File instanceConfig = new File(instance, "instance.cfg");
+            List<String> instanceConfigList = FileUtil.readLines(instanceConfig);
+            Map<String, String> instanceConfigMap = new HashMap<>();
             FileReader fileReader = new FileReader(mmcPackJsonFile);
             BufferedReader buffered = new BufferedReader(fileReader);
             String mmcPackJson = buffered.lines().collect(Collectors.joining());
             Package mmcPackage = new Moshi.Builder().build().adapter(Package.class).fromJson(mmcPackJson);
+            assert instanceConfigList != null;
+            for (String line: instanceConfigList){
+                String delimiter = "=";
+                String[] split = line.split(delimiter);
+                String key = split[0];
+                String value = split.length == 2 ? split[1] : "";
+                instanceConfigMap.put(key, value);
+            }
             boolean isFabric = false;
             String version = "";
+            String name = "";
+            assert mmcPackage != null;
             for (Component component: mmcPackage.getComponents()){
                 if (component.getUid().equals("net.fabricmc.fabric-loader")){
                     isFabric = true;
@@ -53,11 +66,20 @@ public class Util {
                     version = component.getVersion();
                 }
             }
+            for (Map.Entry<String, String> entry: instanceConfigMap.entrySet()){
+                if (entry.getKey().equals("name")){
+                    name = entry.getValue().isEmpty() ? instance.getName() : entry.getValue();
+                }
+            }
             if (isFabric){
-                files.put(instance, version);
+                MinecraftInstance minecraftInstance = new MinecraftInstance();
+                minecraftInstance.setName(name);
+                minecraftInstance.setDirectory(new File(instance + File.separator + ".minecraft" + File.separator + "mods"));
+                minecraftInstance.setMinecraftVersion(version);
+                minecraftInstances.add(minecraftInstance);
             }
         }
-        return files;
+        return minecraftInstances;
     }
 
     public static File getMMCLauncher(){
@@ -104,7 +126,7 @@ public class Util {
         return new File(findDefaultInstallDir().getAbsolutePath() + File.separator + "mods");
     }
 
-    public static Map<File, String> getMMCInstances() throws IOException {
+    public static List<MinecraftInstance> getMMCInstances() throws IOException {
         String os = System.getProperty("os.name").toLowerCase();
         if(os.contains("win") && !ConfigurationManager.getInstance().getSettings().getMmcPath().isEmpty()){
             return getFabricMinecraftInstanceDir(new File(ConfigurationManager.getInstance().getSettings().getMmcPath()));
@@ -121,13 +143,7 @@ public class Util {
         defaultMinecraftInstance.setName(new I18nText("fmm.default_minecraft").toString());
         minecraftInstances.add(defaultMinecraftInstance);
         if (getMMCInstances() != null){
-            for (Map.Entry<File, String> entry: getMMCInstances().entrySet()){
-                MinecraftInstance instance = new MinecraftInstance();
-                instance.setDirectory(new File(entry.getKey() + File.separator + ".minecraft" + File.separator + "mods"));
-                instance.setMinecraftVersion(entry.getValue());
-                instance.setName(entry.getKey().getName());//Name Detection is wank use instance.cfg
-                minecraftInstances.add(instance);
-            }
+            minecraftInstances.addAll(getMMCInstances());
         }
     }
 
