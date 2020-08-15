@@ -5,6 +5,8 @@ import com.squareup.moshi.Moshi;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileUtil {
@@ -74,5 +76,23 @@ public class FileUtil {
 
     public static String sanitizeFileName(String name){
         return name.replaceAll("[\\\\/:*?\"<>|]", "");
+    }
+
+    public static List<String> readLines(File file) {
+        List<String> lines = new ArrayList<>();
+        if (file.isFile()){
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line = reader.readLine();
+                while (line != null) {
+                    lines.add(line);
+                    line = reader.readLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return lines;
+        }else{
+            return null;
+        }
     }
 }

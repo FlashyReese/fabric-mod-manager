@@ -9,7 +9,6 @@ import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
 import me.flashyreese.fabricmm.ui.tab.LibraryManagerUI;
 import me.flashyreese.fabricmm.ui.tab.ModRepositoryBrowserUI;
-import me.flashyreese.fabricmm.util.ModUtils;
 import me.flashyreese.fabricmm.util.Util;
 import org.json.JSONArray;
 

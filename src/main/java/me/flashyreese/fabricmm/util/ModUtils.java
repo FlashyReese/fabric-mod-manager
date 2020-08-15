@@ -25,6 +25,7 @@ public class ModUtils {
             bufferedReader.close();
             FabricModMetadata fabricModMetadata = new Moshi.Builder().build().adapter(FabricModMetadata.class).fromJson(fabricSchemaJson);
             installedMod.setModMetadata(fabricModMetadata);
+            assert fabricModMetadata != null;
             final JarEntry iconJarEntry = jarFile.getJarEntry(fabricModMetadata.getIcon() != null ? fabricModMetadata.getIcon() : "");
             if (iconJarEntry != null){
                 File iconFile = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getModMetadata().getId()));
@@ -54,9 +55,7 @@ public class ModUtils {
         }
         for(File file: Objects.requireNonNull(dir.listFiles((directory, fileName) -> fileName.endsWith(".jar") || fileName.endsWith(".fabricmod")))){
             InstalledMod installedMod = getInstalledModFromJar(file);
-            if(installedMod != null){
-                installedMods.add(installedMod);
-            }
+            installedMods.add(installedMod);
         }
         return installedMods;
     }

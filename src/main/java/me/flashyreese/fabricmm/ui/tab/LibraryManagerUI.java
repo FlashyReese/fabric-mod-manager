@@ -83,7 +83,7 @@ public class LibraryManagerUI extends JPanel {
         modEnvironment = new JLabel();
     }
 
-    private void setupComponents() throws Exception {
+    private void setupComponents() {
         Font labelFont = new Font("Arial", Font.BOLD, 14);
         Font modLabelFont = new Font("Arial", Font.PLAIN, 14);
 
@@ -102,9 +102,7 @@ public class LibraryManagerUI extends JPanel {
                 return renderer;
             }
         });
-        instance.addActionListener(e -> {
-            onInstanceChange();
-        });
+        instance.addActionListener(e -> onInstanceChange());
 
         Dim2i installedModFileDropListDim = new Dim2i(10, 50, this.getWidth() / 2, this.getHeight() - 100);
         installedModFileDropList.setLocation(installedModFileDropListDim.getOriginX(), installedModFileDropListDim.getOriginY());

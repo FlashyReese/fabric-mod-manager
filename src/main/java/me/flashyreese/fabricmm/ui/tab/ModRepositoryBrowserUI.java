@@ -302,9 +302,7 @@ public class ModRepositoryBrowserUI extends JPanel{
             Project project = projectList.getSelectedValue();
             projectId.setText(project.getId());
             projectName.setText(project.getName());
-            StringBuilder sb = new StringBuilder();
-            sb.append("<html>").append(project.getDescription()).append("</html>");
-            projectDescription.setText(sb.toString());
+            projectDescription.setText("<html>" + project.getDescription() + "</html>");
             authorName.setText(project.getUser().getName());
 
             projectWebsite.setEnabled(project.getProjectUrl() != null && !project.getProjectUrl().isEmpty());
@@ -367,8 +365,8 @@ public class ModRepositoryBrowserUI extends JPanel{
         if(projectList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
             Project project = projectList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
-            ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies and refresh library listmodel
-            File fileName = new File(ConfigurationManager.getInstance().MOD_CACHE_DIR, /*FileUtil.sanitizeFileName(String.format("%s__%s__%s.jar", project.getId(), mcVer.getMinecraftVersion(), modVer.getModVersion()))*/ URLUtil.getFileNameWithExtension(modVer.getModUrl()));
+            ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies
+            File fileName = new File(ConfigurationManager.getInstance().MOD_CACHE_DIR, URLUtil.getFileNameWithExtension(modVer.getModUrl()));
             DownloadTask task = new DownloadTask(new URL(modVer.getModUrl()), new FileOutputStream(fileName), new DownloadListener() {
                 public void onUpdate(int bytes, int totalDownloaded) {
                 }

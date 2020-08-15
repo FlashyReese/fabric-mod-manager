@@ -2,8 +2,6 @@ package me.flashyreese.fabricmm.schema;
 
 import me.flashyreese.common.i18n.I18nText;
 
-import java.io.File;
-
 public class InstalledMod {
     private String iconPath;
     private String minecraftVersion;//Need Fabric modders to include this in fabric.mod.json depends section
@@ -46,20 +44,9 @@ public class InstalledMod {
         return this.getInstalledPath().endsWith(".jar");
     }
 
-    private boolean isInstalledViaFMM(){
-        File installedMod = new File(this.getInstalledPath());
-        String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
-        return fileName.contains("__") && fileName.split("__").length == 3;//Fixme: Jank
-    }
-
     public void assignMinecraftVersion() {
         if (modMetadata.getDepends() != null && modMetadata.getDepends().containsKey("minecraft")){
             setMinecraftVersion((String) modMetadata.getDepends().get("minecraft"));
-        }else if(isInstalledViaFMM()){
-            File installedMod = new File(this.getInstalledPath());
-            String fileName = installedMod.getName().substring(0, installedMod.getName().lastIndexOf('.'));
-            String[] splitString = fileName.split("__");
-            setMinecraftVersion(splitString[1]);
         }else{
             setMinecraftVersion(new I18nText("fmm.installed_mod.minecraft_version.not_available").toString());
         }

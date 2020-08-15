@@ -1,4 +1,4 @@
-package me.flashyreese.fabricmm.mmc;
+package me.flashyreese.fabricmm.schema.mmc;
 
 public class Component {
     private String uid;

@@ -17,14 +17,10 @@ public class ConfigurationManager {
     private FMMSettings fmmSettings;
 
     public ConfigurationManager() {
-        try {
-            onInit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        onInit();
     }
 
-    public void onInit() throws IOException {
+    public void onInit() {
         if(!ICON_CACHE_DIR.exists()){
             ICON_CACHE_DIR.mkdirs();
         }

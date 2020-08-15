@@ -3,7 +3,6 @@ package me.flashyreese.fabricmm;
 import com.vdurmont.semver4j.Semver;
 import me.flashyreese.common.util.JarUtil;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
-import me.flashyreese.fabricmm.util.Util;
 import org.json.JSONObject;
 import org.kamranzafar.jddl.DirectDownloader;
 
@@ -28,6 +27,7 @@ public class Application {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            assert fabricModManagerUI != null;
             fabricModManagerUI.setVisible(true);
             FabricModManagerUI finalFabricModManagerUI = fabricModManagerUI;
             new Thread(() -> {
