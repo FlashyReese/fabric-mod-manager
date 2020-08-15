@@ -53,7 +53,7 @@ public class ModUtils {
         if(!dir.isDirectory()){
             throw new Exception("This is not a directory???");
         }
-        for(File file: Objects.requireNonNull(dir.listFiles((directory, fileName) -> fileName.endsWith(".jar") || fileName.endsWith(".fabricmod")))){
+        for(File file: Objects.requireNonNull(dir.listFiles((directory, fileName) -> fileName.endsWith(".jar") || fileName.endsWith(".fabricmod") || fileName.endsWith(".disabled")))){
             InstalledMod installedMod = getInstalledModFromJar(file);
             installedMods.add(installedMod);
         }
