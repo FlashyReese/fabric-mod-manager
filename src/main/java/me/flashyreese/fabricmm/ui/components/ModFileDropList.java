@@ -150,11 +150,14 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
                 for (File file : files) {
                     if(file.getName().endsWith(".jar") || file.getName().endsWith(".fabricmod") || file.getName().endsWith(".disabled")){
                         InstalledMod mod = ModUtils.getInstalledModFromJar(file);
-                        File newFile = new File(currentDirectory, file.getName());
-                        Files.copy(file.toPath(), newFile.toPath());
-                        if (newFile.length() == file.length()){
-                            InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
-                            listModel.addElement(newMod);
+                        if (mod != null){
+                            File newFile = new File(currentDirectory, file.getName());
+                            Files.copy(file.toPath(), newFile.toPath());
+                            if (newFile.length() == file.length()){
+                                InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
+                                if (newMod != null)
+                                    listModel.addElement(newMod);
+                            }
                         }
                     }
                 }

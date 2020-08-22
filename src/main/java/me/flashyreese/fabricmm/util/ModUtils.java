@@ -42,6 +42,8 @@ public class ModUtils {
             }
             installedMod.setInstalledPath(file.getAbsolutePath());
             installedMod.assignMinecraftVersion();
+        }else{
+            return null;
         }
         jarFile.close();
         return installedMod;
@@ -55,7 +57,8 @@ public class ModUtils {
         }
         for(File file: Objects.requireNonNull(dir.listFiles((directory, fileName) -> fileName.endsWith(".jar") || fileName.endsWith(".fabricmod") || fileName.endsWith(".disabled")))){
             InstalledMod installedMod = getInstalledModFromJar(file);
-            installedMods.add(installedMod);
+            if (installedMod != null)
+                installedMods.add(installedMod);
         }
         return installedMods;
     }
