@@ -53,6 +53,15 @@ public class SettingsUI extends JPanel {
                     }
                 }
             }
+
+            @Override
+            public void keyReleased(KeyEvent evt) {
+                File file = new File(mmcPath.getText());
+                if (file.exists()){
+                    ConfigurationManager.getInstance().getSettings().setMmcPath(mmcPath.getText());
+                    ConfigurationManager.getInstance().saveSettings();
+                }
+            }
         });
 
         Dim2i mmcPathChooserDim = new Dim2i(this.getWidth() - 40, 10, 30, 30);
