@@ -84,7 +84,7 @@ public class FabricModManagerUI extends JFrame {
         contentPane.addTab(new I18nText("fmm.settings").toString(), settings);
         setTitle(new I18nText("fmm.title").toString());
         library.updateComponentsText();
-        modBrowser.updateComponentsText();
+        modBrowser.updateComponentsText(repositoryManager);
         menuBar.updateComponentsText();
         settings.updateComponentsText();
         contentPane.setSelectedIndex(index == -1 ? 0 : index);

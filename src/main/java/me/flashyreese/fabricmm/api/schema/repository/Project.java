@@ -66,6 +66,17 @@ public class Project {
         this.user = user;
     }
 
+    public void setProject(Project project){
+        this.id = project.getId();
+        this.name = project.getName();
+        this.description = project.getDescription();
+        this.iconUrl = project.getIconUrl();
+        this.sourcesUrl = project.getSourcesUrl();
+        this.curseForgeProject = project.getCurseForgeProject();
+        this.projectUrl = project.getProjectUrl();
+        this.minecraftVersions = project.getMinecraftVersions();
+    }
+
     public boolean containsMinecraftVersion(String ver){
         for (MinecraftVersion minecraftVersion: getMinecraftVersions()){
             if (minecraftVersion.getMinecraftVersion().equalsIgnoreCase(ver)){

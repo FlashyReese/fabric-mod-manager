@@ -41,32 +41,27 @@ public class RepositoryManager {
     }
 
     private void loadLocalRepositories(boolean force) throws IOException {
-        users.clear();
+        getUsers().clear();
+
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, User.class);
         JsonAdapter<List<User>> adapter = moshi.adapter(type);
         URL url = new URL(repositoryUrl);
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String repository = in.lines().collect(Collectors.joining());
+
         List<User> usersRepository = adapter.fromJson(repository);
+
         final ExecutorService executor = Executors.newFixedThreadPool(4);
         final List<Future<?>> futures = new ArrayList<>();
-        assert usersRepository != null;
+
         for (User user: usersRepository){
             for (Project project: user.getProjects()){
                 if(project.getCurseForgeProject() != -1){
                     File projectJsonFile = getProjectFile(project.getCurseForgeProject());
                     if (projectJsonFile != null && !force){
-                        Type newType = Types.newParameterizedType(List.class, MinecraftVersion.class);
-                        JsonAdapter<List<MinecraftVersion>> jsonAdapter = moshi.adapter(newType);
-                        FileReader fileReader = new FileReader(projectJsonFile);
-                        BufferedReader buffered = new BufferedReader(fileReader);
-                        String projectJson = buffered.lines().collect(Collectors.joining());
-                        buffered.close();
-                        fileReader.close();
-                        List<MinecraftVersion> minecraftVersions = jsonAdapter.fromJson(projectJson);
-                        project.setMinecraftVersions(minecraftVersions);
-                        loadProjectInfo(project);//Fixme: Saved Locally CurseForge doesn't like many request
+                        Project localProject = FileUtil.readJson(projectJsonFile, Project.class);
+                        project.setProject(localProject);
                     }else{
                         Future<?> future = executor.submit(() -> {
                             try {
@@ -103,31 +98,23 @@ public class RepositoryManager {
     }
 
     private void downloadProjectFile(Project project) throws IOException {
-        CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), true);
+        CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), false);
         if (curseAddon.getDefaultCurseAttachment() != null && curseAddon.getDefaultCurseAttachment().getThumbnailUrl() != null){
             project.setIconUrl(curseAddon.getDefaultCurseAttachment().getThumbnailUrl());
         }
         project.setProjectUrl(curseAddon.getWebsiteUrl());
-        List<MinecraftVersion> minecraftVersions = convertCurseAddonToMinecraftFiles(curseAddon);
-        Moshi moshi = new Moshi.Builder().build();
-        JsonAdapter<List<MinecraftVersion>> jsonAdapter = moshi.adapter(Types.newParameterizedType(List.class, MinecraftVersion.class));
-        String json = jsonAdapter.toJson(minecraftVersions);
-        FileWriter fw = new FileWriter(new File(repositoryCache, String.format("%s.json", project.getCurseForgeProject())));
-        fw.write(json);
-        fw.flush();
-        fw.close();
-        project.setMinecraftVersions(minecraftVersions);
+        project.setMinecraftVersions(new ArrayList<>());
+        FileUtil.writeJson(new File(repositoryCache, String.format("%s.json", project.getCurseForgeProject())), project, Project.class);
     }
 
-    private void loadProjectInfo(Project project) {
-        CurseAddon curseAddon = null;
-        try{
-            curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), false);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        assert curseAddon != null;
-        project.setProjectUrl(curseAddon.getWebsiteUrl());
+    public void downloadProjectFiles(Project project){
+        CurseAddon curseAddon = getCurseAddonFromProjectID(project.getCurseForgeProject(), true);
+        List<MinecraftVersion> minecraftVersions = convertCurseAddonToMinecraftFiles(curseAddon);
+        project.setMinecraftVersions(minecraftVersions);
+        User user = project.getUser();
+        project.setUser(null);
+        FileUtil.writeJson(new File(repositoryCache, String.format("%s.json", project.getCurseForgeProject())), project, Project.class);
+        project.setUser(user);
     }
 
     public List<MinecraftVersion> convertCurseAddonToMinecraftFiles(CurseAddon curseAddon) {

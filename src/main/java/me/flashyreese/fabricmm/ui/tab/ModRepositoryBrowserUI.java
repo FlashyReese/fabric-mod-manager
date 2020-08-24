@@ -62,7 +62,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         initComponents();
         setupComponents(repositoryManager, downloadManager, trayIcon);
         loadComponents();
-        updateComponentsText();
+        updateComponentsText(repositoryManager);
     }
 
     private void initComponents() {
@@ -103,7 +103,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         Dim2i modFileListDim = new Dim2i(10, 50, this.getWidth() / 2 - 20, this.getHeight() - 60);
         projectList.setLocation(modFileListDim.getOriginX(), modFileListDim.getOriginY());
         projectList.setSize(modFileListDim.getWidth(), modFileListDim.getHeight());
-        projectList.getList().addListSelectionListener(arg0 -> onProjectListSelect());
+        projectList.getList().addListSelectionListener(arg0 -> onProjectListSelect(repositoryManager));
 
         Dim2i searchTypeDim = new Dim2i(this.getWidth() / 8 * 3, 10, this.getWidth() / 8 - 10, 30);
         filterType.setBounds(searchTypeDim.getOriginX(), searchTypeDim.getOriginY(), searchTypeDim.getWidth(), searchTypeDim.getHeight());
@@ -264,7 +264,7 @@ public class ModRepositoryBrowserUI extends JPanel{
     }
 
 
-    public void updateComponentsText(){
+    public void updateComponentsText(RepositoryManager repositoryManager){
         filterType.removeAllItems();
         filterType.addItem(new I18nText("fmm.mod_browser.filter.general").toString());
         filterType.addItem(new I18nText("fmm.mod_browser.filter.name").toString());
@@ -279,11 +279,17 @@ public class ModRepositoryBrowserUI extends JPanel{
         projectNameLabel.setText(new I18nText("fmm.mod_browser.project_info.name").toString());
         projectDescriptionLabel.setText(new I18nText("fmm.mod_browser.project_info.description").toString());
         authorNameLabel.setText(new I18nText("fmm.mod_browser.author_info.name").toString());
-        onProjectListSelect();
+        onProjectListSelect(repositoryManager);
     }
 
-    private void onProjectListSelect(){
+    private void onProjectListSelect(RepositoryManager repositoryManager){
         if(projectList.getSelectedValue() != null){
+            Project project = projectList.getSelectedValue();
+            if(project.getCurseForgeProject() != -1 && project.getMinecraftVersions().isEmpty())
+                new Thread(() -> {
+                    repositoryManager.downloadProjectFiles(project);
+                    onProjectListSelect(repositoryManager);
+                }).start();
             updateMinecraftVersions();
             if(minecraftVersion.getSelectedItem() != null){
                 minecraftVersion.setEnabled(true);
@@ -299,7 +305,6 @@ public class ModRepositoryBrowserUI extends JPanel{
                 modVersion.setEnabled(false);
                 download.setEnabled(false);
             }
-            Project project = projectList.getSelectedValue();
             projectId.setText(project.getId());
             projectName.setText(project.getName());
             projectDescription.setText("<html>" + project.getDescription() + "</html>");
