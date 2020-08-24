@@ -32,7 +32,7 @@ public class Application {
             FabricModManagerUI finalFabricModManagerUI = fabricModManagerUI;
             new Thread(() -> {
                 try {
-                    finalFabricModManagerUI.getRepositoryManager().updateLocalRepository(false);
+                    finalFabricModManagerUI.getRepositoryManager().updateLocalRepository();
                     finalFabricModManagerUI.getModBrowser().updateModList(finalFabricModManagerUI.getRepositoryManager());
                 } catch (Exception e) {
                     e.printStackTrace();

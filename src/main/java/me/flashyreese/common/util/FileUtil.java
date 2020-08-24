@@ -7,6 +7,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FileUtil {
@@ -94,5 +95,15 @@ public class FileUtil {
         }else{
             return null;
         }
+    }
+
+    public static boolean removeFileDirectory(File directory){
+        for (File file: Objects.requireNonNull(directory.listFiles())){
+            if (file.isDirectory()){
+                removeFileDirectory(file);
+            }
+            if (!file.delete())return false;
+        }
+        return true;
     }
 }

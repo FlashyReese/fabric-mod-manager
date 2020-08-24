@@ -40,7 +40,7 @@ public class RepositoryManager {
         this.users = new ArrayList<>();
     }
 
-    private void loadLocalRepositories(boolean force) throws IOException {
+    private void loadLocalRepositories() throws IOException {
         getUsers().clear();
 
         Moshi moshi = new Moshi.Builder().build();
@@ -59,7 +59,7 @@ public class RepositoryManager {
             for (Project project: user.getProjects()){
                 if(project.getCurseForgeProject() != -1){
                     File projectJsonFile = getProjectFile(project.getCurseForgeProject());
-                    if (projectJsonFile != null && !force){
+                    if (projectJsonFile != null){
                         Project localProject = FileUtil.readJson(projectJsonFile, Project.class);
                         project.setProject(localProject);
                     }else{
@@ -214,9 +214,13 @@ public class RepositoryManager {
         return project.getMinecraftVersions();
     }
 
+    public void clearLocalRepository() throws Exception {
+        if (!FileUtil.removeFileDirectory(getRepositoryCache()))
+            throw new Exception("No");
+    }
 
-    public void updateLocalRepository(boolean force) throws Exception {
-        loadLocalRepositories(force);
+    public void updateLocalRepository() throws Exception {
+        loadLocalRepositories();
     }
 
     public List<User> getUsers() {
