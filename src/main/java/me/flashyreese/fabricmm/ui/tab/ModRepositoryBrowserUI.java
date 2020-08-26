@@ -285,26 +285,12 @@ public class ModRepositoryBrowserUI extends JPanel{
     private void onProjectListSelect(RepositoryManager repositoryManager){
         if(projectList.getSelectedValue() != null){
             Project project = projectList.getSelectedValue();
-            if(project.getCurseForgeProject() != -1 && project.getMinecraftVersions().isEmpty())
+            if(project.getCurseForgeProject() != -1)
                 new Thread(() -> {
                     repositoryManager.downloadProjectFiles(project);
-                    onProjectListSelect(repositoryManager);
+                    updateMinecraftVersions();
                 }).start();
             updateMinecraftVersions();
-            if(minecraftVersion.getSelectedItem() != null){
-                minecraftVersion.setEnabled(true);
-                if (modVersion.getSelectedItem() != null){
-                    modVersion.setEnabled(true);
-                    download.setEnabled(true);
-                }else{
-                    modVersion.setEnabled(false);
-                    download.setEnabled(false);
-                }
-            }else{
-                minecraftVersion.setEnabled(false);
-                modVersion.setEnabled(false);
-                download.setEnabled(false);
-            }
             projectId.setText(project.getId());
             projectName.setText(project.getName());
             projectDescription.setText("<html>" + project.getDescription() + "</html>");
@@ -351,6 +337,20 @@ public class ModRepositoryBrowserUI extends JPanel{
             minecraftVersion.addItem(mcVer);
         }
         updateModVersions();
+        if(minecraftVersion.getSelectedItem() != null){
+            minecraftVersion.setEnabled(true);
+            if (modVersion.getSelectedItem() != null){
+                modVersion.setEnabled(true);
+                download.setEnabled(true);
+            }else{
+                modVersion.setEnabled(false);
+                download.setEnabled(false);
+            }
+        }else{
+            minecraftVersion.setEnabled(false);
+            modVersion.setEnabled(false);
+            download.setEnabled(false);
+        }
     }
 
     private void updateModVersions(){
