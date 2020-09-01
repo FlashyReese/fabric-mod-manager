@@ -1,5 +1,6 @@
 package me.flashyreese.fabricmm;
 
+import com.bulenkov.darcula.DarculaLaf;
 import com.vdurmont.semver4j.Semver;
 import me.flashyreese.common.util.JarUtil;
 import me.flashyreese.fabricmm.ui.FabricModManagerUI;
@@ -16,7 +17,7 @@ public class Application {
     public static void main(String[] args) throws Exception {
         VERSION = new Semver(new JSONObject(JarUtil.readTextFile("fabric.mod.manager.json")).getString("version"), Semver.SemverType.STRICT);
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(new DarculaLaf());//UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -51,8 +51,7 @@ public class CurseFile {
     }
 
     public void removeFabricFromGameVersion(){
-        //getGameVersion().remove("Fabric");//Fixme: CurseForge takes a while
-        getGameVersion().remove("Forge");//Some people are just weird
+        getGameVersion().remove("Forge");
     }
 
     public boolean isFabricModFile(){

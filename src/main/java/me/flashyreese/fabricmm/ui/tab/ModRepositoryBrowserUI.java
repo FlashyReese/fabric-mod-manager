@@ -214,6 +214,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         map.put("twitterUrl", "assets/icons/twitter.png");
         map.put("twitchUrl", "assets/icons/twitch.png");
         map.put("youtubeUrl", "assets/icons/youtube.png");
+        map.put("gitlabUrl", "assets/icons/gitlab.png");
         int offsetX = 0;
         User user = project.getUser();
         for (Map.Entry<String, String> entry: user.getContacts().entrySet()){
