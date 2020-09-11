@@ -1,5 +1,6 @@
 package me.flashyreese.fabricmm.ui.components;
 
+import me.flashyreese.common.util.IntegerUtil;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.ui.popmenu.InstalledModPopUpMenu;
 
@@ -18,8 +19,10 @@ public class ModPopClickListener extends MouseAdapter {
     public void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger()){
             JList<InstalledMod> list = modFileDropList.getList();
-            int row = list.locationToIndex(e.getPoint());
-            list.setSelectedIndex(row);
+            if (!IntegerUtil.containsIndexFromArray(list.getSelectedIndices(), list.locationToIndex(e.getPoint()))){
+                int row = list.locationToIndex(e.getPoint());
+                list.setSelectedIndex(row);
+            }
             doPop(e);
         }
     }
@@ -27,8 +30,10 @@ public class ModPopClickListener extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger()){
             JList<InstalledMod> list = modFileDropList.getList();
-            int row = list.locationToIndex(e.getPoint());
-            list.setSelectedIndex(row);
+            if (!IntegerUtil.containsIndexFromArray(list.getSelectedIndices(), list.locationToIndex(e.getPoint()))){
+                int row = list.locationToIndex(e.getPoint());
+                list.setSelectedIndex(row);
+            }
             doPop(e);
         }
     }

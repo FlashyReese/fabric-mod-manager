@@ -11,7 +11,9 @@ import java.io.File;
 
 public class InstalledModPopUpMenu extends JPopupMenu {
 
-    private JMenuItem toggle;
+    private JMenuItem enable;
+    private JMenuItem disable;
+    private JMenuItem checkForUpdate;
     private JMenuItem delete;
 
     public InstalledModPopUpMenu(ModFileDropList modFileDropList) {
@@ -21,34 +23,71 @@ public class InstalledModPopUpMenu extends JPopupMenu {
     }
 
     private void initComponents(){
-        toggle = new JMenuItem();
+        enable = new JMenuItem();
+        disable = new JMenuItem();
+        checkForUpdate = new JMenuItem();
         delete = new JMenuItem();
     }
 
     private void setupComponents(ModFileDropList modFileDropList){
-        toggle.setText(modFileDropList.getSelectedValue().isEnabled() ? new I18nText("fmm.library.disable").toString() : new I18nText("fmm.library.enable").toString());
-        toggle.addActionListener(arg0 -> {
-            ModUtils.changeInstalledModState(modFileDropList.getSelectedValue());
-            modFileDropList.updateUI();
-        });
+        enable.setText(new I18nText("fmm.library.enable").toString());
+        disable.setText(new I18nText("fmm.library.disable").toString());
+        checkForUpdate.setText(new I18nText("fmm.library.pop_menu.check_for_update").toString());
         delete.setText(new I18nText("fmm.library.pop_menu.delete").toString());
-        delete.addActionListener(arg0 -> {
-            int result = JOptionPane.showConfirmDialog(null, new ParsableI18nText("fmm.library.pop_menu.delete.message",
-                    modFileDropList.getSelectedValue().getModMetadata().getName()).toString(), new I18nText("fmm.library.pop_menu.delete.title").toString(),
-                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-            if(result == JOptionPane.YES_OPTION){
-                InstalledMod installedMod = modFileDropList.getSelectedValue();
-                File location = new File(installedMod.getInstalledPath());
-                if(location.delete()){
-                    modFileDropList.removeSelectedItem();
-                    modFileDropList.updateUI();
+
+        if (modFileDropList.getSelectedValues().size() == 1){
+            enable.setEnabled(!modFileDropList.getSelectedValue().isEnabled());
+            enable.addActionListener(arg0 -> {
+                ModUtils.changeInstalledModState(modFileDropList.getSelectedValue(), true);
+                modFileDropList.updateUI();
+            });
+
+            disable.setEnabled(modFileDropList.getSelectedValue().isEnabled());
+            disable.addActionListener(arg0 -> {
+                ModUtils.changeInstalledModState(modFileDropList.getSelectedValue(), false);
+                modFileDropList.updateUI();
+            });
+
+            checkForUpdate.addActionListener(e -> {
+            });
+
+            delete.addActionListener(arg0 -> {
+                int result = JOptionPane.showConfirmDialog(null, new ParsableI18nText("fmm.library.pop_menu.delete.message",
+                                modFileDropList.getSelectedValue().getModMetadata().getName()).toString(), new I18nText("fmm.library.pop_menu.delete.title").toString(),
+                        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if(result == JOptionPane.YES_OPTION){
+                    InstalledMod installedMod = modFileDropList.getSelectedValue();
+                    File location = new File(installedMod.getInstalledPath());
+                    if(location.delete()){
+                        modFileDropList.removeSelectedItem();
+                        modFileDropList.updateUI();
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            enable.addActionListener(arg0 -> {
+                for (InstalledMod selectedValue: modFileDropList.getSelectedValues()){
+                    ModUtils.changeInstalledModState(selectedValue, true);
+                }
+                modFileDropList.updateUI();
+            });
+
+            checkForUpdate.addActionListener(e -> {
+            });
+
+            disable.addActionListener(arg0 -> {
+                for (InstalledMod selectedValue: modFileDropList.getSelectedValues()){
+                    ModUtils.changeInstalledModState(selectedValue, false);
+                }
+                modFileDropList.updateUI();
+            });
+        }
     }
 
     private void loadComponents(){
-        this.add(toggle);
+        this.add(enable);
+        this.add(disable);
+        this.add(checkForUpdate);
         this.add(delete);
     }
 }
