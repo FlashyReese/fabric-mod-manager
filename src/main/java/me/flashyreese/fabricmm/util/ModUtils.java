@@ -73,4 +73,16 @@ public class ModUtils {
         installedMod.setInstalledPath(newFile.getAbsolutePath());
     }
 
+    public static void changeInstalledModState(InstalledMod installedMod, boolean state){
+        File newFile;
+        if (state != installedMod.isEnabled()){
+            if (state){
+                newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "jar");
+            }else{
+                newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "disabled");
+            }
+            installedMod.setInstalledPath(newFile.getAbsolutePath());
+        }
+    }
+
 }
