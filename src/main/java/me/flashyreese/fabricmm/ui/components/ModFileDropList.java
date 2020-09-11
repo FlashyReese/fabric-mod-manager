@@ -71,8 +71,8 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
         return list.getSelectedValue();
     }
 
-    public ArrayList<InstalledMod> getSelectedValues(){
-        return (ArrayList<InstalledMod>) list.getSelectedValuesList();//Fixme: add multi disable and enable
+    public List<InstalledMod> getSelectedValues(){
+        return list.getSelectedValuesList();//Fixme: add multi disable and enable
     }
 
     public void removeAllItems(){

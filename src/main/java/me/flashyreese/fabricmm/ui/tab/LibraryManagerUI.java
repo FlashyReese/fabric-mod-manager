@@ -2,6 +2,7 @@ package me.flashyreese.fabricmm.ui.tab;
 
 import com.thebrokenrail.modupdater.strategy.util.UpdateStrategyRunner;
 import me.flashyreese.common.i18n.I18nText;
+import me.flashyreese.fabricmm.core.ConfigurationManager;
 import me.flashyreese.fabricmm.schema.InstalledMod;
 import me.flashyreese.fabricmm.schema.MinecraftInstance;
 import me.flashyreese.fabricmm.ui.components.ModFileDropList;
@@ -14,6 +15,7 @@ import me.flashyreese.fabricmm.util.Util;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -102,7 +104,17 @@ public class LibraryManagerUI extends JPanel {
                 return renderer;
             }
         });
-        instance.addActionListener(e -> onInstanceChange());
+        updateInstances();
+        instance.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED){
+                onInstanceChange();
+                if (instance.getSelectedItem() instanceof MinecraftInstance) {
+                    MinecraftInstance minecraftInstance = (MinecraftInstance) instance.getSelectedItem();
+                    ConfigurationManager.getInstance().getSettings().setLastSelectedInstance(minecraftInstance.getName());
+                    ConfigurationManager.getInstance().saveSettings();
+                }
+            }
+        });
 
         Dim2i installedModFileDropListDim = new Dim2i(10, 50, this.getWidth() / 2, this.getHeight() - 100);
         installedModFileDropList.setLocation(installedModFileDropListDim.getOriginX(), installedModFileDropListDim.getOriginY());
@@ -210,6 +222,8 @@ public class LibraryManagerUI extends JPanel {
         modAuthors.setFont(modLabelFont);
         modEnvironment.setBounds(15, modBaseHeightLabel + modOffsetHeightLabel * 5, labelWidth, modLabelFontHeight);
         modEnvironment.setFont(modLabelFont);
+
+        loadLastSelectedInstance();
     }
 
     private void loadComponents(){
@@ -252,9 +266,29 @@ public class LibraryManagerUI extends JPanel {
         modVersionLabel.setText(new I18nText("fmm.library.mod_info.version").toString());
         modIdLabel.setText(new I18nText("fmm.library.mod_info.id").toString());
         modAuthorsLabel.setText(new I18nText("fmm.library.mod_info.authors").toString());
-        updateInstances();
+        //updateInstances(); fixme:
         onModFileDropListSelect();
         onInstanceChange();
+    }
+
+    private void loadLastSelectedInstance() {
+        if (ConfigurationManager.getInstance().getSettings().getLastSelectedInstance() != null){
+            boolean containsItem = false;
+            int index = -1;
+            int size = instance.getItemCount();
+            for (int i = 0; i < size; i++) {
+                MinecraftInstance item = instance.getItemAt(i);
+                if (item.getName().equals(ConfigurationManager.getInstance().getSettings().getLastSelectedInstance())){
+                    containsItem = true;
+                    index = i;
+                    break;
+                }
+            }
+            if (containsItem){
+                instance.setSelectedIndex(index);
+                onInstanceChange();
+            }
+        }
     }
 
     public void updateInstances(){

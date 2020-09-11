@@ -17,7 +17,7 @@ public class Application {
     public static void main(String[] args) throws Exception {
         VERSION = new Semver(new JSONObject(JarUtil.readTextFile("fabric.mod.manager.json")).getString("version"), Semver.SemverType.STRICT);
         try {
-            UIManager.setLookAndFeel(new DarculaLaf());//UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(/*new DarculaLaf());*/UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

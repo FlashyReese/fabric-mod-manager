@@ -64,6 +64,7 @@ public class DownloadManagerUI extends JPanel {
                 ioException.printStackTrace();
             }
         });
+
     }
 
     private void loadComponents() {
@@ -76,6 +77,26 @@ public class DownloadManagerUI extends JPanel {
         install.setText(new I18nText("fmm.download_manager.install").toString());
         onModFileDropListSelect();
         updateInstances();
+        loadLastSelectedInstance();
+    }
+
+    private void loadLastSelectedInstance() {
+        if (ConfigurationManager.getInstance().getSettings().getLastSelectedInstance() != null){
+            boolean containsItem = false;
+            int index = -1;
+            int size = minecraftInstances.getItemCount();
+            for (int i = 0; i < size; i++) {
+                MinecraftInstance item = minecraftInstances.getItemAt(i);
+                if (item.getName().equals(ConfigurationManager.getInstance().getSettings().getLastSelectedInstance())){
+                    containsItem = true;
+                    index = i;
+                    break;
+                }
+            }
+            if (containsItem){
+                minecraftInstances.setSelectedIndex(index);
+            }
+        }
     }
 
     public void updateInstances(){
