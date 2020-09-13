@@ -40,14 +40,14 @@ public class InstalledMod {
         this.modMetadata = modMetadata;
     }
 
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return this.getInstalledPath().endsWith(".jar");
     }
 
     public void assignMinecraftVersion() {
-        if (modMetadata.getDepends() != null && modMetadata.getDepends().containsKey("minecraft")){
+        if (modMetadata.getDepends() != null && modMetadata.getDepends().containsKey("minecraft")) {
             setMinecraftVersion((String) modMetadata.getDepends().get("minecraft"));
-        }else{
+        } else {
             setMinecraftVersion(new I18nText("fmm.installed_mod.minecraft_version.not_available").toString());
         }
     }

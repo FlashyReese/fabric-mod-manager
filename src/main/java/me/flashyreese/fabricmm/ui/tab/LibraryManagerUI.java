@@ -48,10 +48,10 @@ public class LibraryManagerUI extends JPanel {
     private JLabel modAuthors;
     private JLabel modEnvironment;
 
-    public LibraryManagerUI(JTabbedPane jTabbedPane) throws Exception {
+    public LibraryManagerUI(JTabbedPane jTabbedPane) {
         setLayout(null);
         setLocation(0, 0);
-        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
+        setSize(new Dimension((int) jTabbedPane.getPreferredSize().getWidth() - 5, (int) jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         Util.findMinecraftInstances();
         initComponents();
         setupComponents();
@@ -59,7 +59,7 @@ public class LibraryManagerUI extends JPanel {
         updateComponentsText();
     }
 
-    private void initComponents(){
+    private void initComponents() {
         instanceLabel = new JLabel();
         instance = new JComboBox<>();
         installedModFileDropList = new ModFileDropList();
@@ -95,10 +95,10 @@ public class LibraryManagerUI extends JPanel {
 
         Dim2i instanceDim = new Dim2i(this.getWidth() / 6 + 10, 10, this.getWidth() / 2 - this.getWidth() / 6, 30);
         instance.setBounds(instanceDim.getOriginX(), instanceDim.getOriginY(), instanceDim.getWidth(), instanceDim.getHeight());
-        instance.setRenderer(new DefaultListCellRenderer(){
+        instance.setRenderer(new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(value instanceof MinecraftInstance) {
+                if (value instanceof MinecraftInstance) {
                     renderer.setText(((MinecraftInstance) value).getName());
                 }
                 return renderer;
@@ -106,7 +106,7 @@ public class LibraryManagerUI extends JPanel {
         });
         updateInstances();
         instance.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED){
+            if (e.getStateChange() == ItemEvent.SELECTED) {
                 onInstanceChange();
                 if (instance.getSelectedItem() instanceof MinecraftInstance) {
                     MinecraftInstance minecraftInstance = (MinecraftInstance) instance.getSelectedItem();
@@ -127,7 +127,7 @@ public class LibraryManagerUI extends JPanel {
         openModsFolder.setBounds(openModsFolderDim.getOriginX(), openModsFolderDim.getOriginY(), openModsFolderDim.getWidth(), openModsFolderDim.getHeight());
         openModsFolder.addActionListener(e -> {
             try {
-                if (instance.getSelectedItem() instanceof MinecraftInstance){
+                if (instance.getSelectedItem() instanceof MinecraftInstance) {
                     MinecraftInstance minecraftInstance = (MinecraftInstance) instance.getSelectedItem();
                     Desktop.getDesktop().open(minecraftInstance.getDirectory());
                 }
@@ -150,7 +150,7 @@ public class LibraryManagerUI extends JPanel {
         Dim2i toggleInstalledModStateDim = new Dim2i(this.getWidth() / 2 + 20, this.getHeight() - 40, this.getWidth() / 2 - 30, 30);
         toggleInstalledModState.setBounds(toggleInstalledModStateDim.getOriginX(), toggleInstalledModStateDim.getOriginY(), toggleInstalledModStateDim.getWidth(), toggleInstalledModStateDim.getHeight());
         toggleInstalledModState.addActionListener(e -> {
-            if(installedModFileDropList.getSelectedValue() != null){
+            if (installedModFileDropList.getSelectedValue() != null) {
                 ModUtils.changeInstalledModState(installedModFileDropList.getSelectedValue());
                 this.installedModFileDropList.updateUI();
             }
@@ -160,9 +160,9 @@ public class LibraryManagerUI extends JPanel {
         checkForModUpdate.setBounds(checkForModUpdateDim.getOriginX(), checkForModUpdateDim.getOriginY(), checkForModUpdateDim.getWidth(), checkForModUpdateDim.getHeight());
         checkForModUpdate.addActionListener(e -> {
             JOptionPane.showMessageDialog(null, "This does nothing at the moment");
-            try{
+            try {
                 System.out.println(Objects.requireNonNull(UpdateStrategyRunner.checkModForUpdate(installedModFileDropList.getSelectedValue().getModMetadata())).downloadURL);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
@@ -226,7 +226,7 @@ public class LibraryManagerUI extends JPanel {
         loadLastSelectedInstance();
     }
 
-    private void loadComponents(){
+    private void loadComponents() {
         modInfoPanel.add(modNameLabel);
         modInfoPanel.add(modName);
         modInfoPanel.add(modMinecraftVersionLabel);
@@ -253,7 +253,7 @@ public class LibraryManagerUI extends JPanel {
         installedModFileDropList.updateUI();
     }
 
-    public void updateComponentsText(){
+    public void updateComponentsText() {
         instanceLabel.setText(new I18nText("fmm.library.instance").toString());
         openModsFolder.setText(new I18nText("fmm.library.open_mods_folder").toString());
         refreshMods.setText(new I18nText("fmm.library.refresh_mods").toString());
@@ -272,34 +272,34 @@ public class LibraryManagerUI extends JPanel {
     }
 
     private void loadLastSelectedInstance() {
-        if (ConfigurationManager.getInstance().getSettings().getLastSelectedInstance() != null){
+        if (ConfigurationManager.getInstance().getSettings().getLastSelectedInstance() != null) {
             boolean containsItem = false;
             int index = -1;
             int size = instance.getItemCount();
             for (int i = 0; i < size; i++) {
                 MinecraftInstance item = instance.getItemAt(i);
-                if (item.getName().equals(ConfigurationManager.getInstance().getSettings().getLastSelectedInstance())){
+                if (item.getName().equals(ConfigurationManager.getInstance().getSettings().getLastSelectedInstance())) {
                     containsItem = true;
                     index = i;
                     break;
                 }
             }
-            if (containsItem){
+            if (containsItem) {
                 instance.setSelectedIndex(index);
                 onInstanceChange();
             }
         }
     }
 
-    public void updateInstances(){
+    public void updateInstances() {
         instance.removeAllItems();
-        for(MinecraftInstance minecraftInstance: Util.getMinecraftInstances()){
+        for (MinecraftInstance minecraftInstance : Util.getMinecraftInstances()) {
             instance.addItem(minecraftInstance);
         }
     }
 
-    private void onInstanceChange(){
-        if (instance.getSelectedItem() instanceof MinecraftInstance){
+    private void onInstanceChange() {
+        if (instance.getSelectedItem() instanceof MinecraftInstance) {
             MinecraftInstance minecraftInstance = (MinecraftInstance) instance.getSelectedItem();
             installedModFileDropList.setDirectory(minecraftInstance.getDirectory());
             try {
@@ -311,8 +311,8 @@ public class LibraryManagerUI extends JPanel {
         }
     }
 
-    private void onModFileDropListSelect(){
-        if(installedModFileDropList.getSelectedValue() != null){
+    private void onModFileDropListSelect() {
+        if (installedModFileDropList.getSelectedValue() != null) {
             InstalledMod selectedMod = installedModFileDropList.getSelectedValue();
             this.toggleInstalledModState.setText(installedModFileDropList.getSelectedValue().isEnabled() ? new I18nText("fmm.library.disable").toString() : new I18nText("fmm.library.enable").toString());
             this.toggleInstalledModState.setEnabled(true);
@@ -326,7 +326,7 @@ public class LibraryManagerUI extends JPanel {
             this.modId.setText(selectedMod.getModMetadata().getId());
             this.modAuthors.setText(UserInterfaceUtils.getEnglishStringList((ArrayList<Object>) selectedMod.getModMetadata().getAuthors()));
             this.modEnvironment.setText(UserInterfaceUtils.filterEnvironment(selectedMod.getModMetadata().getEnvironment()));
-        }else{
+        } else {
             this.toggleInstalledModState.setText(new I18nText("fmm.library.enable").toString());
             this.toggleInstalledModState.setEnabled(false);
             this.checkForModUpdate.setEnabled(false);

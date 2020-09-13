@@ -17,9 +17,9 @@ public class ModPopClickListener extends MouseAdapter {
     }
 
     public void mousePressed(MouseEvent e) {
-        if (e.isPopupTrigger()){
+        if (e.isPopupTrigger()) {
             JList<InstalledMod> list = modFileDropList.getList();
-            if (!IntegerUtil.containsIndexFromArray(list.getSelectedIndices(), list.locationToIndex(e.getPoint()))){
+            if (!IntegerUtil.containsIndexFromArray(list.getSelectedIndices(), list.locationToIndex(e.getPoint()))) {
                 int row = list.locationToIndex(e.getPoint());
                 list.setSelectedIndex(row);
             }
@@ -28,9 +28,9 @@ public class ModPopClickListener extends MouseAdapter {
     }
 
     public void mouseReleased(MouseEvent e) {
-        if (e.isPopupTrigger()){
+        if (e.isPopupTrigger()) {
             JList<InstalledMod> list = modFileDropList.getList();
-            if (!IntegerUtil.containsIndexFromArray(list.getSelectedIndices(), list.locationToIndex(e.getPoint()))){
+            if (!IntegerUtil.containsIndexFromArray(list.getSelectedIndices(), list.locationToIndex(e.getPoint()))) {
                 int row = list.locationToIndex(e.getPoint());
                 list.setSelectedIndex(row);
             }

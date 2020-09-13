@@ -59,10 +59,10 @@ public class CurseAddon {
         return latestFiles;
     }
 
-    public CurseAttachment getDefaultCurseAttachment(){
-        if(getAttachments() != null){
-            for (CurseAttachment curseAttachment: getAttachments()){
-                if (curseAttachment.isDefault()){
+    public CurseAttachment getDefaultCurseAttachment() {
+        if (getAttachments() != null) {
+            for (CurseAttachment curseAttachment : getAttachments()) {
+                if (curseAttachment.isDefault()) {
                     return curseAttachment;
                 }
             }

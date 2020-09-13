@@ -5,7 +5,8 @@ public class Dim2i {
     private final int y;
     private final int width;
     private final int height;
-    public Dim2i(int x, int y, int width, int height){
+
+    public Dim2i(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -28,11 +29,11 @@ public class Dim2i {
         return this.height;
     }
 
-    public int getLimitX(){
+    public int getLimitX() {
         return this.x + this.width;
     }
 
-    public int getLimitY(){
+    public int getLimitY() {
         return this.y + this.height;
     }
 }

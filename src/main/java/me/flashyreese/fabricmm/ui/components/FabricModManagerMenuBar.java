@@ -38,14 +38,14 @@ public class FabricModManagerMenuBar extends JMenuBar {
     private JMenuItem checkForUpdates;
     private JMenuItem about;
 
-    public FabricModManagerMenuBar(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, DownloadManagerUI downloadManagerUI, I18nManager i18nManager){
+    public FabricModManagerMenuBar(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, DownloadManagerUI downloadManagerUI, I18nManager i18nManager) {
         initComponents();
         setupComponents(fabricModManagerUI, repositoryManager, library, modRepositoryBrowserUI, downloadManagerUI, i18nManager);
         loadComponents();
         updateComponentsText();
     }
 
-    private void initComponents(){
+    private void initComponents() {
         quickToolsMenu = new JMenu();
         repositoryMenu = new JMenu();
         languageMenu = new JMenu();
@@ -58,10 +58,10 @@ public class FabricModManagerMenuBar extends JMenuBar {
         about = new JMenuItem();
     }
 
-    private void setupComponents(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, DownloadManagerUI downloadManagerUI, I18nManager i18nManager){
+    private void setupComponents(FabricModManagerUI fabricModManagerUI, RepositoryManager repositoryManager, LibraryManagerUI library, ModRepositoryBrowserUI modRepositoryBrowserUI, DownloadManagerUI downloadManagerUI, I18nManager i18nManager) {
         openMinecraftLauncher.addActionListener(e -> {
             File launcher = Util.findDefaultLauncherPath();
-            if(launcher.exists()){
+            if (launcher.exists()) {
                 try {
                     Desktop.getDesktop().open(launcher);
                 } catch (IOException ioException) {
@@ -72,17 +72,17 @@ public class FabricModManagerMenuBar extends JMenuBar {
 
         openMMCLauncher.addActionListener(e -> {
             File launcher = Util.getMMCLauncher();
-            if(launcher != null){
-                if (launcher.exists()){
+            if (launcher != null) {
+                if (launcher.exists()) {
                     try {
                         Desktop.getDesktop().open(launcher);
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, new I18nText("fmm.menubar.quick_tools.open_mmc_launcher.not_available").toString());
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, new I18nText("fmm.menubar.quick_tools.open_mmc_launcher.not_available").toString());
             }
         });
@@ -99,44 +99,40 @@ public class FabricModManagerMenuBar extends JMenuBar {
 
         refreshMinecraftInstances.addActionListener(e -> {
             Util.getMinecraftInstances().clear();
-            try {
-                Util.findMinecraftInstances();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+            Util.findMinecraftInstances();
             library.updateInstances();
             downloadManagerUI.updateInstances();
         });
 
         checkForUpdates.addActionListener(e -> new Thread(() -> {
-            try{
+            try {
                 URL url = new URL("https://api.github.com/repos/FlashyReese/fabric-mod-manager/releases");
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                 String json = in.lines().collect(Collectors.joining());
                 in.close();
                 JSONArray jsonArray = new JSONArray(json);
-                if(!jsonArray.isEmpty()){
+                if (!jsonArray.isEmpty()) {
                     Semver latest = new Semver(jsonArray.getJSONObject(0).getString("tag_name"), Semver.SemverType.STRICT);
-                    if(Application.getVersion().isLowerThan(latest)){
+                    if (Application.getVersion().isLowerThan(latest)) {
                         Desktop.getDesktop().browse(new URI("https://github.com/FlashyReese/fabric-mod-manager/releases"));
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(null, new I18nText("fmm.menubar.help.check_for_updates.up_to_date").toString());
                     }
                 }
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }).start());
 
         about.addActionListener(e -> JOptionPane.showMessageDialog(null, new MessageWithLink(
                 String.format("Fabric Mod Manager %s <br><p>Source can be found at " +
-                        "<a href=\"https://github.com/FlashyReese/fabric-mod-manager\">GitHub</a></p></br>",
+                                "<a href=\"https://github.com/FlashyReese/fabric-mod-manager\">GitHub</a></p></br>",
                         Application.getVersion().toString()))));
 
         loadAvailableLocales(fabricModManagerUI, i18nManager);
     }
 
-    private void loadComponents(){
+    private void loadComponents() {
         quickToolsMenu.add(openMinecraftLauncher);
         quickToolsMenu.add(openMMCLauncher);
         repositoryMenu.add(updateLocalRepository);
@@ -149,7 +145,7 @@ public class FabricModManagerMenuBar extends JMenuBar {
         this.add(helpMenu);
     }
 
-    public void updateComponentsText(){
+    public void updateComponentsText() {
         quickToolsMenu.setText(new I18nText("fmm.menubar.quick_tools").toString());
         openMinecraftLauncher.setText(new I18nText("fmm.menubar.quick_tools.open_minecraft_launcher").toString());
         openMMCLauncher.setText(new I18nText("fmm.menubar.quick_tools.open_mmc_launcher").toString());
@@ -162,9 +158,9 @@ public class FabricModManagerMenuBar extends JMenuBar {
         about.setText(new I18nText("fmm.menubar.help.about").toString());
     }
 
-    private void loadAvailableLocales(FabricModManagerUI fabricModManagerUI, I18nManager i18nManager){
+    private void loadAvailableLocales(FabricModManagerUI fabricModManagerUI, I18nManager i18nManager) {
         languageMenu.removeAll();
-        for (Locale locale: i18nManager.getAvailableLocales()){
+        for (Locale locale : i18nManager.getAvailableLocales()) {
             JMenuItem menuItem = new JMenuItem();
             menuItem.setText(locale.getDisplayName());
             menuItem.addActionListener(e -> {

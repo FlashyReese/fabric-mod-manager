@@ -21,27 +21,27 @@ public class ConfigurationManager {
     }
 
     public void onInit() {
-        if(!ICON_CACHE_DIR.exists()){
+        if (!ICON_CACHE_DIR.exists()) {
             ICON_CACHE_DIR.mkdirs();
         }
-        if(!MOD_CACHE_DIR.exists()){
+        if (!MOD_CACHE_DIR.exists()) {
             MOD_CACHE_DIR.mkdirs();
         }
-        if(!REPOSITORY_CACHE_DIR.exists()){
+        if (!REPOSITORY_CACHE_DIR.exists()) {
             REPOSITORY_CACHE_DIR.mkdirs();
         }
-        if(!CONFIG_DIR.exists()){
+        if (!CONFIG_DIR.exists()) {
             CONFIG_DIR.mkdirs();
         }
-        if(!FMM_CONFIG.exists()){
+        if (!FMM_CONFIG.exists()) {
             fmmSettings = ConfigurationBuilder.createFMMDefaultSettings(FMM_CONFIG);
-        }else{
+        } else {
             fmmSettings = FileUtil.readJson(FMM_CONFIG, FMMSettings.class);
         }
     }
 
-    public static ConfigurationManager getInstance(){
-        if(instance == null) instance = new ConfigurationManager();
+    public static ConfigurationManager getInstance() {
+        if (instance == null) instance = new ConfigurationManager();
         return instance;
     }
 
@@ -49,7 +49,7 @@ public class ConfigurationManager {
         return fmmSettings;
     }
 
-    public void saveSettings(){
+    public void saveSettings() {
         FileUtil.writeJson(FMM_CONFIG, fmmSettings, FMMSettings.class);
     }
 }

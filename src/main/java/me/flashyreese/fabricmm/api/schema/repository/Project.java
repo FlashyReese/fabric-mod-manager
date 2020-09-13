@@ -66,7 +66,7 @@ public class Project {
         this.user = user;
     }
 
-    public void setProject(Project project){
+    public void setProject(Project project) {
         this.id = project.getId();
         this.name = project.getName();
         this.description = project.getDescription();
@@ -77,18 +77,18 @@ public class Project {
         this.minecraftVersions = project.getMinecraftVersions();
     }
 
-    public boolean containsMinecraftVersion(String ver){
-        for (MinecraftVersion minecraftVersion: getMinecraftVersions()){
-            if (minecraftVersion.getMinecraftVersion().equalsIgnoreCase(ver)){
+    public boolean containsMinecraftVersion(String ver) {
+        for (MinecraftVersion minecraftVersion : getMinecraftVersions()) {
+            if (minecraftVersion.getMinecraftVersion().equalsIgnoreCase(ver)) {
                 return true;
             }
         }
         return false;
     }
 
-    public MinecraftVersion getMinecraftVersion(String ver){
-        for (MinecraftVersion version: getMinecraftVersions()){
-            if (version.getMinecraftVersion().equalsIgnoreCase(ver)){
+    public MinecraftVersion getMinecraftVersion(String ver) {
+        for (MinecraftVersion version : getMinecraftVersions()) {
+            if (version.getMinecraftVersion().equalsIgnoreCase(ver)) {
                 return version;
             }
         }

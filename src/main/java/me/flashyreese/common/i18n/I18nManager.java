@@ -32,13 +32,13 @@ public class I18nManager {
     }
 
     public void setLocale(Locale l) throws Exception {
-        for (Locale locale: getAvailableLocales()){
-            if (locale == l){
+        for (Locale locale : getAvailableLocales()) {
+            if (locale == l) {
                 currentLocale = getTranslationsForLocale(locale);
                 break;
             }
         }
-        if (currentLocale == null){
+        if (currentLocale == null) {
             currentLocale = getTranslationsForLocale(Locale.US);
         }
     }
@@ -46,15 +46,15 @@ public class I18nManager {
     private ArrayList<Locale> findAvailableLocales() throws Exception {
         ArrayList<Locale> availableLocales = new ArrayList<>();
         final File jarFile = new File(I18nManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        if(jarFile.isFile()) {
+        if (jarFile.isFile()) {
             final JarFile jar = new JarFile(jarFile);
             final Enumeration<JarEntry> entries = jar.entries();
-            while(entries.hasMoreElements()) {
+            while (entries.hasMoreElements()) {
                 final JarEntry entry = entries.nextElement();
                 final String name = entry.getName();
                 if (name.startsWith(languageDirectory + "/") && name.endsWith(".json")) {
                     Locale locale = getLocale(JarUtil.getFileName(entry));
-                    if(locale != null){
+                    if (locale != null) {
                         availableLocales.add(locale);
                     }
                 }
@@ -68,7 +68,7 @@ public class I18nManager {
                     final File languages = new File(url.toURI());
                     for (File language : Objects.requireNonNull(languages.listFiles())) {
                         Locale locale = getLocale(FileUtil.getFileName(language));
-                        if(locale != null){
+                        if (locale != null) {
                             availableLocales.add(locale);
                         }
                     }
@@ -84,19 +84,19 @@ public class I18nManager {
     private HashMap<String, String> getTranslationsForLocale(Locale locale) throws Exception {
         HashMap<String, String> translations = new HashMap<>();
         final File jarFile = new File(I18nManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        if(jarFile.isFile()) {
+        if (jarFile.isFile()) {
             final JarFile jar = new JarFile(jarFile);
             final Enumeration<JarEntry> entries = jar.entries();
-            while(entries.hasMoreElements()) {
+            while (entries.hasMoreElements()) {
                 final JarEntry entry = entries.nextElement();
                 final String name = entry.getName();
                 if (name.startsWith(languageDirectory + "/") && name.endsWith(".json")) {
-                    if (JarUtil.getFileName(entry).equalsIgnoreCase(locale.toString())){
+                    if (JarUtil.getFileName(entry).equalsIgnoreCase(locale.toString())) {
                         Moshi moshi = new Moshi.Builder().build();
                         Type type = Types.newParameterizedType(Map.class, String.class, String.class);
-                        JsonAdapter<Map<String,String>> adapter = moshi.adapter(type);
+                        JsonAdapter<Map<String, String>> adapter = moshi.adapter(type);
                         String json = new BufferedReader(new InputStreamReader(jar.getInputStream(entry), StandardCharsets.UTF_8)).lines().collect(Collectors.joining());
-                        Map<String,String> map = adapter.fromJson(json);
+                        Map<String, String> map = adapter.fromJson(json);
                         translations.putAll(map);
                         break;
                     }
@@ -110,12 +110,12 @@ public class I18nManager {
                 try {
                     final File languages = new File(url.toURI());
                     for (File language : Objects.requireNonNull(languages.listFiles())) {
-                        if (FileUtil.getFileName(language).equalsIgnoreCase(locale.toString())){
+                        if (FileUtil.getFileName(language).equalsIgnoreCase(locale.toString())) {
                             Moshi moshi = new Moshi.Builder().build();
                             Type type = Types.newParameterizedType(Map.class, String.class, String.class);
-                            JsonAdapter<Map<String,String>> adapter = moshi.adapter(type);
+                            JsonAdapter<Map<String, String>> adapter = moshi.adapter(type);
                             String json = new BufferedReader(new InputStreamReader(new FileInputStream(language), StandardCharsets.UTF_8)).lines().collect(Collectors.joining());
-                            Map<String,String> map = adapter.fromJson(json);
+                            Map<String, String> map = adapter.fromJson(json);
                             translations.putAll(map);
                             break;
                         }
@@ -135,7 +135,7 @@ public class I18nManager {
 
     public String getLocaleDisplayName(String tag) {
         for (Locale locale : Locale.getAvailableLocales()) {
-            if(locale.toString().equalsIgnoreCase(tag)){
+            if (locale.toString().equalsIgnoreCase(tag)) {
                 return locale.getDisplayName();
             }
         }
@@ -144,7 +144,7 @@ public class I18nManager {
 
     public Locale getLocale(String tag) {
         for (Locale locale : Locale.getAvailableLocales()) {
-            if(locale.toString().equalsIgnoreCase(tag)){
+            if (locale.toString().equalsIgnoreCase(tag)) {
                 return locale;
             }
         }
@@ -152,7 +152,7 @@ public class I18nManager {
     }
 
     protected static String translate(String key) {
-        if (currentLocale != null && currentLocale.containsKey(key)){
+        if (currentLocale != null && currentLocale.containsKey(key)) {
             return currentLocale.get(key);
         }
         return key;

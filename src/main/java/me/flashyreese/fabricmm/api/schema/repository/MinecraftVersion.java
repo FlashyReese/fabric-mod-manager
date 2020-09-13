@@ -34,25 +34,25 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
         this.releasedDate = releasedDate;
     }
 
-    public boolean containsModVersion(String ver){
-        for (ModVersion modVersion: getModVersions()){
-            if (modVersion.getModVersion().equalsIgnoreCase(ver)){
+    public boolean containsModVersion(String ver) {
+        for (ModVersion modVersion : getModVersions()) {
+            if (modVersion.getModVersion().equalsIgnoreCase(ver)) {
                 return true;
             }
         }
         return false;
     }
 
-    public ModVersion getModVersion(String ver){
-        for (ModVersion modVersion: getModVersions()){
-            if (modVersion.getModVersion().equalsIgnoreCase(ver)){
+    public ModVersion getModVersion(String ver) {
+        for (ModVersion modVersion : getModVersions()) {
+            if (modVersion.getModVersion().equalsIgnoreCase(ver)) {
                 return modVersion;
             }
         }
         return null;
     }
 
-    public LocalDate getReleasedLocalDate(){
+    public LocalDate getReleasedLocalDate() {
         return ISODateTimeFormat.dateTimeParser().parseLocalDateTime(getReleasedDate()).toLocalDate();
     }
 

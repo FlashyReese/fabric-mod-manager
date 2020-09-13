@@ -23,12 +23,12 @@ public class ProjectList extends JPanel {
         list = new JList<>();
         list.setModel(listModel);
         list.setDragEnabled(true);
-        list.setCellRenderer(new DefaultListCellRenderer(){
+        list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(value instanceof Project) {
-                    Project project = (Project)value;
+                if (value instanceof Project) {
+                    Project project = (Project) value;
                     try {
                         renderer.setIcon(UserInterfaceUtils.getImageIconFromCache(project));
                     } catch (Exception e) {
@@ -47,45 +47,45 @@ public class ProjectList extends JPanel {
 
     }
 
-    public void searchFilter(String searchTerm, String type){//Fixme: really jank, might include descriptions in general search
+    public void searchFilter(String searchTerm, String type) {//Fixme: really jank, might include descriptions in general search
         DefaultListModel<Project> filteredItems = new DefaultListModel<>();
         ArrayList<Project> listProjects = new ArrayList<>(listModel.getSize());
         for (int i = 0; i < listModel.getSize(); i++) {
             listProjects.add(listModel.getElementAt(i));
         }
-        if(searchTerm.isEmpty()){
+        if (searchTerm.isEmpty()) {
             list.setModel(listModel);
             return;
         }
-        if(type.equals(new I18nText("fmm.mod_browser.filter.general").toString())){
-            for (Project project: listProjects){
-                if (project.getName().toLowerCase().contains(searchTerm.toLowerCase()) || project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())){
-                    if(!filteredItems.contains(project)){
+        if (type.equals(new I18nText("fmm.mod_browser.filter.general").toString())) {
+            for (Project project : listProjects) {
+                if (project.getName().toLowerCase().contains(searchTerm.toLowerCase()) || project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+                    if (!filteredItems.contains(project)) {
                         filteredItems.addElement(project);
                     }
                 }
-                for (MinecraftVersion minecraftVersion: project.getMinecraftVersions()){
-                    if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
-                        if(!filteredItems.contains(project)){
+                for (MinecraftVersion minecraftVersion : project.getMinecraftVersions()) {
+                    if (minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())) {
+                        if (!filteredItems.contains(project)) {
                             filteredItems.addElement(project);
                         }
                     }
                 }
             }
-        }else{
-            for (Project project: listProjects){
-                if(type.equals(new I18nText("fmm.mod_browser.filter.name").toString())){
-                    if (project.getName().toLowerCase().contains(searchTerm.toLowerCase())){
+        } else {
+            for (Project project : listProjects) {
+                if (type.equals(new I18nText("fmm.mod_browser.filter.name").toString())) {
+                    if (project.getName().toLowerCase().contains(searchTerm.toLowerCase())) {
                         filteredItems.addElement(project);
                     }
-                }else if(type.equals(new I18nText("fmm.mod_browser.filter.author").toString())){
-                    if (project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())){
+                } else if (type.equals(new I18nText("fmm.mod_browser.filter.author").toString())) {
+                    if (project.getUser().getName().toLowerCase().contains(searchTerm.toLowerCase())) {
                         filteredItems.addElement(project);
                     }
-                }else if(type.equals(new I18nText("fmm.mod_browser.filter.minecraft_version").toString())){
-                    for (MinecraftVersion minecraftVersion: project.getMinecraftVersions()){
-                        if(minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())){
-                            if(!filteredItems.contains(project)){
+                } else if (type.equals(new I18nText("fmm.mod_browser.filter.minecraft_version").toString())) {
+                    for (MinecraftVersion minecraftVersion : project.getMinecraftVersions()) {
+                        if (minecraftVersion.getMinecraftVersion().toLowerCase().contains(searchTerm.toLowerCase())) {
+                            if (!filteredItems.contains(project)) {
                                 filteredItems.addElement(project);
                             }
                         }
@@ -96,7 +96,7 @@ public class ProjectList extends JPanel {
         list.setModel(filteredItems);
     }
 
-    public JList<Project> getList(){
+    public JList<Project> getList() {
         return list;
     }
 
@@ -104,13 +104,13 @@ public class ProjectList extends JPanel {
         return list.getSelectedValue();
     }
 
-    public void removeAllItems(){
+    public void removeAllItems() {
         listModel.removeAllElements();
     }
 
     public void updateUI() {
         super.updateUI();
-        if (list != null){
+        if (list != null) {
             list.updateUI();
         }
     }

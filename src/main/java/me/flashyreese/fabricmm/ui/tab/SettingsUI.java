@@ -19,7 +19,7 @@ public class SettingsUI extends JPanel {
 
     public SettingsUI(JTabbedPane jTabbedPane) throws Exception {
         setLayout(null);
-        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
+        setSize(new Dimension((int) jTabbedPane.getPreferredSize().getWidth() - 5, (int) jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
         setupComponents();
         loadComponents();
@@ -38,15 +38,15 @@ public class SettingsUI extends JPanel {
         mmcPathLabel.setBounds(mmcPathLabelDim.getOriginX(), mmcPathLabelDim.getOriginY(), mmcPathLabelDim.getWidth(), mmcPathLabelDim.getHeight());
         mmcPathLabel.setFont(labelFont);
 
-        Dim2i mmcPathDim = new Dim2i(this.getWidth() / 4 + 10,  10, this.getWidth() - (this.getWidth() / 4 + 10) - 50, 30);
+        Dim2i mmcPathDim = new Dim2i(this.getWidth() / 4 + 10, 10, this.getWidth() - (this.getWidth() / 4 + 10) - 50, 30);
         mmcPath.setBounds(mmcPathDim.getOriginX(), mmcPathDim.getOriginY(), mmcPathDim.getWidth(), mmcPathDim.getHeight());
         mmcPath.setText(ConfigurationManager.getInstance().getSettings().getMmcPath());
         mmcPath.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     File file = new File(mmcPath.getText());
-                    if (file.exists()){
+                    if (file.exists()) {
                         ConfigurationManager.getInstance().getSettings().setMmcPath(mmcPath.getText());
                         ConfigurationManager.getInstance().saveSettings();
                         requestFocusInWindow();
@@ -57,7 +57,7 @@ public class SettingsUI extends JPanel {
             @Override
             public void keyReleased(KeyEvent evt) {
                 File file = new File(mmcPath.getText());
-                if (file.exists()){
+                if (file.exists()) {
                     ConfigurationManager.getInstance().getSettings().setMmcPath(mmcPath.getText());
                     ConfigurationManager.getInstance().saveSettings();
                 }
@@ -71,9 +71,9 @@ public class SettingsUI extends JPanel {
             UIManager.put("FileChooser.readOnly", Boolean.TRUE);
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if (!ConfigurationManager.getInstance().getSettings().getMmcPath().isEmpty()){
+            if (!ConfigurationManager.getInstance().getSettings().getMmcPath().isEmpty()) {
                 chooser.setCurrentDirectory(new File(ConfigurationManager.getInstance().getSettings().getMmcPath()));
-            }else{
+            } else {
                 try {
                     chooser.setCurrentDirectory(new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation()
                             .toURI()).getPath()));

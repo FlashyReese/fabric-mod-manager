@@ -23,7 +23,7 @@ public class DownloadManagerUI extends JPanel {
 
     public DownloadManagerUI(JTabbedPane jTabbedPane, TrayIcon trayIcon) throws Exception {
         setLayout(null);
-        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
+        setSize(new Dimension((int) jTabbedPane.getPreferredSize().getWidth() - 5, (int) jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
         setupComponents(trayIcon);
         loadComponents();
@@ -46,10 +46,10 @@ public class DownloadManagerUI extends JPanel {
 
         Dim2i minecraftInstancesDim = new Dim2i(10, this.getHeight() - 40, this.getWidth() / 4 * 3 - 30, 30);
         minecraftInstances.setBounds(minecraftInstancesDim.getOriginX(), minecraftInstancesDim.getOriginY(), minecraftInstancesDim.getWidth(), minecraftInstancesDim.getHeight());
-        minecraftInstances.setRenderer(new DefaultListCellRenderer(){
+        minecraftInstances.setRenderer(new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(value instanceof MinecraftInstance) {
+                if (value instanceof MinecraftInstance) {
                     renderer.setText(((MinecraftInstance) value).getName());
                 }
                 return renderer;
@@ -73,7 +73,7 @@ public class DownloadManagerUI extends JPanel {
         this.add(install);
     }
 
-    public void updateComponentsText(){
+    public void updateComponentsText() {
         install.setText(new I18nText("fmm.download_manager.install").toString());
         onModFileDropListSelect();
         updateInstances();
@@ -81,37 +81,37 @@ public class DownloadManagerUI extends JPanel {
     }
 
     private void loadLastSelectedInstance() {
-        if (ConfigurationManager.getInstance().getSettings().getLastSelectedInstance() != null){
+        if (ConfigurationManager.getInstance().getSettings().getLastSelectedInstance() != null) {
             boolean containsItem = false;
             int index = -1;
             int size = minecraftInstances.getItemCount();
             for (int i = 0; i < size; i++) {
                 MinecraftInstance item = minecraftInstances.getItemAt(i);
-                if (item.getName().equals(ConfigurationManager.getInstance().getSettings().getLastSelectedInstance())){
+                if (item.getName().equals(ConfigurationManager.getInstance().getSettings().getLastSelectedInstance())) {
                     containsItem = true;
                     index = i;
                     break;
                 }
             }
-            if (containsItem){
+            if (containsItem) {
                 minecraftInstances.setSelectedIndex(index);
             }
         }
     }
 
-    public void updateInstances(){
+    public void updateInstances() {
         minecraftInstances.removeAllItems();
-        for(MinecraftInstance minecraftInstance: Util.getMinecraftInstances()){
+        for (MinecraftInstance minecraftInstance : Util.getMinecraftInstances()) {
             minecraftInstances.addItem(minecraftInstance);
         }
     }
 
-    private void onModFileDropListSelect(){
+    private void onModFileDropListSelect() {
         install.setEnabled(downloadModFileDropList.getSelectedValue() != null);
     }
 
     private void onInstallMod(TrayIcon trayIcon) throws IOException {
-        if (downloadModFileDropList.getSelectedValue() != null){
+        if (downloadModFileDropList.getSelectedValue() != null) {
             InstalledMod mod = downloadModFileDropList.getSelectedValue();
             File currentLocation = new File(mod.getInstalledPath());
             MinecraftInstance instance = (MinecraftInstance) minecraftInstances.getSelectedItem();

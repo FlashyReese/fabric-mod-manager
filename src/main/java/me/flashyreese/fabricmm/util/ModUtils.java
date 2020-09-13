@@ -19,7 +19,7 @@ public class ModUtils {
         InstalledMod installedMod = new InstalledMod();
         final JarFile jarFile = new JarFile(file);
         final JarEntry fabricSchema = jarFile.getJarEntry("fabric.mod.json");
-        if(fabricSchema != null) {
+        if (fabricSchema != null) {
             final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(jarFile.getInputStream(fabricSchema), StandardCharsets.UTF_8));
             String fabricSchemaJson = bufferedReader.lines().collect(Collectors.joining());
             bufferedReader.close();
@@ -27,9 +27,9 @@ public class ModUtils {
             installedMod.setModMetadata(fabricModMetadata);
             assert fabricModMetadata != null;
             final JarEntry iconJarEntry = jarFile.getJarEntry(fabricModMetadata.getIcon() != null ? fabricModMetadata.getIcon() : "");
-            if (iconJarEntry != null){
+            if (iconJarEntry != null) {
                 File iconFile = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR + File.separator + String.format("%s.png", installedMod.getModMetadata().getId()));
-                if(!iconFile.exists()){
+                if (!iconFile.exists()) {
                     InputStream inputStream = jarFile.getInputStream(iconJarEntry);
                     FileOutputStream fileOutputStream = new FileOutputStream(iconFile);
                     while (inputStream.available() > 0) {
@@ -42,7 +42,7 @@ public class ModUtils {
             }
             installedMod.setInstalledPath(file.getAbsolutePath());
             installedMod.assignMinecraftVersion();
-        }else{
+        } else {
             return null;
         }
         jarFile.close();
@@ -50,12 +50,12 @@ public class ModUtils {
     }
 
     public static List<InstalledMod> getInstalledModsFromDir(File dir) throws Exception {
-        if(!dir.exists())dir.mkdirs();
+        if (!dir.exists()) dir.mkdirs();
         List<InstalledMod> installedMods = new ArrayList<>();
-        if(!dir.isDirectory()){
+        if (!dir.isDirectory()) {
             throw new Exception("This is not a directory???");
         }
-        for(File file: Objects.requireNonNull(dir.listFiles((directory, fileName) -> fileName.endsWith(".jar") || fileName.endsWith(".fabricmod") || fileName.endsWith(".disabled")))){
+        for (File file : Objects.requireNonNull(dir.listFiles((directory, fileName) -> fileName.endsWith(".jar") || fileName.endsWith(".fabricmod") || fileName.endsWith(".disabled")))) {
             InstalledMod installedMod = getInstalledModFromJar(file);
             if (installedMod != null)
                 installedMods.add(installedMod);
@@ -63,22 +63,22 @@ public class ModUtils {
         return installedMods;
     }
 
-    public static void changeInstalledModState(InstalledMod installedMod){
+    public static void changeInstalledModState(InstalledMod installedMod) {
         File newFile;
-        if(installedMod.isEnabled()){
+        if (installedMod.isEnabled()) {
             newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "disabled");
-        }else{
+        } else {
             newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "jar");
         }
         installedMod.setInstalledPath(newFile.getAbsolutePath());
     }
 
-    public static void changeInstalledModState(InstalledMod installedMod, boolean state){
+    public static void changeInstalledModState(InstalledMod installedMod, boolean state) {
         File newFile;
-        if (state != installedMod.isEnabled()){
-            if (state){
+        if (state != installedMod.isEnabled()) {
+            if (state) {
                 newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "jar");
-            }else{
+            } else {
                 newFile = FileUtil.changeExtension(new File(installedMod.getInstalledPath()), "disabled");
             }
             installedMod.setInstalledPath(newFile.getAbsolutePath());

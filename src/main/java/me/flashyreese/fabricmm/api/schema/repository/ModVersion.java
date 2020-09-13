@@ -44,7 +44,7 @@ public class ModVersion implements Comparable<ModVersion> {
         this.dependencies = dependencies;
     }
 
-    public LocalDate getReleasedLocalDate(){
+    public LocalDate getReleasedLocalDate() {
         return ISODateTimeFormat.dateTimeParser().parseLocalDateTime(getReleasedDate()).toLocalDate();
     }
 

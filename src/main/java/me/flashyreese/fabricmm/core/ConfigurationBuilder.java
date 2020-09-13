@@ -6,7 +6,7 @@ import java.io.File;
 
 public class ConfigurationBuilder {
 
-    public static FMMSettings createFMMDefaultSettings(File config){
+    public static FMMSettings createFMMDefaultSettings(File config) {
         FMMSettings fmmSettings = new FMMSettings();
         fmmSettings.setLocale("en_us");
         fmmSettings.setMmcPath("");

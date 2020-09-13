@@ -33,17 +33,17 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
         new DropTarget(list, this);
         list.setModel(listModel);
         list.setDragEnabled(true);
-        list.setCellRenderer(new DefaultListCellRenderer(){
+        list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(value instanceof InstalledMod) {
-                    InstalledMod mod = (InstalledMod)value;
+                if (value instanceof InstalledMod) {
+                    InstalledMod mod = (InstalledMod) value;
                     File file = new File(mod.getInstalledPath());
                     try {
-                        if(mod.isEnabled()){
+                        if (mod.isEnabled()) {
                             renderer.setIcon(mod.getIconPath() != null ? UserInterfaceUtils.getIconFromFile(new File(mod.getIconPath())) : UserInterfaceUtils.getGrayScaledIconFromResource("icon.png", 64));
-                        }else{
+                        } else {
                             renderer.setIcon(mod.getIconPath() != null ? UserInterfaceUtils.getGrayScaledIconFromFile(new File(mod.getIconPath())) : UserInterfaceUtils.getGrayScaledIconFromResource("icon.png", 64));
                         }
                     } catch (IOException e) {
@@ -63,7 +63,7 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
 
     }
 
-    public JList<InstalledMod> getList(){
+    public JList<InstalledMod> getList() {
         return list;
     }
 
@@ -71,11 +71,11 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
         return list.getSelectedValue();
     }
 
-    public List<InstalledMod> getSelectedValues(){
-        return list.getSelectedValuesList();//Fixme: add multi disable and enable
+    public List<InstalledMod> getSelectedValues() {
+        return list.getSelectedValuesList();
     }
 
-    public void removeAllItems(){
+    public void removeAllItems() {
         listModel.removeAllElements();
     }
 
@@ -83,25 +83,25 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
     public void updateUI() {
         super.updateUI();
         filterListModel();
-        if (list != null){
+        if (list != null) {
             list.updateUI();
         }
     }
 
-    public void filterListModel(){
-        if (listModel != null){
+    public void filterListModel() {
+        if (listModel != null) {
             DefaultListModel<InstalledMod> filteredItems = new DefaultListModel<>();
             ArrayList<InstalledMod> listMods = new ArrayList<>(listModel.getSize());
             for (int i = 0; i < listModel.getSize(); i++) {
                 listMods.add(listModel.getElementAt(i));
             }
-            for (InstalledMod mod: listMods){
-                if (mod.isEnabled()){
+            for (InstalledMod mod : listMods) {
+                if (mod.isEnabled()) {
                     filteredItems.addElement(mod);
                 }
             }
-            for (InstalledMod mod: listMods){
-                if (!mod.isEnabled()){
+            for (InstalledMod mod : listMods) {
+                if (!mod.isEnabled()) {
                     filteredItems.addElement(mod);
                 }
             }
@@ -148,12 +148,12 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
                 @SuppressWarnings("unchecked")
                 List<File> files = (List<File>) data.getTransferData(DataFlavor.javaFileListFlavor);
                 for (File file : files) {
-                    if(file.getName().endsWith(".jar") || file.getName().endsWith(".fabricmod") || file.getName().endsWith(".disabled")){
+                    if (file.getName().endsWith(".jar") || file.getName().endsWith(".fabricmod") || file.getName().endsWith(".disabled")) {
                         InstalledMod mod = ModUtils.getInstalledModFromJar(file);
-                        if (mod != null){
+                        if (mod != null) {
                             File newFile = new File(currentDirectory, file.getName());
                             Files.copy(file.toPath(), newFile.toPath());
-                            if (newFile.length() == file.length()){
+                            if (newFile.length() == file.length()) {
                                 InstalledMod newMod = ModUtils.getInstalledModFromJar(newFile);
                                 if (newMod != null)
                                     listModel.addElement(newMod);
@@ -176,7 +176,7 @@ public class ModFileDropList extends JPanel implements DropTargetListener {
 
     public void reloadMods() throws Exception {
         listModel.removeAllElements();
-        for (InstalledMod installedMod: ModUtils.getInstalledModsFromDir(this.currentDirectory)){
+        for (InstalledMod installedMod : ModUtils.getInstalledModsFromDir(this.currentDirectory)) {
             listModel.addElement(installedMod);
         }
     }

@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModRepositoryBrowserUI extends JPanel{
+public class ModRepositoryBrowserUI extends JPanel {
 
     private JTextField searchBar;
     private ProjectList projectList;
@@ -58,7 +58,7 @@ public class ModRepositoryBrowserUI extends JPanel{
 
     public ModRepositoryBrowserUI(JTabbedPane jTabbedPane, RepositoryManager repositoryManager, DownloadManagerUI downloadManager, TrayIcon trayIcon) {
         setLayout(null);
-        setSize(new Dimension((int)jTabbedPane.getPreferredSize().getWidth() - 5, (int)jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
+        setSize(new Dimension((int) jTabbedPane.getPreferredSize().getWidth() - 5, (int) jTabbedPane.getPreferredSize().getHeight() - 28));//Fixme: Jank AF
         initComponents();
         setupComponents(repositoryManager, downloadManager, trayIcon);
         loadComponents();
@@ -90,13 +90,13 @@ public class ModRepositoryBrowserUI extends JPanel{
         authorName = new JLabel();
     }
 
-    private void setupComponents(RepositoryManager repositoryManager, DownloadManagerUI downloadManager, TrayIcon trayIcon){
+    private void setupComponents(RepositoryManager repositoryManager, DownloadManagerUI downloadManager, TrayIcon trayIcon) {
         Dim2i searchBarDim = new Dim2i(10, 10, this.getWidth() / 8 * 3 - 20, 30);
         searchBar.setBounds(searchBarDim.getOriginX(), searchBarDim.getOriginY(), searchBarDim.getWidth(), searchBarDim.getHeight());
         updateModList(repositoryManager);
         searchBar.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent evt) {
-                SwingUtilities.invokeLater(() -> projectList.searchFilter(searchBar.getText(), (String)filterType.getSelectedItem()));
+                SwingUtilities.invokeLater(() -> projectList.searchFilter(searchBar.getText(), (String) filterType.getSelectedItem()));
             }
         });
 
@@ -113,10 +113,10 @@ public class ModRepositoryBrowserUI extends JPanel{
         minecraftVersionLabel.setFont(labelFont);
         Dim2i minecraftVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 120, this.getWidth() / 4, 30);
         minecraftVersion.setBounds(minecraftVersionDim.getOriginX(), minecraftVersionDim.getOriginY(), minecraftVersionDim.getWidth(), minecraftVersionDim.getHeight());
-        minecraftVersion.setRenderer(new DefaultListCellRenderer(){
+        minecraftVersion.setRenderer(new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(value instanceof MinecraftVersion) {
+                if (value instanceof MinecraftVersion) {
                     renderer.setText(((MinecraftVersion) value).getMinecraftVersion());
                 }
                 return renderer;
@@ -128,10 +128,10 @@ public class ModRepositoryBrowserUI extends JPanel{
         modVersionLabel.setFont(labelFont);
         Dim2i modVersionDim = new Dim2i(this.getWidth() / 4 * 3 - 10, this.getHeight() - 80, this.getWidth() / 4, 30);
         modVersion.setBounds(modVersionDim.getOriginX(), modVersionDim.getOriginY(), modVersionDim.getWidth(), modVersionDim.getHeight());
-        modVersion.setRenderer(new DefaultListCellRenderer(){
+        modVersion.setRenderer(new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel renderer = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(value instanceof ModVersion) {
+                if (value instanceof ModVersion) {
                     renderer.setText(((ModVersion) value).getModVersion());
                 }
                 return renderer;
@@ -205,7 +205,7 @@ public class ModRepositoryBrowserUI extends JPanel{
         authorName.setFont(projectLabelFont);
     }
 
-    private ArrayList<JButton> createContactButtons(Project project, int x, int y){
+    private ArrayList<JButton> createContactButtons(Project project, int x, int y) {
         ArrayList<JButton> jButtonList = new ArrayList<>();
         Map<String, String> map = new HashMap<>();
         map.put("discordUrl", "assets/icons/discord.png");
@@ -217,8 +217,8 @@ public class ModRepositoryBrowserUI extends JPanel{
         map.put("gitlabUrl", "assets/icons/gitlab.png");
         int offsetX = 0;
         User user = project.getUser();
-        for (Map.Entry<String, String> entry: user.getContacts().entrySet()){
-            if (map.containsKey(entry.getKey())){
+        for (Map.Entry<String, String> entry : user.getContacts().entrySet()) {
+            if (map.containsKey(entry.getKey())) {
                 JButton jButton = new JButton();
                 jButton.setIcon(UserInterfaceUtils.getIconFromResource(map.get(entry.getKey()), 50));
                 jButton.setBorderPainted(false);
@@ -265,7 +265,7 @@ public class ModRepositoryBrowserUI extends JPanel{
     }
 
 
-    public void updateComponentsText(RepositoryManager repositoryManager){
+    public void updateComponentsText(RepositoryManager repositoryManager) {
         filterType.removeAllItems();
         filterType.addItem(new I18nText("fmm.mod_browser.filter.general").toString());
         filterType.addItem(new I18nText("fmm.mod_browser.filter.name").toString());
@@ -283,10 +283,10 @@ public class ModRepositoryBrowserUI extends JPanel{
         onProjectListSelect(repositoryManager);
     }
 
-    private void onProjectListSelect(RepositoryManager repositoryManager){
-        if(projectList.getSelectedValue() != null){
+    private void onProjectListSelect(RepositoryManager repositoryManager) {
+        if (projectList.getSelectedValue() != null) {
             Project project = projectList.getSelectedValue();
-            if(project.getCurseForgeProject() != -1)
+            if (project.getCurseForgeProject() != -1)
                 new Thread(() -> {
                     repositoryManager.downloadProjectFiles(project);
                     updateMinecraftVersions();
@@ -300,17 +300,17 @@ public class ModRepositoryBrowserUI extends JPanel{
             projectWebsite.setEnabled(project.getProjectUrl() != null && !project.getProjectUrl().isEmpty());
             projectSources.setEnabled(project.getSourcesUrl() != null && !project.getSourcesUrl().isEmpty());
 
-            if (authorContacts != null){
-                for (JButton button: authorContacts){
+            if (authorContacts != null) {
+                for (JButton button : authorContacts) {
                     authorInfoPanel.remove(button);
                 }
             }
             authorContacts = createContactButtons(projectList.getSelectedValue(), 10, 50);
-            for (JButton button: authorContacts){
+            for (JButton button : authorContacts) {
                 authorInfoPanel.add(button);
             }
             authorInfoPanel.updateUI();
-        }else{
+        } else {
             minecraftVersion.setEnabled(false);
             modVersion.setEnabled(false);
             download.setEnabled(false);
@@ -320,8 +320,8 @@ public class ModRepositoryBrowserUI extends JPanel{
             projectName.setText(new I18nText("fmm.library.none_selected").toString());
             projectDescription.setText(new I18nText("fmm.library.none_selected").toString());
             authorName.setText(new I18nText("fmm.library.none_selected").toString());
-            if (authorContacts != null){
-                for (JButton button: authorContacts){
+            if (authorContacts != null) {
+                for (JButton button : authorContacts) {
                     authorInfoPanel.remove(button);
                 }
             }
@@ -331,36 +331,36 @@ public class ModRepositoryBrowserUI extends JPanel{
         }
     }
 
-    private void updateMinecraftVersions(){
+    private void updateMinecraftVersions() {
         minecraftVersion.removeAllItems();
         minecraftVersion.setSelectedItem(null);
-        for(MinecraftVersion mcVer: projectList.getSelectedValue().getMinecraftVersions()){
+        for (MinecraftVersion mcVer : projectList.getSelectedValue().getMinecraftVersions()) {
             minecraftVersion.addItem(mcVer);
         }
         updateModVersions();
-        if(minecraftVersion.getSelectedItem() != null){
+        if (minecraftVersion.getSelectedItem() != null) {
             minecraftVersion.setEnabled(true);
-            if (modVersion.getSelectedItem() != null){
+            if (modVersion.getSelectedItem() != null) {
                 modVersion.setEnabled(true);
                 download.setEnabled(true);
-            }else{
+            } else {
                 modVersion.setEnabled(false);
                 download.setEnabled(false);
             }
-        }else{
+        } else {
             minecraftVersion.setEnabled(false);
             modVersion.setEnabled(false);
             download.setEnabled(false);
         }
     }
 
-    private void updateModVersions(){
+    private void updateModVersions() {
         modVersion.removeAllItems();
         modVersion.setSelectedItem(null);
-        if (minecraftVersion.getSelectedItem() instanceof MinecraftVersion){
+        if (minecraftVersion.getSelectedItem() instanceof MinecraftVersion) {
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
-            if(mcVer != null){
-                for(ModVersion modVer: mcVer.getModVersions()){
+            if (mcVer != null) {
+                for (ModVersion modVer : mcVer.getModVersions()) {
                     modVersion.addItem(modVer);
                 }
             }
@@ -368,7 +368,7 @@ public class ModRepositoryBrowserUI extends JPanel{
     }
 
     private void downloadMod(DownloadManagerUI downloadManager, TrayIcon trayIcon) throws MalformedURLException, FileNotFoundException {//Fixme: literally
-        if(projectList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null){
+        if (projectList.getSelectedValue() != null && minecraftVersion.getSelectedItem() != null && modVersion.getSelectedItem() != null) {
             Project project = projectList.getSelectedValue();
             MinecraftVersion mcVer = (MinecraftVersion) minecraftVersion.getSelectedItem();
             ModVersion modVer = (ModVersion) modVersion.getSelectedItem();//Todo: also download dependencies
@@ -382,7 +382,7 @@ public class ModRepositoryBrowserUI extends JPanel{
 
                 public void onComplete() {
                     trayIcon.displayMessage(new ParsableI18nText("fmm.mod_browser.tray_icon.download_complete.caption",
-                            project.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()).toString(),
+                                    project.getName(), modVer.getModVersion(), mcVer.getMinecraftVersion()).toString(),
                             new I18nText("fmm.mod_browser.tray_icon.download_complete.text").toString(), TrayIcon.MessageType.INFO);
                     try {
                         downloadManager.refreshMods();
@@ -400,8 +400,8 @@ public class ModRepositoryBrowserUI extends JPanel{
 
     public void updateModList(RepositoryManager repositoryManager) {
         projectList.removeAllItems();
-        for(User user: repositoryManager.getUsers()){
-            for (Project project: user.getProjects()){
+        for (User user : repositoryManager.getUsers()) {
+            for (Project project : user.getProjects()) {
                 project.setUser(user);
                 projectList.addItem(project);
             }

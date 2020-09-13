@@ -21,9 +21,9 @@ public class UserInterfaceUtils {
 
     public static ImageIcon getImageIconFromCache(Project project) throws Exception {
         File file = new File(ConfigurationManager.getInstance().ICON_CACHE_DIR, String.format("%s.png", project.getId()));
-        if(file.exists()){
+        if (file.exists()) {
             return getIconFromFile(file);
-        }else{
+        } else {
             try {
                 BufferedInputStream in = new BufferedInputStream(new URL(project.getIconUrl()).openStream());
                 FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -39,11 +39,11 @@ public class UserInterfaceUtils {
         }
     }
 
-    public static ImageIcon getIconFromResource(String resource, int scale){
+    public static ImageIcon getIconFromResource(String resource, int scale) {
         return getIconFromImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource(resource)), scale, Image.SCALE_SMOOTH);
     }
 
-    public static ImageIcon getGrayScaledIconFromResource(String resource, int scale){
+    public static ImageIcon getGrayScaledIconFromResource(String resource, int scale) {
         Image image = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemClassLoader().getResource(resource));
         ImageFilter filter = new GrayFilter(true, 50);
         ImageProducer producer = new FilteredImageSource(image.getSource(), filter);
@@ -56,15 +56,15 @@ public class UserInterfaceUtils {
         return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
     }
 
-    public static ImageIcon getIconFromImage(Image image){
+    public static ImageIcon getIconFromImage(Image image) {
         return new ImageIcon(image.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
     }
 
-    public static ImageIcon getIconFromImage(Image image, int scale){
+    public static ImageIcon getIconFromImage(Image image, int scale) {
         return new ImageIcon(image.getScaledInstance(scale, scale, Image.SCALE_SMOOTH));
     }
 
-    public static ImageIcon getIconFromImage(Image image, int scale, int hints){
+    public static ImageIcon getIconFromImage(Image image, int scale, int hints) {
         return new ImageIcon(image.getScaledInstance(scale, scale, hints));
     }
 
@@ -76,19 +76,19 @@ public class UserInterfaceUtils {
         return new ImageIcon(mage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
     }
 
-    public static String getEnglishStringList(ArrayList<Object> list){//Fixme: This will need a patch
+    public static String getEnglishStringList(ArrayList<Object> list) {//Fixme: This will need a patch
         StringBuilder line = new StringBuilder();
-        if(list == null){
+        if (list == null) {
             line.append("None listed");
-        }else{
-            for(int i = 0; i < list.size(); i++) {
-                if (list.get(i) instanceof String){
-                    String currElement = (String)list.get(i);
-                    if(i == 0) {
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i) instanceof String) {
+                    String currElement = (String) list.get(i);
+                    if (i == 0) {
                         line = new StringBuilder(currElement);
-                    }else if(i == list.size() - 1) {
+                    } else if (i == list.size() - 1) {
                         line.append(" and ").append(currElement);
-                    }else{
+                    } else {
                         line.append(", ").append(currElement);
                     }
                 }
@@ -115,14 +115,14 @@ public class UserInterfaceUtils {
         return titleCase.toString();
     }
 
-    public static String filterEnvironment(String environment){
-        if(environment == null){
+    public static String filterEnvironment(String environment) {
+        if (environment == null) {
             return new I18nText("fmm.filter_environment.null").toString();
-        }else if(environment.equals("*")){
+        } else if (environment.equals("*")) {
             return new I18nText("fmm.filter_environment.both").toString();
-        }else if(environment.equals("client")){
+        } else if (environment.equals("client")) {
             return new I18nText("fmm.filter_environment.client").toString();
-        }else{
+        } else {
             return new I18nText("fmm.filter_environment.server").toString();
         }
     }

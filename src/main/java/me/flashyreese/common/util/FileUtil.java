@@ -22,7 +22,7 @@ public class FileUtil {
             return jsonAdapter.fromJson(buffered.lines().collect(Collectors.joining()));
         } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             try {
                 assert buffered != null;
                 buffered.close();
@@ -57,7 +57,7 @@ public class FileUtil {
         filename += "." + extension;
 
         File newFile = file;
-        if(file.renameTo(new File(file.getParentFile(), filename))){
+        if (file.renameTo(new File(file.getParentFile(), filename))) {
             newFile = new File(file.getParentFile(), filename);
         }
         return newFile;
@@ -67,21 +67,21 @@ public class FileUtil {
         return file.getName();
     }
 
-    public static String getFileName(File file)  {
+    public static String getFileName(File file) {
         String fileNameWithExtension = getFileNameWithExtension(file);
-        if(fileNameWithExtension.contains(".")){
+        if (fileNameWithExtension.contains(".")) {
             return fileNameWithExtension.substring(0, fileNameWithExtension.lastIndexOf('.'));
         }
         return fileNameWithExtension;
     }
 
-    public static String sanitizeFileName(String name){
+    public static String sanitizeFileName(String name) {
         return name.replaceAll("[\\\\/:*?\"<>|]", "");
     }
 
     public static List<String> readLines(File file) {
         List<String> lines = new ArrayList<>();
-        if (file.isFile()){
+        if (file.isFile()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line = reader.readLine();
                 while (line != null) {
@@ -92,17 +92,17 @@ public class FileUtil {
                 e.printStackTrace();
             }
             return lines;
-        }else{
+        } else {
             return null;
         }
     }
 
-    public static boolean removeFileDirectory(File directory){
-        for (File file: Objects.requireNonNull(directory.listFiles())){
-            if (file.isDirectory()){
+    public static boolean removeFileDirectory(File directory) {
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
+            if (file.isDirectory()) {
                 removeFileDirectory(file);
             }
-            if (!file.delete())return false;
+            if (!file.delete()) return false;
         }
         return true;
     }

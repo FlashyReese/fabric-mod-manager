@@ -50,13 +50,13 @@ public class CurseFile {
         return gameVersionDateReleased;
     }
 
-    public void removeFabricFromGameVersion(){
+    public void removeFabricFromGameVersion() {
         getGameVersion().remove("Forge");
     }
 
-    public boolean isFabricModFile(){
-        for (CurseModule curseModule: getModules()){
-            if (curseModule.isFabricMod()){
+    public boolean isFabricModFile() {
+        for (CurseModule curseModule : getModules()) {
+            if (curseModule.isFabricMod()) {
                 return true;
             }
         }

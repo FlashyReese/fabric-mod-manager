@@ -19,5 +19,4 @@ public class User {
     public List<Project> getProjects() {
         return projects;
     }
-
 }

@@ -53,7 +53,7 @@ public class FabricModManagerUI extends JFrame {
         contentPane = new JTabbedPane();
         //Fixme: Jank
         contentPane.setLocation(0, 0);
-        contentPane.setPreferredSize(new Dimension(16* SCALE, 9* SCALE));
+        contentPane.setPreferredSize(new Dimension(16 * SCALE, 9 * SCALE));
 
         library = new LibraryManagerUI(contentPane);
         downloadManager = new DownloadManagerUI(contentPane, trayIcon);
@@ -75,10 +75,10 @@ public class FabricModManagerUI extends JFrame {
         setJMenuBar(menuBar);
     }
 
-    public void updateComponentsText(){
+    public void updateComponentsText() {
         int index = contentPane.getSelectedIndex();
         contentPane.removeAll();
-        contentPane.addTab(new I18nText("fmm.library").toString(), library); //Fixme: Panel Scaling macOS looks cropped off
+        contentPane.addTab(new I18nText("fmm.library").toString(), library);
         contentPane.addTab(new I18nText("fmm.mod_browser").toString(), modBrowser);
         contentPane.addTab(new I18nText("fmm.download_manager").toString(), downloadManager);
         contentPane.addTab(new I18nText("fmm.settings").toString(), settings);
