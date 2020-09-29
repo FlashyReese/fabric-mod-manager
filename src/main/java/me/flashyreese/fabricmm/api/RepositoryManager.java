@@ -4,8 +4,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import me.flashyreese.common.util.FileUtil;
-import me.flashyreese.fabricmm.api.schema.curse.CurseAddon;
-import me.flashyreese.fabricmm.api.schema.curse.CurseFile;
+import me.flashyreese.fabricmm.api.schema.CurseAddon;
 import me.flashyreese.fabricmm.api.schema.repository.*;
 
 import java.io.*;
@@ -133,12 +132,12 @@ public class RepositoryManager {
         String filesJson = in.lines().collect(Collectors.joining());
         in.close();
         Moshi moshi = new Moshi.Builder().build();
-        Type type = Types.newParameterizedType(List.class, CurseFile.class);
-        JsonAdapter<List<CurseFile>> jsonAdapter = moshi.adapter(type);
-        List<CurseFile> files = jsonAdapter.fromJson(filesJson);
+        Type type = Types.newParameterizedType(List.class, CurseAddon.CurseFile.class);
+        JsonAdapter<List<CurseAddon.CurseFile>> jsonAdapter = moshi.adapter(type);
+        List<CurseAddon.CurseFile> files = jsonAdapter.fromJson(filesJson);
         assert files != null;
         files.removeIf(curseFile -> !curseFile.isFabricModFile());
-        files.forEach(CurseFile::removeFabricFromGameVersion);
+        files.forEach(CurseAddon.CurseFile::removeFabricFromGameVersion);
         curseAddon.setFiles(files);
         curseAddon.getLatestFiles().removeIf(curseFile -> !curseFile.isFabricModFile());
         curseAddon.getLatestFiles().forEach(latestFile -> {
@@ -162,7 +161,7 @@ public class RepositoryManager {
         return null;
     }
 
-    private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(List<CurseFile> curseFiles) {
+    private List<MinecraftVersion> convertCurseFilesToMinecraftVersions(List<CurseAddon.CurseFile> curseFiles) {
         Project project = new Project();
         project.setMinecraftVersions(new ArrayList<>());
 
